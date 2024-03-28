@@ -2,67 +2,6 @@
 // In order to regenerate this file execute `go generate` from the repository root.
 // More details can be found in the [README](https://github.com/CiscoDevNet/terraform-provider-aci/blob/master/README.md).
 
-{{- define "child_attributes" }}
-			"{{- .ResourceName}}": schema.SetNestedAttribute{
-				MarkdownDescription: `{{.Comment}}`,
-				Optional:            true,
-				Computed:            true,
-				PlanModifiers: []planmodifier.Set{
-					setplanmodifier.UseStateForUnknown(),
-				},
-				{{- if not .IdentifiedBy}}
-				Validators: []validator.Set{
-					setvalidator.SizeAtMost(1),
-				},
-				{{- end}}
-				NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					{{- range .Properties}}
-					{{- if eq .ValueType "bitmask"}}
-					"{{overwriteProperty .PkgName .SnakeCaseName $.Definitions}}": schema.SetAttribute{
-						MarkdownDescription: `{{.Comment}}`,
-						Optional:            true,
-						Computed:            true,
-						PlanModifiers: []planmodifier.Set{
-							setplanmodifier.UseStateForUnknown(),
-						},
-						{{- if .ValidValues}}
-						Validators: []validator.Set{
-							setvalidator.SizeAtMost({{ len .ValidValues }}),
-							setvalidator.ValueStringsAre(
-								stringvalidator.OneOf({{- validatorString .ValidValues}}),
-							),
-						},
-						{{- end}}
-						ElementType: types.StringType,
-					},
-					{{- else}}
-					"{{overwriteProperty .PkgName .SnakeCaseName $.Definitions}}": schema.StringAttribute{
-						{{- if or .IsNaming .IsRequired}}
-						Required:            true,
-						{{- else }}
-						Optional:            true,
-						Computed:            true,
-						{{- end}}
-						PlanModifiers: []planmodifier.String{
-							stringplanmodifier.UseStateForUnknown(),
-						},
-						{{- if .ValidValues}}
-						Validators: []validator.String{
-							stringvalidator.OneOf({{- validatorString .ValidValues}}),
-						},
-						{{- end}}
-						MarkdownDescription: `{{.Comment}}`,
-					},
-					{{- end}}
-				{{- end}}
-				{{- range .Children}}
-				{{- template "child_attributes" . }}
-				},
-				},
-				},
-				{{- end}}
-				{{- end}}
 
 package provider
 
@@ -255,13 +194,12 @@ func (r *{{.ResourceClassName}}Resource) Schema(ctx context.Context, req resourc
 			{{- end}}
 			{{- range .Children}}
 				{{- template "child_attributes" . }}
-				
 					},
-					},
-					},
+				},
+			},
 				
 					{{- end}}
-					},
+		},
 	}
 	tflog.Debug(ctx, "End schema of resource: aci_{{.ResourceName}}")
 }
@@ -777,3 +715,67 @@ func get{{.ResourceClassName}}CreateJsonPayload(ctx context.Context, diags *diag
 	}
 	return jsonPayload
 }
+
+{{- define "child_attributes" }}
+  "{{ .ResourceName }}": schema.SetNestedAttribute{
+    MarkdownDescription: `{{ .Comment }}`,
+    Optional:            true,
+    Computed:            true,
+    PlanModifiers: []planmodifier.Set{
+      setplanmodifier.UseStateForUnknown(),
+    },
+    {{- if not .IdentifiedBy }}
+    Validators: []validator.Set{
+      setvalidator.SizeAtMost(1),
+    },
+    {{- end }}
+    NestedObject: schema.NestedAttributeObject{
+      Attributes: map[string]schema.Attribute{
+        {{- range .Properties }}
+        {{- if eq .ValueType "bitmask" }}
+        "{{ overwriteProperty .PkgName .SnakeCaseName $.Definitions }}": schema.SetAttribute{
+          MarkdownDescription: `{{ .Comment }}`,
+          Optional:            true,
+          Computed:            true,
+          PlanModifiers: []planmodifier.Set{
+            setplanmodifier.UseStateForUnknown(),
+          },
+          {{- if .ValidValues }}
+          Validators: []validator.Set{
+            setvalidator.SizeAtMost({{ len .ValidValues }}),
+            setvalidator.ValueStringsAre(
+              stringvalidator.OneOf({{ validatorString .ValidValues }}),
+            ),
+          },
+          {{- end }}
+          ElementType: types.StringType,
+        },
+        {{- else }}
+        "{{ overwriteProperty .PkgName .SnakeCaseName $.Definitions }}": schema.StringAttribute{
+          {{- if or .IsNaming .IsRequired }}
+          Required:            true,
+          {{- else }}
+          Optional:            true,
+          Computed:            true,
+          {{- end }}
+          PlanModifiers: []planmodifier.String{
+            stringplanmodifier.UseStateForUnknown(),
+          },
+          {{- if .ValidValues }}
+          Validators: []validator.String{
+            stringvalidator.OneOf({{ validatorString .ValidValues }}),
+          },
+          {{- end }}
+          MarkdownDescription: `{{ .Comment }}`,
+        },
+        {{- end }}
+        {{- end }}
+      },
+      {{- range .Children }}
+      "{{ .ResourceName }}": {
+        {{- template "child_attributes" . }}
+      },
+      {{- end }}
+    },
+  },
+{{- end }}

@@ -439,6 +439,21 @@ func getAndSetMgmtInstPAttributes(ctx context.Context, diags *diag.Diagnostics, 
 					data.Prio = basetypes.NewStringValue(attributeValue.(string))
 				}
 			}
+			if data.Annotation.IsUnknown() {
+				data.Annotation = types.StringNull()
+			}
+			if data.Descr.IsUnknown() {
+				data.Descr = types.StringNull()
+			}
+			if data.Name.IsUnknown() {
+				data.Name = types.StringNull()
+			}
+			if data.NameAlias.IsUnknown() {
+				data.NameAlias = types.StringNull()
+			}
+			if data.Prio.IsUnknown() {
+				data.Prio = types.StringNull()
+			}
 			MgmtRsOoBConsMgmtInstPList := make([]MgmtRsOoBConsMgmtInstPResourceModel, 0)
 			TagAnnotationMgmtInstPList := make([]TagAnnotationMgmtInstPResourceModel, 0)
 			TagTagMgmtInstPList := make([]TagTagMgmtInstPResourceModel, 0)
@@ -644,7 +659,6 @@ func getMgmtInstPTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostic
 
 	return childPayloads
 }
-
 func getMgmtInstPCreateJsonPayload(ctx context.Context, diags *diag.Diagnostics, data *MgmtInstPResourceModel, mgmtRsOoBConsPlan, mgmtRsOoBConsState []MgmtRsOoBConsMgmtInstPResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationMgmtInstPResourceModel, tagTagPlan, tagTagState []TagTagMgmtInstPResourceModel) *container.Container {
 	payloadMap := map[string]interface{}{}
 	payloadMap["attributes"] = map[string]string{}
