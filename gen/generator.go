@@ -102,6 +102,7 @@ var templateFuncs = template.FuncMap{
 	"capitalize":                   Capitalize,
 	"getTestConfigVariableName":    GetTestConfigVariableName,
 	"getDevnetDocForClass":         GetDevnetDocForClass,
+	"lowerFirstCharacter":          LowerFirstCharacter,
 }
 
 // Global variables used for unique resource name setting based on label from meta data
@@ -226,6 +227,13 @@ func FromInterfacesToString(identifiedBy []interface{}) string {
 	return fmt.Sprintf("\"%s\"", strings.Join(identifiers, "\", \""))
 }
 
+func LowerFirstCharacter(str string) string {
+	if str == "" {
+		return ""
+	}
+	return strings.ToLower(string(str[0])) + str[1:]
+}
+
 // Renders the templates and writes a file to the output directory
 func renderTemplate(templateName, outputFileName, outputPath string, outputData interface{}) {
 	templateData, err := os.ReadFile(fmt.Sprintf("%s/%s", templatePath, templateName))
@@ -291,7 +299,7 @@ func getClassModels(definitions Definitions) map[string]Model {
 	for _, pkgName := range pkgNames {
 
 		classModel := Model{PkgName: pkgName}
-		classModel.setClassModel(metaPath, false, definitions, []string{}, pkgNames, nil)
+		classModel.setClassModel(metaPath, false, definitions, []string{}, pkgNames, nil, nil)
 		classModels[pkgName] = classModel
 	}
 	return classModels
@@ -638,6 +646,7 @@ type Model struct {
 	RelationshipResourceName  string
 	Versions                  string
 	ParentName                string
+	GrandParentName           string
 	ChildClasses              []string
 	ContainedBy               []string
 	Contains                  []string
@@ -713,7 +722,7 @@ type Definitions struct {
 }
 
 // Reads the class details from the meta file and sets all details to the Model
-func (m *Model) setClassModel(metaPath string, isChildIteration bool, definitions Definitions, parents, pkgNames, mainParentChildren []string) {
+func (m *Model) setClassModel(metaPath string, isChildIteration bool, definitions Definitions, parents, pkgNames, mainParentChildren, parentsList []string) {
 	fileContent, err := os.ReadFile(fmt.Sprintf("%s/%s.json", metaPath, m.PkgName))
 	if err != nil {
 		log.Fatal("Error when opening file: ", err)
@@ -756,14 +765,17 @@ func (m *Model) setClassModel(metaPath string, isChildIteration bool, definition
 			- Incorrect: Parent -> Child -> Grandchild
 		// TODO add grandchild logic
 	*/
-
+	parentsList = append(parentsList, parents...)
+	if len(parents) != 0 {
+		m.SetGrandParentName(parentsList, parents[0])
+	}
 	if len(m.ChildClasses) > 0 {
 		mainParentChildren := append(mainParentChildren, m.ChildClasses...)
 		m.HasChild = true
 		m.Children = make(map[string]Model)
 		for _, child := range m.ChildClasses {
 			childModel := Model{PkgName: child}
-			childModel.setClassModel(metaPath, true, definitions, []string{m.ResourceClassName}, pkgNames, mainParentChildren)
+			childModel.setClassModel(metaPath, true, definitions, []string{m.ResourceClassName}, pkgNames, mainParentChildren, parentsList)
 			m.Children[child] = childModel
 			if childModel.HasValidValues {
 				m.HasValidValues = true
@@ -938,6 +950,16 @@ func (m *Model) SetClassAllowDelete(classDetails interface{}) {
 
 func (m *Model) SetParentName(classPkgName []string) {
 	m.ParentName = classPkgName[0]
+}
+
+func (m *Model) SetGrandParentName(parentList []string, parent string) {
+	for i, value := range parentList {
+		if value == parent {
+			if i > 0 {
+				m.GrandParentName = parentList[i-1]
+			}
+		}
+	}
 }
 
 // Determine if a class is allowed to be deleted as defined in the classes.yaml file

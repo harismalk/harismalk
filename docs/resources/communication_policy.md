@@ -85,6 +85,12 @@ resource "aci_communication_policy" "full_example" {
       value = "value_1"
     }
   ]
+  tags = [
+    {
+      key   = "tags_1"
+      value = "value_1"
+    }
+  ]
 }
 
 ```
@@ -172,6 +178,13 @@ All examples for the Communication Policy resource can be found in the [examples
       - Valid Values: `disabled`, `enabled`.
 
 * `annotations` - (list) A list of Annotations objects ([tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview)). Annotations can also be configured using a separate [aci_annotation](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/annotation) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
+  
+  #### Required ####
+  
+  * `key` (key) - (string) The key used to uniquely identify this configuration object.
+  * `value` (value) - (string) The value of the property.
+
+* `tags` - (list) A list of Tags objects ([tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview)). Tags can also be configured using a separate [aci_tag](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/tag) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
   
   #### Required ####
   

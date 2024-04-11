@@ -101,6 +101,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				Default:             stringdefault.StaticString(globalAnnotation),
 				MarkdownDescription: `The annotation of the External Management Network Subnet object.`,
@@ -110,6 +111,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The description of the External Management Network Subnet object.`,
 			},
@@ -117,6 +119,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 					stringplanmodifier.RequiresReplace(),
 				},
 				MarkdownDescription: `The external subnet IP address and subnet mask. This IP address is used for creating an external management entity. The subnet mask for the IP address to be imported from the outside into the fabric. The contracts associated with its parent instance profile (l3ext:InstP) are applied to the subnet.`,
@@ -126,6 +129,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The name of the External Management Network Subnet object.`,
 			},
@@ -134,6 +138,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The name alias of the External Management Network Subnet object.`,
 			},
@@ -143,6 +148,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
+					SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -150,6 +156,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
@@ -157,6 +164,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -169,6 +177,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
+					SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -176,6 +185,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
@@ -183,6 +193,7 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -362,7 +373,7 @@ func (r *MgmtSubnetResource) ImportState(ctx context.Context, req resource.Impor
 }
 
 func getAndSetMgmtSubnetAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *MgmtSubnetResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=children&rsp-subtree-class=%s", data.Id.ValueString(), "mgmtSubnet,tagAnnotation,tagTag"), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full", data.Id.ValueString()), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -392,6 +403,21 @@ func getAndSetMgmtSubnetAttributes(ctx context.Context, diags *diag.Diagnostics,
 					data.NameAlias = basetypes.NewStringValue(attributeValue.(string))
 				}
 			}
+			if data.Annotation.IsUnknown() {
+				data.Annotation = types.StringNull()
+			}
+			if data.Descr.IsUnknown() {
+				data.Descr = types.StringNull()
+			}
+			if data.Ip.IsUnknown() {
+				data.Ip = types.StringNull()
+			}
+			if data.Name.IsUnknown() {
+				data.Name = types.StringNull()
+			}
+			if data.NameAlias.IsUnknown() {
+				data.NameAlias = types.StringNull()
+			}
 			TagAnnotationMgmtSubnetList := make([]TagAnnotationMgmtSubnetResourceModel, 0)
 			TagTagMgmtSubnetList := make([]TagTagMgmtSubnetResourceModel, 0)
 			_, ok := classReadInfo[0].(map[string]interface{})["children"]
@@ -410,6 +436,12 @@ func getAndSetMgmtSubnetAttributes(ctx context.Context, diags *diag.Diagnostics,
 									TagAnnotationMgmtSubnet.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
 							}
+							if TagAnnotationMgmtSubnet.Key.IsUnknown() {
+								TagAnnotationMgmtSubnet.Key = types.StringNull()
+							}
+							if TagAnnotationMgmtSubnet.Value.IsUnknown() {
+								TagAnnotationMgmtSubnet.Value = types.StringNull()
+							}
 							TagAnnotationMgmtSubnetList = append(TagAnnotationMgmtSubnetList, TagAnnotationMgmtSubnet)
 						}
 						if childClassName == "tagTag" {
@@ -421,6 +453,12 @@ func getAndSetMgmtSubnetAttributes(ctx context.Context, diags *diag.Diagnostics,
 								if childAttributeName == "value" {
 									TagTagMgmtSubnet.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
+							}
+							if TagTagMgmtSubnet.Key.IsUnknown() {
+								TagTagMgmtSubnet.Key = types.StringNull()
+							}
+							if TagTagMgmtSubnet.Value.IsUnknown() {
+								TagTagMgmtSubnet.Value = types.StringNull()
 							}
 							TagTagMgmtSubnetList = append(TagTagMgmtSubnetList, TagTagMgmtSubnet)
 						}
@@ -474,17 +512,23 @@ func setMgmtSubnetId(ctx context.Context, data *MgmtSubnetResourceModel) {
 }
 
 func getMgmtSubnetTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtSubnetResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationMgmtSubnetResourceModel) []map[string]interface{} {
-
+	type childMapType struct {
+		Attributes map[string]interface{}   `json:"attributes"`
+		Children   []map[string]interface{} `json:"children"`
+	}
+	childMap := childMapType{
+		Attributes: make(map[string]interface{}),
+		Children:   make([]map[string]interface{}, 0),
+	}
 	childPayloads := []map[string]interface{}{}
 	if !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
 		for _, tagAnnotation := range tagAnnotationPlan {
-			childMap := map[string]map[string]interface{}{"attributes": {}}
 			if !tagAnnotation.Key.IsUnknown() {
-				childMap["attributes"]["key"] = tagAnnotation.Key.ValueString()
+				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
 			}
 			if !tagAnnotation.Value.IsUnknown() {
-				childMap["attributes"]["value"] = tagAnnotation.Value.ValueString()
+				childMap.Attributes["value"] = tagAnnotation.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
 			tagAnnotationIdentifier := TagAnnotationIdentifier{}
@@ -500,9 +544,11 @@ func getMgmtSubnetTagAnnotationChildPayloads(ctx context.Context, diags *diag.Di
 				}
 			}
 			if delete {
-				childMap := map[string]map[string]interface{}{"attributes": {}}
-				childMap["attributes"]["status"] = "deleted"
-				childMap["attributes"]["key"] = tagAnnotation.Key.ValueString()
+				childMap := childMapType{
+					Attributes: make(map[string]interface{}),
+				}
+				childMap.Attributes["status"] = "deleted"
+				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
 				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
 			}
 		}
@@ -512,18 +558,25 @@ func getMgmtSubnetTagAnnotationChildPayloads(ctx context.Context, diags *diag.Di
 
 	return childPayloads
 }
-func getMgmtSubnetTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtSubnetResourceModel, tagTagPlan, tagTagState []TagTagMgmtSubnetResourceModel) []map[string]interface{} {
 
+func getMgmtSubnetTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtSubnetResourceModel, tagTagPlan, tagTagState []TagTagMgmtSubnetResourceModel) []map[string]interface{} {
+	type childMapType struct {
+		Attributes map[string]interface{}   `json:"attributes"`
+		Children   []map[string]interface{} `json:"children"`
+	}
+	childMap := childMapType{
+		Attributes: make(map[string]interface{}),
+		Children:   make([]map[string]interface{}, 0),
+	}
 	childPayloads := []map[string]interface{}{}
 	if !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
 		for _, tagTag := range tagTagPlan {
-			childMap := map[string]map[string]interface{}{"attributes": {}}
 			if !tagTag.Key.IsUnknown() {
-				childMap["attributes"]["key"] = tagTag.Key.ValueString()
+				childMap.Attributes["key"] = tagTag.Key.ValueString()
 			}
 			if !tagTag.Value.IsUnknown() {
-				childMap["attributes"]["value"] = tagTag.Value.ValueString()
+				childMap.Attributes["value"] = tagTag.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
 			tagTagIdentifier := TagTagIdentifier{}
@@ -539,9 +592,11 @@ func getMgmtSubnetTagTagChildPayloads(ctx context.Context, diags *diag.Diagnosti
 				}
 			}
 			if delete {
-				childMap := map[string]map[string]interface{}{"attributes": {}}
-				childMap["attributes"]["status"] = "deleted"
-				childMap["attributes"]["key"] = tagTag.Key.ValueString()
+				childMap := childMapType{
+					Attributes: make(map[string]interface{}),
+				}
+				childMap.Attributes["status"] = "deleted"
+				childMap.Attributes["key"] = tagTag.Key.ValueString()
 				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
 			}
 		}

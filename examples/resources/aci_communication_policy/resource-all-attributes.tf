@@ -39,4 +39,10 @@ resource "aci_communication_policy" "full_example" {
       value = "value_1"
     }
   ]
+  tags = [
+    {
+      key   = "tags_1"
+      value = "value_1"
+    }
+  ]
 }

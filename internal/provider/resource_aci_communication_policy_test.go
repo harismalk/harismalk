@@ -143,6 +143,11 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.throttle_st", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.visore_access", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "tags_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.key", "tags_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.#", "2"),
 				),
 			},
 			// Update with children removed from config
@@ -205,6 +210,11 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.throttle_st", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.visore_access", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "tags_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.key", "tags_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.#", "2"),
 				),
 			},
 			// Update with children first child removed
@@ -243,6 +253,9 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "tags_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.#", "1"),
 				),
 			},
 			// Update with all children removed
@@ -257,6 +270,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "strict_security_on_apic_oob_subnet", "false"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.#", "0"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "0"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.#", "0"),
 				),
 			},
 		},
@@ -355,6 +369,16 @@ resource "aci_communication_policy" "test" {
 	  visore_access = "enabled"
 	},
   ]
+  tags = [
+	{
+	  key = "tags_1"
+	  value = "value_1"
+	},
+	{
+	  key = "tags_2"
+	  value = "value_2"
+	},
+  ]
 }
 `
 
@@ -399,6 +423,12 @@ resource "aci_communication_policy" "test" {
 	  visore_access = "enabled"
 	},
   ]
+  tags = [ 
+	{
+	  key = "tags_2"
+	  value = "value_2"
+	},
+  ]
 }
 `
 
@@ -407,5 +437,6 @@ resource "aci_communication_policy" "test" {
   name = "test_name"
   annotations = []
   http_ssl_configuration = []
+  tags = []
 }
 `
