@@ -159,6 +159,10 @@ func CommRsClientCertCACommHttpsResourceModelAttributeTypes() map[string]attr.Ty
     }
 }
 
+func CommRsClientCertCACommHttpsResourceModelElementType() attr.TypeWithAttributeTypes {
+    return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{},CommRsClientCertCACommHttpsResourceModelAttributeTypes())
+}
+
 func NewCommRsClientCertCACommHttpsResourceModel() *CommRsClientCertCACommHttpsResourceModel {
     return &CommRsClientCertCACommHttpsResourceModel{
         Annotation: types.StringNull(),
@@ -185,6 +189,7 @@ func NewCommRsKeyRingCommHttpsResourceModel() *CommRsKeyRingCommHttpsResourceMod
 		TnPkiKeyRingName:        types.StringNull(),
     }
 }
+
 
 // TagAnnotationCommPolResourceModel describes the resource data model for the children without relation ships.
 type TagAnnotationCommPolResourceModel struct {
@@ -905,10 +910,10 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 			}
 			CommHttpsCommPolList := make([]CommHttpsCommPolResourceModel, 1)
 			var CommHttpsCommPol CommHttpsCommPolResourceModel
-			//CommRsClientCertCACommHttpsList := make([]CommRsClientCertCACommHttpsResourceModel, 1)
+			CommRsClientCertCACommHttpsList := make([]CommRsClientCertCACommHttpsResourceModel, 0)
 			//var CommRsClientCertCACommHttps2 CommRsClientCertCACommHttpsResourceModel
 			//var CommRsClientCertCAObject basetypes.ObjectValue
-			CommRsClientCertCAObject:=types.ObjectNull(CommRsClientCertCACommHttpsResourceModelAttributeTypes())
+			//CommRsClientCertCAObject:=types.ObjectNull(CommRsClientCertCACommHttpsResourceModelAttributeTypes())
 			CommRsKeyRingCommHttpsList := make([]CommRsKeyRingCommHttpsResourceModel, 1)
 			var CommRsKeyRingCommHttps CommRsKeyRingCommHttpsResourceModel
 			TagAnnotationCommPolList := make([]TagAnnotationCommPolResourceModel, 0)
@@ -1052,7 +1057,8 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 														CommRsClientCertCACommHttps.TDn = basetypes.NewStringValue(tDn)
 													} 
 													
-													CommRsClientCertCAObject, _ = types.ObjectValueFrom(ctx, CommRsClientCertCACommHttpsResourceModelAttributeTypes(), CommRsClientCertCACommHttps)
+													//CommRsClientCertCAObject, _ = types.ObjectValueFrom(ctx, CommRsClientCertCACommHttpsResourceModelAttributeTypes(), CommRsClientCertCACommHttps)
+													CommRsClientCertCACommHttpsList = append(CommRsClientCertCACommHttpsList, CommRsClientCertCACommHttps)
 													
 												}
 												
@@ -1108,14 +1114,21 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 							// CommRsClientCertCAObject,diag:=types.SetValueFrom(ctx,types.StringType,CommRsClientCertCACommHttpsList)
 							// CommHttpsCommPol.CommRsClientCertCA=CommRsClientCertCAObject
 							//log.Printf("HERE from set %v %v",CommHttpsCommPol.CommRsClientCertCA, diag)
-							log.Printf("here CA outside %v %v %v",CommRsClientCertCAObject,CommRsClientCertCAObject.IsNull(),CommRsClientCertCAObject.IsUnknown())
-							if !CommRsClientCertCAObject.IsNull(){
-								log.Printf("here CA inside %v %v %v",CommRsClientCertCAObject,CommRsClientCertCAObject.IsNull(),CommRsClientCertCAObject.IsUnknown())
-							CommHttpsCommPol.CommRsClientCertCA,_=types.SetValue(CommRsClientCertCAObject.Type(ctx),[]attr.Value{CommRsClientCertCAObject})
+							//basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{},CommRsClientCertCACommHttpsResourceModelAttributeTypes())
+							if len(CommRsClientCertCACommHttpsList) > 0 {
+								CommRsClientCertCASet,_:=types.SetValueFrom(ctx,CommRsClientCertCACommHttpsResourceModelElementType(),CommRsClientCertCACommHttpsList)
+								CommHttpsCommPol.CommRsClientCertCA=CommRsClientCertCASet
 							} else{
-								log.Printf("here CA else %v %v %v",CommRsClientCertCAObject,CommRsClientCertCAObject.IsNull(),CommRsClientCertCAObject.IsUnknown())
-								CommHttpsCommPol.CommRsClientCertCA=types.SetNull(CommRsClientCertCAObject.Type(ctx))
+								CommHttpsCommPol.CommRsClientCertCA=types.SetNull(CommRsClientCertCACommHttpsResourceModelElementType())
 							}
+							// log.Printf("here CA WithAttr %v",CommRsClientCertCACommHttpsResourceModelElementType())
+							// if !CommRsClientCertCAObject.IsNull(){
+							// 	log.Printf("here CA inside %v %v %v",CommRsClientCertCAObject,CommRsClientCertCAObject.IsNull(),CommRsClientCertCAObject.IsUnknown())
+							// CommHttpsCommPol.CommRsClientCertCA,_=types.SetValue(CommRsClientCertCAObject.Type(ctx),[]attr.Value{CommRsClientCertCAObject})
+							// } else{
+							// 	log.Printf("here CA else %v %v %v",CommRsClientCertCAObject,CommRsClientCertCAObject.IsNull(),CommRsClientCertCAObject.IsUnknown())
+							// 	CommHttpsCommPol.CommRsClientCertCA=types.SetNull(CommRsClientCertCAObject.Type(ctx))
+							// }
 							// if !areAllStringFieldsEmpty(*CommRsClientCertCACommHttps) {
 							// CommHttpsCommPol.CommRsClientCertCA,_=types.SetValue(CommRsClientCertCAObject.Type(ctx),[]attr.Value{CommRsClientCertCAObject})
 							// log.Printf("here ca0 %v",CommHttpsCommPol.CommRsClientCertCA)
@@ -1262,6 +1275,7 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 				log.Printf("HERE  %v %v %v",commHttpsSet,data.CommHttps,diags)
 			}
 			if len(TagAnnotationCommPolList) > 0 {
+				log.Printf("HERE TAG %v",data.TagAnnotation.ElementType(ctx))
 				tagAnnotationSet, _ := types.SetValueFrom(ctx, data.TagAnnotation.ElementType(ctx), TagAnnotationCommPolList)
 				data.TagAnnotation = tagAnnotationSet
 			}
