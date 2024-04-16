@@ -981,6 +981,21 @@ for childAttributeName, childAttributeValue := range {{.PkgName}}childAttributeV
 	{{- template "getAndSetGrandChildren" . }}
 	}
 	{{- end}}
+	{{- range .Properties}}
+	if {{.ResourceClassName}}{{$.ParentName}}.{{.Name}}.IsNull() {
+	{{- if eq .ValueType "bitmask"}}
+	 var data{{.PropertyName}}{{.ResourceClassName}}{{$.ResourceClassName}} []{{.ResourceClassName}}{{$.ResourceClassName}}ResourceModel
+	 data.{{.ResourceClassName}}.ElementsAs(ctx,&data{{.PropertyName}}{{.ResourceClassName}}{{$.ResourceClassName}},false)
+	 for _, {{.ResourceClassName | lowerFirstCharacter}} := range data{{.PropertyName}}{{.ResourceClassName}}{{$.ResourceClassName}} {
+		if {{.ResourceClassName}}{{$.ResourceClassName}}.{{.Name}}.IsNull(){
+		{{.ResourceClassName}}{{$.ResourceClassName}}.{{.Name}} = types.SetUnknown({{.ResourceClassName | lowerFirstCharacter}}.{{.Name}}.ElementType(ctx))
+		}
+	 } 
+	{{- else}}
+		{{.ResourceClassName}}{{$.ParentName}}.{{.Name}} = types.StringUnknown()
+	{{- end}}
+	}
+	{{- end}}
 	}
 	{{- if .IdentifiedBy}}
 	{{.ResourceClassName}}{{$.ParentName}}List = append({{.ResourceClassName}}{{$.ParentName}}List, {{.ResourceClassName}}{{$.ParentName}})
