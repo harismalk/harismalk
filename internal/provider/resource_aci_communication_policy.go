@@ -8,7 +8,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"reflect"
 	"strings"
 
@@ -87,63 +86,36 @@ type CommHttpsCommPolResourceModel struct {
 	CommRsKeyRing                types.Set    `tfsdk:"key_ring"`
 }
 
-func NewCommHttpsCommPolResourceModel() *CommHttpsCommPolResourceModel {
-    return &CommHttpsCommPolResourceModel{
-		AccessControlAllowCredential: types.StringNull(),
-		AccessControlAllowOrigins:    types.StringNull(),
-		AdminSt:                      types.StringNull(),
-		Annotation:                   types.StringNull(),
-		CliOnlyMode:                  types.StringNull(),
-		ClientCertAuthState:          types.StringNull(),
-		Descr:                        types.StringNull(),
-		DhParam:                      types.StringNull(),
-		GlobalThrottleRate:           types.StringNull(),
-		GlobalThrottleSt:             types.StringNull(),
-		GlobalThrottleUnit:           types.StringNull(),
-		MaxRequestStatusCount:        types.StringNull(),
-		Name:                         types.StringNull(),
-		NameAlias:                    types.StringNull(),
-		NodeExporter:                 types.StringNull(),
-		Port:                         types.StringNull(),
-		Referer:                      types.StringNull(),
-		ServerHeader:                 types.StringNull(),
-		SslProtocols:                 types.SetNull(types.StringType),
-		ThrottleRate:                 types.StringNull(),
-		ThrottleSt:                   types.StringNull(),
-		VisoreAccess:                 types.StringNull(),
-		CommRsClientCertCA: types.SetNull(types.SetType{}),
-		CommRsKeyRing: types.SetNull(types.SetType{}),
-        
-    }
+func CommHttpsCommPolResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"access_control_allow_credential": types.StringType,
+		"access_control_allow_origins":    types.StringType,
+		"admin_st":                        types.StringType,
+		"annotation":                      types.StringType,
+		"cli_only_mode":                   types.StringType,
+		"client_cert_auth_state":          types.StringType,
+		"description":                     types.StringType,
+		"dh_param":                        types.StringType,
+		"global_throttle_rate":            types.StringType,
+		"global_throttle_st":              types.StringType,
+		"global_throttle_unit":            types.StringType,
+		"max_request_status_count":        types.StringType,
+		"name":                            types.StringType,
+		"name_alias":                      types.StringType,
+		"node_exporter":                   types.StringType,
+		"port":                            types.StringType,
+		"referer":                         types.StringType,
+		"server_header":                   types.StringType,
+		"ssl_protocols":                   types.SetType{ElemType: types.StringType},
+		"throttle_rate":                   types.StringType,
+		"throttle_st":                     types.StringType,
+		"visore_access":                   types.StringType,
+		"tp":                              types.SetType{ElemType: types.StringType},
+		"key_ring":                        types.SetType{ElemType: types.StringType},
+	}
 }
-
-func (m CommHttpsCommPolResourceModel) AttributeTypes() map[string]attr.Type {
-    return map[string]attr.Type{
-        "access_control_allow_credential": types.StringType,
-        "access_control_allow_origins":    types.StringType,
-        "admin_st":                        types.StringType,
-        "annotation":                      types.StringType,
-        "cli_only_mode":                   types.StringType,
-        "client_cert_auth_state":          types.StringType,
-        "description":                     types.StringType,
-        "dh_param":                        types.StringType,
-        "global_throttle_rate":            types.StringType,
-        "global_throttle_st":              types.StringType,
-        "global_throttle_unit":            types.StringType,
-        "max_request_status_count":        types.StringType,
-        "name":                            types.StringType,
-        "name_alias":                      types.StringType,
-        "node_exporter":                   types.StringType,
-        "port":                            types.StringType,
-        "referer":                         types.StringType,
-        "server_header":                   types.StringType,
-        "ssl_protocols":                   types.SetType{ElemType: types.StringType},
-        "throttle_rate":                   types.StringType,
-        "throttle_st":                     types.StringType,
-        "visore_access":                   types.StringType,
-        "tp":          					   types.SetType{ElemType: types.StringType},
-        "key_ring":                		   types.SetType{ElemType: types.StringType},
-    }
+func CommHttpsCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, CommHttpsCommPolResourceModelAttributeTypes())
 }
 
 // CommRsClientCertCACommHttpsResourceModel describes the resource data model for the children without relation ships.
@@ -153,21 +125,13 @@ type CommRsClientCertCACommHttpsResourceModel struct {
 }
 
 func CommRsClientCertCACommHttpsResourceModelAttributeTypes() map[string]attr.Type {
-    return map[string]attr.Type{
-        "annotation": types.StringType,
-        "target_dn":  types.StringType,
-    }
+	return map[string]attr.Type{
+		"annotation": types.StringType,
+		"target_dn":  types.StringType,
+	}
 }
-
 func CommRsClientCertCACommHttpsResourceModelElementType() attr.TypeWithAttributeTypes {
-    return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{},CommRsClientCertCACommHttpsResourceModelAttributeTypes())
-}
-
-func NewCommRsClientCertCACommHttpsResourceModel() *CommRsClientCertCACommHttpsResourceModel {
-    return &CommRsClientCertCACommHttpsResourceModel{
-        Annotation: types.StringNull(),
-		TDn:        types.StringNull(),
-    }
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, CommRsClientCertCACommHttpsResourceModelAttributeTypes())
 }
 
 // CommRsKeyRingCommHttpsResourceModel describes the resource data model for the children without relation ships.
@@ -176,20 +140,15 @@ type CommRsKeyRingCommHttpsResourceModel struct {
 	TnPkiKeyRingName types.String `tfsdk:"tn_pki_key_ring_name"`
 }
 
-func (m CommRsKeyRingCommHttpsResourceModel) AttributeTypes() map[string]attr.Type {
-    return map[string]attr.Type{
-        "annotation": types.StringType,
-        "tn_pki_key_ring_name":  types.StringType,
-    }
+func CommRsKeyRingCommHttpsResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"annotation":           types.StringType,
+		"tn_pki_key_ring_name": types.StringType,
+	}
 }
-
-func NewCommRsKeyRingCommHttpsResourceModel() *CommRsKeyRingCommHttpsResourceModel {
-    return &CommRsKeyRingCommHttpsResourceModel{
-        Annotation: types.StringNull(),
-		TnPkiKeyRingName:        types.StringNull(),
-    }
+func CommRsKeyRingCommHttpsResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, CommRsKeyRingCommHttpsResourceModelAttributeTypes())
 }
-
 
 // TagAnnotationCommPolResourceModel describes the resource data model for the children without relation ships.
 type TagAnnotationCommPolResourceModel struct {
@@ -197,10 +156,30 @@ type TagAnnotationCommPolResourceModel struct {
 	Value types.String `tfsdk:"value"`
 }
 
+func TagAnnotationCommPolResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+func TagAnnotationCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationCommPolResourceModelAttributeTypes())
+}
+
 // TagTagCommPolResourceModel describes the resource data model for the children without relation ships.
 type TagTagCommPolResourceModel struct {
 	Key   types.String `tfsdk:"key"`
 	Value types.String `tfsdk:"value"`
+}
+
+func TagTagCommPolResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+func TagTagCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagCommPolResourceModelAttributeTypes())
 }
 
 type CommPolIdentifier struct {
@@ -300,7 +279,6 @@ func (r *CommPolResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
-					SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				Validators: []validator.Set{
 					setvalidator.SizeAtMost(1),
@@ -499,7 +477,6 @@ func (r *CommPolResource) Schema(ctx context.Context, req resource.SchemaRequest
 							Computed:            true,
 							PlanModifiers: []planmodifier.Set{
 								setplanmodifier.UseStateForUnknown(),
-								SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							Validators: []validator.Set{
 								setvalidator.SizeAtMost(4),
@@ -548,8 +525,6 @@ func (r *CommPolResource) Schema(ctx context.Context, req resource.SchemaRequest
 							Computed:            true,
 							PlanModifiers: []planmodifier.Set{
 								setplanmodifier.UseStateForUnknown(),
-								SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-							
 							},
 							Validators: []validator.Set{
 								setvalidator.SizeAtMost(1),
@@ -561,7 +536,7 @@ func (r *CommPolResource) Schema(ctx context.Context, req resource.SchemaRequest
 										Computed: true,
 										PlanModifiers: []planmodifier.String{
 											stringplanmodifier.UseStateForUnknown(),
-											//SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+											SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 										},
 										MarkdownDescription: `The annotation of the Tp object.`,
 									},
@@ -570,7 +545,7 @@ func (r *CommPolResource) Schema(ctx context.Context, req resource.SchemaRequest
 										Computed: true,
 										PlanModifiers: []planmodifier.String{
 											stringplanmodifier.UseStateForUnknown(),
-											//SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+											SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 										},
 										MarkdownDescription: `The distinguished name of the target.`,
 									},
@@ -583,8 +558,6 @@ func (r *CommPolResource) Schema(ctx context.Context, req resource.SchemaRequest
 							Computed:            true,
 							PlanModifiers: []planmodifier.Set{
 								setplanmodifier.UseStateForUnknown(),
-								SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-								
 							},
 							Validators: []validator.Set{
 								setvalidator.SizeAtMost(1),
@@ -621,7 +594,6 @@ func (r *CommPolResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
-					
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -650,7 +622,6 @@ func (r *CommPolResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
-					
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -852,7 +823,7 @@ func (r *CommPolResource) ImportState(ctx context.Context, req resource.ImportSt
 }
 
 func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *CommPolResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full", data.Id.ValueString()), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "commPol,commHttps,tagAnnotation,tagTag,commRsClientCertCA,commRsKeyRing"), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -908,15 +879,15 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 			if data.StrictSecurityOnApicOOBSubnet.IsUnknown() {
 				data.StrictSecurityOnApicOOBSubnet = types.StringNull()
 			}
-			CommHttpsCommPolList := make([]CommHttpsCommPolResourceModel, 1)
-			var CommHttpsCommPol CommHttpsCommPolResourceModel
+			CommHttpsCommPol := CommHttpsCommPolResourceModel{}
+			CommHttpsCommPolList := make([]CommHttpsCommPolResourceModel, 0)
+			CommRsClientCertCACommHttps := CommRsClientCertCACommHttpsResourceModel{}
 			CommRsClientCertCACommHttpsList := make([]CommRsClientCertCACommHttpsResourceModel, 0)
-			//var CommRsClientCertCACommHttps2 CommRsClientCertCACommHttpsResourceModel
-			//var CommRsClientCertCAObject basetypes.ObjectValue
-			//CommRsClientCertCAObject:=types.ObjectNull(CommRsClientCertCACommHttpsResourceModelAttributeTypes())
-			CommRsKeyRingCommHttpsList := make([]CommRsKeyRingCommHttpsResourceModel, 1)
-			var CommRsKeyRingCommHttps CommRsKeyRingCommHttpsResourceModel
+			CommRsKeyRingCommHttps := CommRsKeyRingCommHttpsResourceModel{}
+			CommRsKeyRingCommHttpsList := make([]CommRsKeyRingCommHttpsResourceModel, 0)
+			TagAnnotationCommPol := TagAnnotationCommPolResourceModel{}
 			TagAnnotationCommPolList := make([]TagAnnotationCommPolResourceModel, 0)
+			TagTagCommPol := TagTagCommPolResourceModel{}
 			TagTagCommPolList := make([]TagTagCommPolResourceModel, 0)
 			_, ok := classReadInfo[0].(map[string]interface{})["children"]
 			if ok {
@@ -925,7 +896,6 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 					for childClassName, childClassDetails := range child.(map[string]interface{}) {
 						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
 						if childClassName == "commHttps" {
-							// CommHttpsCommPol := CommHttpsCommPolResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "accessControlAllowCredential" {
 									CommHttpsCommPol.AccessControlAllowCredential = basetypes.NewStringValue(childAttributeValue.(string))
@@ -985,12 +955,9 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 								}
 								if childAttributeName == "sslProtocols" {
 									sslProtocolsList := strings.Split(childAttributeValue.(string), ",")
-									var dataCommHttpsCommPol []CommHttpsCommPolResourceModel
-									data.CommHttps.ElementsAs(ctx, &dataCommHttpsCommPol, false)
-									for _, commHttps := range dataCommHttpsCommPol {
-										sslProtocolsSet, _ := types.SetValueFrom(ctx, commHttps.SslProtocols.ElementType(ctx), sslProtocolsList)
-										CommHttpsCommPol.SslProtocols = sslProtocolsSet
-									}
+									sslProtocolsSet, _ := types.SetValueFrom(ctx, basetypes.StringType{}, sslProtocolsList)
+									CommHttpsCommPol.SslProtocols = sslProtocolsSet
+
 								}
 								if childAttributeName == "throttleRate" {
 									CommHttpsCommPol.ThrottleRate = basetypes.NewStringValue(childAttributeValue.(string))
@@ -1001,85 +968,26 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 								if childAttributeName == "visoreAccess" {
 									CommHttpsCommPol.VisoreAccess = basetypes.NewStringValue(childAttributeValue.(string))
 								}
-								childClassesCommHttps := childClassDetails.(map[string]interface{})["children"].([]interface{})
-								
-								// for _, childCommHttps := range childClassesCommHttps {
-								// 	for childClassNameCommHttps, childClassDetailsCommHttps := range childCommHttps.(map[string]interface{}) {
-								// 		if childClassNameCommHttps == "commRsClientCertCA" {
-								// 			CommRsClientCertCACommHttps := CommRsClientCertCACommHttpsResourceModel{}
-											
-								// 			commRsClientCertCAchildAttributeValue := childClassDetailsCommHttps.(map[string]interface{})["attributes"].(map[string]interface{})
-								// 			for childAttributeName, childAttributeValue := range commRsClientCertCAchildAttributeValue {
-								// 				if childAttributeName == "annotation" {
-								// 					CommRsClientCertCACommHttps.Annotation = basetypes.NewStringValue(childAttributeValue.(string))
-								// 				}
-								// 				if childAttributeName == "tDn" {
-								// 					CommRsClientCertCACommHttps.TDn = basetypes.NewStringValue(childAttributeValue.(string))
-								// 				}
-								// 				if CommRsClientCertCACommHttps.Annotation.IsUnknown() {
-								// 					CommRsClientCertCACommHttps.Annotation = types.StringNull(),
-								// 				}
-								// 				if CommRsClientCertCACommHttps.TDn.IsUnknown() {
-								// 					CommRsClientCertCACommHttps.TDn = types.StringNull(),
-								// 				}
-								// 			}
-								// 			CommRsClientCertCACommHttpsList[0] = CommRsClientCertCACommHttps
-								// 			CommHttpsCommPol.CommRsClientCertCA, _ = types.SetValueFrom(ctx, CommHttpsCommPol.CommRsClientCertCA.ElementType(ctx), CommRsClientCertCACommHttpsList)
-								// 		}
 
-										
-
-										// type ObjectAsOptions struct {
-										// 	// UnhandledNullAsEmpty controls what happens when As needs to put a
-										// 	// null value in a type that has no way to preserve that distinction.
-										// 	// When set to true, the type's empty value will be used.  When set to
-										// 	// false, an error will be returned.
-										// 	UnhandledNullAsEmpty bool
-										
-										// 	// UnhandledUnknownAsEmpty controls what happens when As needs to put
-										// 	// an unknown value in a type that has no way to preserve that
-										// 	// distinction. When set to true, the type's empty value will be used.
-										// 	// When set to false, an error will be returned.
-										// 	UnhandledUnknownAsEmpty bool
-										// }
-										
-										for _, childCommHttps := range childClassesCommHttps {
-											for childClassNameCommHttps, childClassDetailsCommHttps := range childCommHttps.(map[string]interface{}) {
-												if childClassNameCommHttps == "commRsClientCertCA" {
-													var CommRsClientCertCACommHttps CommRsClientCertCACommHttpsResourceModel
-													commRsClientCertCAchildAttributes := childClassDetailsCommHttps.(map[string]interface{})["attributes"].(map[string]interface{})
-
-													// Set the known attributes.
-													if annotation, ok := commRsClientCertCAchildAttributes["annotation"].(string); ok {
-														CommRsClientCertCACommHttps.Annotation = basetypes.NewStringValue(annotation)
-													} 
-													if tDn, ok := commRsClientCertCAchildAttributes["tDn"].(string); ok {
-														CommRsClientCertCACommHttps.TDn = basetypes.NewStringValue(tDn)
-													} 
-													
-													//CommRsClientCertCAObject, _ = types.ObjectValueFrom(ctx, CommRsClientCertCACommHttpsResourceModelAttributeTypes(), CommRsClientCertCACommHttps)
-													CommRsClientCertCACommHttpsList = append(CommRsClientCertCACommHttpsList, CommRsClientCertCACommHttps)
-													
+							}
+							_, childrenOfCommHttpsExist := childClassDetails.(map[string]interface{})["children"]
+							if childrenOfCommHttpsExist {
+								childClassesOfCommHttps := childClassDetails.(map[string]interface{})["children"].([]interface{})
+								for _, childCommHttps := range childClassesOfCommHttps {
+									for childClassNameCommHttps, childClassDetailsCommHttps := range childCommHttps.(map[string]interface{}) {
+										if childClassNameCommHttps == "commRsClientCertCA" {
+											commRsClientCertCAchildAttributeValue := childClassDetailsCommHttps.(map[string]interface{})["attributes"].(map[string]interface{})
+											for childAttributeName, childAttributeValue := range commRsClientCertCAchildAttributeValue {
+												if childAttributeName == "annotation" {
+													CommRsClientCertCACommHttps.Annotation = basetypes.NewStringValue(childAttributeValue.(string))
 												}
-												
-												// if CommHttpsCommPol.CommRsClientCertCA.IsUnknown() || CommHttpsCommPol.CommRsClientCertCA.IsNull() {
-												
-												// 	CommHttpsCommPol.CommRsClientCertCA = types.ObjectNull(CommRsClientCertCACommHttps.AttributeTypes())
-												// }
-											
-										// var dataCommRsClientCertCACommHttpsCommPol []CommHttpsCommPolResourceModel
-										// data.CommHttps.ElementsAs(ctx, &dataCommRsClientCertCACommHttpsCommPol, false)
-										// for _, commHttps := range dataCommRsClientCertCACommHttpsCommPol {
-										// 	// CommRsClientCertCAObject, _ := types.SetValueFrom(ctx, commHttps.CommRsClientCertCA.ElementType(ctx), CommRsClientCertCACommHttpsList)
-										// 	// CommHttpsCommPol.CommRsClientCertCA = CommRsClientCertCAObject
-										// 	log.Printf("Here %v",commHttps.CommRsClientCertCA.ElementType(ctx))
-										// 	if commHttps.CommRsClientCertCA.IsUnknown() || commHttps.CommRsClientCertCA.IsNull() {
-												
-										// 		CommHttpsCommPol.CommRsClientCertCA = types.SetNull(commHttps.CommRsClientCertCA.ElementType(ctx))
-										// 	}
-										// }
+												if childAttributeName == "tDn" {
+													CommRsClientCertCACommHttps.TDn = basetypes.NewStringValue(childAttributeValue.(string))
+												}
+											}
+											CommRsClientCertCACommHttpsList = append(CommRsClientCertCACommHttpsList, CommRsClientCertCACommHttps)
+										}
 										if childClassNameCommHttps == "commRsKeyRing" {
-											// CommRsKeyRingCommHttps := CommRsKeyRingCommHttpsResourceModel{}
 											commRsKeyRingchildAttributeValue := childClassDetailsCommHttps.(map[string]interface{})["attributes"].(map[string]interface{})
 											for childAttributeName, childAttributeValue := range commRsKeyRingchildAttributeValue {
 												if childAttributeName == "annotation" {
@@ -1088,146 +996,27 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 												if childAttributeName == "tnPkiKeyRingName" {
 													CommRsKeyRingCommHttps.TnPkiKeyRingName = basetypes.NewStringValue(childAttributeValue.(string))
 												}
-												// if CommRsKeyRingCommHttps.Annotation.IsUnknown() {
-												// 	CommRsKeyRingCommHttps.Annotation = types.StringNull(),
-												// }
-												// if CommRsKeyRingCommHttps.TnPkiKeyRingName.IsUnknown() {
-												// 	CommRsKeyRingCommHttps.TnPkiKeyRingName = types.StringNull(),
-												// }
 											}
-											CommRsKeyRingCommHttpsList[0] = CommRsKeyRingCommHttps
-											//CommHttpsCommPol.CommRsKeyRing, _ = types.SetValueFrom(ctx, CommHttpsCommPol.CommRsKeyRing.ElementType(ctx), CommRsKeyRingCommHttpsList)
+											CommRsKeyRingCommHttpsList = append(CommRsKeyRingCommHttpsList, CommRsKeyRingCommHttps)
 										}
-										// var dataCommRsKeyRingCommHttpsCommPol []CommHttpsCommPolResourceModel
-										// data.CommHttps.ElementsAs(ctx, &dataCommRsKeyRingCommHttpsCommPol, false)
-										// for _, commHttps := range dataCommRsKeyRingCommHttpsCommPol {
-										// 	CommRsKeyRingObject, _ := types.SetValueFrom(ctx, commHttps.CommRsKeyRing.ElementType(ctx), CommRsKeyRingCommHttpsList)
-										// 	CommHttpsCommPol.CommRsKeyRing = CommRsKeyRingObject
-										// 	if commHttps.CommRsKeyRing.IsUnknown() {
-										// 		CommHttpsCommPol.CommRsKeyRing = types.SetNull(commHttps.CommRsKeyRing.ElementType(ctx))
-										// 	}
-										// }
 									}
 								}
 							}
-
-							// CommRsClientCertCAObject,diag:=types.SetValueFrom(ctx,types.StringType,CommRsClientCertCACommHttpsList)
-							// CommHttpsCommPol.CommRsClientCertCA=CommRsClientCertCAObject
-							//log.Printf("HERE from set %v %v",CommHttpsCommPol.CommRsClientCertCA, diag)
-							//basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{},CommRsClientCertCACommHttpsResourceModelAttributeTypes())
 							if len(CommRsClientCertCACommHttpsList) > 0 {
-								CommRsClientCertCASet,_:=types.SetValueFrom(ctx,CommRsClientCertCACommHttpsResourceModelElementType(),CommRsClientCertCACommHttpsList)
-								CommHttpsCommPol.CommRsClientCertCA=CommRsClientCertCASet
-							} else{
-								CommHttpsCommPol.CommRsClientCertCA=types.SetNull(CommRsClientCertCACommHttpsResourceModelElementType())
+								CommRsClientCertCASet, _ := types.SetValueFrom(ctx, CommRsClientCertCACommHttpsResourceModelElementType(), CommRsClientCertCACommHttpsList)
+								CommHttpsCommPol.CommRsClientCertCA = CommRsClientCertCASet
+							} else {
+								CommHttpsCommPol.CommRsClientCertCA = types.SetNull(CommRsClientCertCACommHttpsResourceModelElementType())
 							}
-							// log.Printf("here CA WithAttr %v",CommRsClientCertCACommHttpsResourceModelElementType())
-							// if !CommRsClientCertCAObject.IsNull(){
-							// 	log.Printf("here CA inside %v %v %v",CommRsClientCertCAObject,CommRsClientCertCAObject.IsNull(),CommRsClientCertCAObject.IsUnknown())
-							// CommHttpsCommPol.CommRsClientCertCA,_=types.SetValue(CommRsClientCertCAObject.Type(ctx),[]attr.Value{CommRsClientCertCAObject})
-							// } else{
-							// 	log.Printf("here CA else %v %v %v",CommRsClientCertCAObject,CommRsClientCertCAObject.IsNull(),CommRsClientCertCAObject.IsUnknown())
-							// 	CommHttpsCommPol.CommRsClientCertCA=types.SetNull(CommRsClientCertCAObject.Type(ctx))
-							// }
-							// if !areAllStringFieldsEmpty(*CommRsClientCertCACommHttps) {
-							// CommHttpsCommPol.CommRsClientCertCA,_=types.SetValue(CommRsClientCertCAObject.Type(ctx),[]attr.Value{CommRsClientCertCAObject})
-							// log.Printf("here ca0 %v",CommHttpsCommPol.CommRsClientCertCA)
-							// } else{
-							// 	CommHttpsCommPol.CommRsClientCertCA=types.SetNull(CommRsClientCertCAObject.Type(ctx))
-							// 	log.Printf("here ca1 %v",CommHttpsCommPol.CommRsClientCertCA)
-							// }
-							CommRsKeyRingObject, _ := types.ObjectValueFrom(ctx, CommRsKeyRingCommHttps.AttributeTypes(), CommRsKeyRingCommHttpsList[0])
-							CommHttpsCommPol.CommRsKeyRing,_=types.SetValue(CommRsKeyRingObject.Type(ctx),[]attr.Value{CommRsKeyRingObject})
-							// if !areAllStringFieldsEmpty(*CommRsKeyRingCommHttps) {
-							// CommHttpsCommPol.CommRsKeyRing,_=types.SetValue(CommRsKeyRingObject.Type(ctx),[]attr.Value{CommRsKeyRingObject})
-							// log.Printf("here kr0 %v",CommHttpsCommPol.CommRsKeyRing)
-							// } else{
-							// 	CommHttpsCommPol.CommRsKeyRing=types.SetNull(CommRsKeyRingObject.Type(ctx))
-							// 	log.Printf("here kr1 %v",CommHttpsCommPol.CommRsKeyRing)
-							// }
-
-							
-							
-							// if CommHttpsCommPol.CommRsClientCertCA.IsUnknown() || CommHttpsCommPol.CommRsClientCertCA.IsNull() {
-							// 	log.Printf("HERE in")
-							// 	log.Printf("HERE CertCA %v %v %v",CommHttpsCommPol.CommRsClientCertCA,CommHttpsCommPol.CommRsClientCertCA.IsUnknown(), CommHttpsCommPol.CommRsClientCertCA.IsNull())
-							// 		CommHttpsCommPol.CommRsClientCertCA = basetypes.NewSetNull(CommRsKeyRingObject.Type(ctx))
-							// }
-							//log.Printf("HERE CertCA %v %v",CommHttpsCommPol.CommRsClientCertCA, CommRsClientCertCAObject)
-							//log.Printf("HERE KeyRIng %v %v",CommHttpsCommPol.CommRsKeyRing,CommRsKeyRingObject)
-							// if CommHttpsCommPol.AccessControlAllowCredential.IsUnknown() {
-							// 	CommHttpsCommPol.AccessControlAllowCredential = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.AccessControlAllowOrigins.IsUnknown() {
-							// 	CommHttpsCommPol.AccessControlAllowOrigins = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.AdminSt.IsUnknown() {
-							// 	CommHttpsCommPol.AdminSt = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.Annotation.IsUnknown() {
-							// 	CommHttpsCommPol.Annotation = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.CliOnlyMode.IsUnknown() {
-							// 	CommHttpsCommPol.CliOnlyMode = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.ClientCertAuthState.IsUnknown() {
-							// 	CommHttpsCommPol.ClientCertAuthState = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.Descr.IsUnknown() {
-							// 	CommHttpsCommPol.Descr = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.DhParam.IsUnknown() {
-							// 	CommHttpsCommPol.DhParam = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.GlobalThrottleRate.IsUnknown() {
-							// 	CommHttpsCommPol.GlobalThrottleRate = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.GlobalThrottleSt.IsUnknown() {
-							// 	CommHttpsCommPol.GlobalThrottleSt = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.GlobalThrottleUnit.IsUnknown() {
-							// 	CommHttpsCommPol.GlobalThrottleUnit = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.MaxRequestStatusCount.IsUnknown() {
-							// 	CommHttpsCommPol.MaxRequestStatusCount = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.Name.IsUnknown() {
-							// 	CommHttpsCommPol.Name = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.NameAlias.IsUnknown() {
-							// 	CommHttpsCommPol.NameAlias = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.NodeExporter.IsUnknown() {
-							// 	CommHttpsCommPol.NodeExporter = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.Referer.IsNull() {
-							// 	CommHttpsCommPol.Referer = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.ServerHeader.IsUnknown() {
-							// 	CommHttpsCommPol.ServerHeader = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.SslProtocols.IsUnknown() {
-							// 	var datasslProtocolsCommHttpsCommPol []CommHttpsCommPolResourceModel
-							// 	data.CommHttps.ElementsAs(ctx, &datasslProtocolsCommHttpsCommPol, false)
-							// 	for _, commHttps := range datasslProtocolsCommHttpsCommPol {
-							// 		if CommHttpsCommPol.SslProtocols.IsUnknown() {
-							// 			CommHttpsCommPol.SslProtocols = types.SetNull(commHttps.SslProtocols.ElementType(ctx))
-							// 		}
-							// 	}
-							// }
-							// if CommHttpsCommPol.ThrottleRate.IsUnknown() {
-							// 	CommHttpsCommPol.ThrottleRate = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.ThrottleSt.IsUnknown() {
-							// 	CommHttpsCommPol.ThrottleSt = types.StringNull(),
-							// }
-							// if CommHttpsCommPol.VisoreAccess.IsUnknown() {
-							// 	CommHttpsCommPol.VisoreAccess = types.StringNull(),
-							// }
-							CommHttpsCommPolList[0] = CommHttpsCommPol
+							if len(CommRsKeyRingCommHttpsList) > 0 {
+								CommRsKeyRingSet, _ := types.SetValueFrom(ctx, CommRsKeyRingCommHttpsResourceModelElementType(), CommRsKeyRingCommHttpsList)
+								CommHttpsCommPol.CommRsKeyRing = CommRsKeyRingSet
+							} else {
+								CommHttpsCommPol.CommRsKeyRing = types.SetNull(CommRsKeyRingCommHttpsResourceModelElementType())
+							}
+							CommHttpsCommPolList = append(CommHttpsCommPolList, CommHttpsCommPol)
 						}
 						if childClassName == "tagAnnotation" {
-							TagAnnotationCommPol := TagAnnotationCommPolResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagAnnotationCommPol.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -1235,17 +1024,11 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 								if childAttributeName == "value" {
 									TagAnnotationCommPol.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
-							}
-							if TagAnnotationCommPol.Key.IsUnknown() {
-								TagAnnotationCommPol.Key = types.StringNull()
-							}
-							if TagAnnotationCommPol.Value.IsUnknown() {
-								TagAnnotationCommPol.Value = types.StringNull()
+
 							}
 							TagAnnotationCommPolList = append(TagAnnotationCommPolList, TagAnnotationCommPol)
 						}
 						if childClassName == "tagTag" {
-							TagTagCommPol := TagTagCommPolResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagTagCommPol.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -1253,12 +1036,7 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 								if childAttributeName == "value" {
 									TagTagCommPol.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
-							}
-							if TagTagCommPol.Key.IsUnknown() {
-								TagTagCommPol.Key = types.StringNull()
-							}
-							if TagTagCommPol.Value.IsUnknown() {
-								TagTagCommPol.Value = types.StringNull()
+
 							}
 							TagTagCommPolList = append(TagTagCommPolList, TagTagCommPol)
 						}
@@ -1266,16 +1044,10 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 				}
 			}
 			if len(CommHttpsCommPolList) > 0 {
-				commHttpsSet, _ := types.SetValueFrom(ctx, data.CommHttps.ElementType(ctx),CommHttpsCommPolList)
-				data.CommHttps=commHttpsSet
-				// commHttpsSet, diags := types.ObjectValueFrom(ctx, CommHttpsCommPol.AttributeTypes(), CommHttpsCommPolList[0])
-				log.Printf("HERE %v %v %v",CommHttpsCommPolList,commHttpsSet, diags)
-				
-				// data.CommHttps = types.SetValueMust(commHttpsSet.Type(ctx),[]attr.Value{commHttpsSet})
-				log.Printf("HERE  %v %v %v",commHttpsSet,data.CommHttps,diags)
+				commHttpsSet, _ := types.SetValueFrom(ctx, data.CommHttps.ElementType(ctx), CommHttpsCommPolList)
+				data.CommHttps = commHttpsSet
 			}
 			if len(TagAnnotationCommPolList) > 0 {
-				log.Printf("HERE TAG %v",data.TagAnnotation.ElementType(ctx))
 				tagAnnotationSet, _ := types.SetValueFrom(ctx, data.TagAnnotation.ElementType(ctx), TagAnnotationCommPolList)
 				data.TagAnnotation = tagAnnotationSet
 			}
@@ -1310,24 +1082,11 @@ func setCommPolId(ctx context.Context, data *CommPolResourceModel) {
 }
 
 func getCommPolCommHttpsChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *CommPolResourceModel, commHttpsPlan, commHttpsState []CommHttpsCommPolResourceModel) []map[string]interface{} {
-	type childMapType struct {
-		Attributes map[string]interface{}   `json:"attributes"`
-		Children   []map[string]interface{} `json:"children"`
-	}
-	childMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
-	CommHttpsChildren := make([]map[string]interface{}, 0)
-	commRsClientCertCAChildMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
-	commRsKeyRingChildMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
+	childMap := newAciObjectType()
 	childPayloads := []map[string]interface{}{}
+	commRsClientCertCAChildMap := newAciObjectType()
+	commRsKeyRingChildMap := newAciObjectType()
+	CommHttpsChildren := make([]map[string]interface{}, 0)
 	if !data.CommHttps.IsUnknown() {
 		for _, commHttps := range commHttpsPlan {
 			if !commHttps.AccessControlAllowCredential.IsUnknown() {
@@ -1400,18 +1159,14 @@ func getCommPolCommHttpsChildPayloads(ctx context.Context, diags *diag.Diagnosti
 			if !commHttps.VisoreAccess.IsUnknown() {
 				childMap.Attributes["visoreAccess"] = commHttps.VisoreAccess.ValueString()
 			}
-			var commRsClientCertCAPlan, commRsClientCertCAState []CommRsClientCertCACommHttpsResourceModel
-			for i, commHttps := range commHttpsPlan {
-				commHttps.CommRsClientCertCA.ElementsAs(ctx, &commRsClientCertCAPlan, false)
-				commHttpsPlan[i].CommRsClientCertCA, _ = types.SetValueFrom(ctx, commHttps.CommRsClientCertCA.ElementType(ctx), commRsClientCertCAPlan)
-			}
-			for i, commHttps := range commHttpsState {
-				commHttps.CommRsClientCertCA.ElementsAs(ctx, &commRsClientCertCAState, false)
-				commHttpsState[i].CommRsClientCertCA, _ = types.SetValueFrom(ctx, commHttps.CommRsClientCertCA.ElementType(ctx), commRsClientCertCAState)
-			}
-			if len(commRsClientCertCAPlan) == 0 && len(commRsClientCertCAState) == 1 {
-				commRsClientCertCAChildMap.Attributes["status"] = "deleted"
-				CommHttpsChildren = append(CommHttpsChildren, map[string]interface{}{"commRsClientCertCA": commRsClientCertCAChildMap})
+			var commRsClientCertCAPlan []CommRsClientCertCACommHttpsResourceModel
+			commHttps.CommRsClientCertCA.ElementsAs(ctx, &commRsClientCertCAPlan, false)
+			for _, commHttpscommRsClientCertCA := range commHttpsState {
+				if len(commRsClientCertCAPlan) == 0 && len(commHttpscommRsClientCertCA.CommRsClientCertCA.Elements()) == 1 {
+					commRsClientCertCAChildMap := newAciObjectType()
+					commRsClientCertCAChildMap.Attributes["status"] = "deleted"
+					CommHttpsChildren = append(CommHttpsChildren, map[string]interface{}{"commRsClientCertCA": commRsClientCertCAChildMap})
+				}
 			}
 			if !commHttps.CommRsClientCertCA.IsUnknown() {
 				for _, commRsClientCertCA := range commRsClientCertCAPlan {
@@ -1426,22 +1181,16 @@ func getCommPolCommHttpsChildPayloads(ctx context.Context, diags *diag.Diagnosti
 					CommHttpsChildren = append(CommHttpsChildren, map[string]interface{}{"commRsClientCertCA": commRsClientCertCAChildMap})
 				}
 			}
-			//childMap.Children = CommHttpsChildren
-			var commRsKeyRingPlan, commRsKeyRingState []CommRsKeyRingCommHttpsResourceModel
-			for i, commHttps := range commHttpsPlan {
-				commHttps.CommRsKeyRing.ElementsAs(ctx, &commRsKeyRingPlan, false)
-				commHttpsPlan[i].CommRsKeyRing, _ = types.SetValueFrom(ctx, commHttps.CommRsKeyRing.ElementType(ctx), commRsKeyRingPlan)
-			}
-			for i, commHttps := range commHttpsState {
-				commHttps.CommRsKeyRing.ElementsAs(ctx, &commRsKeyRingState, false)
-				commHttpsState[i].CommRsKeyRing, _ = types.SetValueFrom(ctx, commHttps.CommRsKeyRing.ElementType(ctx), commRsKeyRingState)
-			}
-			if len(commRsKeyRingPlan) == 0 && len(commRsKeyRingState) == 1 {
-				diags.AddError(
-					"CommRsKeyRing object cannot be deleted",
-					"deletion of child is only possible upon deletion of the parent",
-				)
-				return nil
+			var commRsKeyRingPlan []CommRsKeyRingCommHttpsResourceModel
+			commHttps.CommRsKeyRing.ElementsAs(ctx, &commRsKeyRingPlan, false)
+			for _, commHttpscommRsKeyRing := range commHttpsState {
+				if len(commRsKeyRingPlan) == 0 && len(commHttpscommRsKeyRing.CommRsKeyRing.Elements()) == 1 {
+					diags.AddError(
+						"CommRsKeyRing object cannot be deleted",
+						"deletion of child is only possible upon deletion of the parent",
+					)
+					return nil
+				}
 			}
 			if !commHttps.CommRsKeyRing.IsUnknown() {
 				for _, commRsKeyRing := range commRsKeyRingPlan {
@@ -1474,14 +1223,7 @@ func getCommPolCommHttpsChildPayloads(ctx context.Context, diags *diag.Diagnosti
 }
 
 func getCommPolTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *CommPolResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationCommPolResourceModel) []map[string]interface{} {
-	type childMapType struct {
-		Attributes map[string]interface{}   `json:"attributes"`
-		Children   []map[string]interface{} `json:"children"`
-	}
-	childMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
+	childMap := newAciObjectType()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
@@ -1506,12 +1248,10 @@ func getCommPolTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagn
 				}
 			}
 			if delete {
-				childMap := childMapType{
-					Attributes: make(map[string]interface{}),
-				}
-				childMap.Attributes["status"] = "deleted"
-				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
+				tagAnnotationChildMapForDelete := newAciObjectType()
+				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
+				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
 			}
 		}
 	} else {
@@ -1522,14 +1262,7 @@ func getCommPolTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagn
 }
 
 func getCommPolTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *CommPolResourceModel, tagTagPlan, tagTagState []TagTagCommPolResourceModel) []map[string]interface{} {
-	type childMapType struct {
-		Attributes map[string]interface{}   `json:"attributes"`
-		Children   []map[string]interface{} `json:"children"`
-	}
-	childMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
+	childMap := newAciObjectType()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
@@ -1554,12 +1287,10 @@ func getCommPolTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics,
 				}
 			}
 			if delete {
-				childMap := childMapType{
-					Attributes: make(map[string]interface{}),
-				}
-				childMap.Attributes["status"] = "deleted"
-				childMap.Attributes["key"] = tagTag.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
+				tagTagChildMapForDelete := newAciObjectType()
+				tagTagChildMapForDelete.Attributes["status"] = "deleted"
+				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
 			}
 		}
 	} else {

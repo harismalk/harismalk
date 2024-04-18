@@ -14,6 +14,7 @@ import (
 	"github.com/ciscoecosystem/aci-go-client/v2/client"
 	"github.com/ciscoecosystem/aci-go-client/v2/container"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -63,10 +64,30 @@ type TagAnnotationL3extConsLblResourceModel struct {
 	Value types.String `tfsdk:"value"`
 }
 
+func TagAnnotationL3extConsLblResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+func TagAnnotationL3extConsLblResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationL3extConsLblResourceModelAttributeTypes())
+}
+
 // TagTagL3extConsLblResourceModel describes the resource data model for the children without relation ships.
 type TagTagL3extConsLblResourceModel struct {
 	Key   types.String `tfsdk:"key"`
 	Value types.String `tfsdk:"value"`
+}
+
+func TagTagL3extConsLblResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+func TagTagL3extConsLblResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagL3extConsLblResourceModelAttributeTypes())
 }
 
 type L3extConsLblIdentifier struct {
@@ -186,7 +207,6 @@ func (r *L3extConsLblResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
-					SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -215,7 +235,6 @@ func (r *L3extConsLblResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
-					SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -411,7 +430,7 @@ func (r *L3extConsLblResource) ImportState(ctx context.Context, req resource.Imp
 }
 
 func getAndSetL3extConsLblAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *L3extConsLblResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full", data.Id.ValueString()), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "l3extConsLbl,tagAnnotation,tagTag"), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -474,7 +493,9 @@ func getAndSetL3extConsLblAttributes(ctx context.Context, diags *diag.Diagnostic
 			if data.Tag.IsUnknown() {
 				data.Tag = types.StringNull()
 			}
+			TagAnnotationL3extConsLbl := TagAnnotationL3extConsLblResourceModel{}
 			TagAnnotationL3extConsLblList := make([]TagAnnotationL3extConsLblResourceModel, 0)
+			TagTagL3extConsLbl := TagTagL3extConsLblResourceModel{}
 			TagTagL3extConsLblList := make([]TagTagL3extConsLblResourceModel, 0)
 			_, ok := classReadInfo[0].(map[string]interface{})["children"]
 			if ok {
@@ -483,7 +504,6 @@ func getAndSetL3extConsLblAttributes(ctx context.Context, diags *diag.Diagnostic
 					for childClassName, childClassDetails := range child.(map[string]interface{}) {
 						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
 						if childClassName == "tagAnnotation" {
-							TagAnnotationL3extConsLbl := TagAnnotationL3extConsLblResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagAnnotationL3extConsLbl.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -491,17 +511,11 @@ func getAndSetL3extConsLblAttributes(ctx context.Context, diags *diag.Diagnostic
 								if childAttributeName == "value" {
 									TagAnnotationL3extConsLbl.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
-							}
-							if TagAnnotationL3extConsLbl.Key.IsUnknown() {
-								TagAnnotationL3extConsLbl.Key = types.StringNull()
-							}
-							if TagAnnotationL3extConsLbl.Value.IsUnknown() {
-								TagAnnotationL3extConsLbl.Value = types.StringNull()
+
 							}
 							TagAnnotationL3extConsLblList = append(TagAnnotationL3extConsLblList, TagAnnotationL3extConsLbl)
 						}
 						if childClassName == "tagTag" {
-							TagTagL3extConsLbl := TagTagL3extConsLblResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagTagL3extConsLbl.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -509,12 +523,7 @@ func getAndSetL3extConsLblAttributes(ctx context.Context, diags *diag.Diagnostic
 								if childAttributeName == "value" {
 									TagTagL3extConsLbl.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
-							}
-							if TagTagL3extConsLbl.Key.IsUnknown() {
-								TagTagL3extConsLbl.Key = types.StringNull()
-							}
-							if TagTagL3extConsLbl.Value.IsUnknown() {
-								TagTagL3extConsLbl.Value = types.StringNull()
+
 							}
 							TagTagL3extConsLblList = append(TagTagL3extConsLblList, TagTagL3extConsLbl)
 						}
@@ -568,14 +577,7 @@ func setL3extConsLblId(ctx context.Context, data *L3extConsLblResourceModel) {
 }
 
 func getL3extConsLblTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *L3extConsLblResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationL3extConsLblResourceModel) []map[string]interface{} {
-	type childMapType struct {
-		Attributes map[string]interface{}   `json:"attributes"`
-		Children   []map[string]interface{} `json:"children"`
-	}
-	childMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
+	childMap := newAciObjectType()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
@@ -600,12 +602,10 @@ func getL3extConsLblTagAnnotationChildPayloads(ctx context.Context, diags *diag.
 				}
 			}
 			if delete {
-				childMap := childMapType{
-					Attributes: make(map[string]interface{}),
-				}
-				childMap.Attributes["status"] = "deleted"
-				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
+				tagAnnotationChildMapForDelete := newAciObjectType()
+				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
+				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
 			}
 		}
 	} else {
@@ -616,14 +616,7 @@ func getL3extConsLblTagAnnotationChildPayloads(ctx context.Context, diags *diag.
 }
 
 func getL3extConsLblTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *L3extConsLblResourceModel, tagTagPlan, tagTagState []TagTagL3extConsLblResourceModel) []map[string]interface{} {
-	type childMapType struct {
-		Attributes map[string]interface{}   `json:"attributes"`
-		Children   []map[string]interface{} `json:"children"`
-	}
-	childMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
+	childMap := newAciObjectType()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
@@ -648,12 +641,10 @@ func getL3extConsLblTagTagChildPayloads(ctx context.Context, diags *diag.Diagnos
 				}
 			}
 			if delete {
-				childMap := childMapType{
-					Attributes: make(map[string]interface{}),
-				}
-				childMap.Attributes["status"] = "deleted"
-				childMap.Attributes["key"] = tagTag.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
+				tagTagChildMapForDelete := newAciObjectType()
+				tagTagChildMapForDelete.Attributes["status"] = "deleted"
+				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
 			}
 		}
 	} else {

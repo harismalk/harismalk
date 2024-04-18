@@ -103,6 +103,7 @@ var templateFuncs = template.FuncMap{
 	"getTestConfigVariableName":    GetTestConfigVariableName,
 	"getDevnetDocForClass":         GetDevnetDocForClass,
 	"lowerFirstCharacter":          LowerFirstCharacter,
+	"isListEmpty":                  func(stringList []string) bool { return len(stringList) == 0 },
 }
 
 // Global variables used for unique resource name setting based on label from meta data

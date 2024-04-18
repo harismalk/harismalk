@@ -14,6 +14,7 @@ import (
 	"github.com/ciscoecosystem/aci-go-client/v2/client"
 	"github.com/ciscoecosystem/aci-go-client/v2/container"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -61,16 +62,47 @@ type MgmtRsOoBConsMgmtInstPResourceModel struct {
 	TnVzOOBBrCPName types.String `tfsdk:"out_of_band_contract_name"`
 }
 
+func MgmtRsOoBConsMgmtInstPResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"annotation":                types.StringType,
+		"priority":                  types.StringType,
+		"out_of_band_contract_name": types.StringType,
+	}
+}
+func MgmtRsOoBConsMgmtInstPResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, MgmtRsOoBConsMgmtInstPResourceModelAttributeTypes())
+}
+
 // TagAnnotationMgmtInstPResourceModel describes the resource data model for the children without relation ships.
 type TagAnnotationMgmtInstPResourceModel struct {
 	Key   types.String `tfsdk:"key"`
 	Value types.String `tfsdk:"value"`
 }
 
+func TagAnnotationMgmtInstPResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+func TagAnnotationMgmtInstPResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationMgmtInstPResourceModelAttributeTypes())
+}
+
 // TagTagMgmtInstPResourceModel describes the resource data model for the children without relation ships.
 type TagTagMgmtInstPResourceModel struct {
 	Key   types.String `tfsdk:"key"`
 	Value types.String `tfsdk:"value"`
+}
+
+func TagTagMgmtInstPResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+func TagTagMgmtInstPResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagMgmtInstPResourceModelAttributeTypes())
 }
 
 type MgmtInstPIdentifier struct {
@@ -152,7 +184,6 @@ func (r *MgmtInstPResource) Schema(ctx context.Context, req resource.SchemaReque
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
-					SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -194,7 +225,6 @@ func (r *MgmtInstPResource) Schema(ctx context.Context, req resource.SchemaReque
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
-					SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -223,7 +253,6 @@ func (r *MgmtInstPResource) Schema(ctx context.Context, req resource.SchemaReque
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
-					SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -425,7 +454,7 @@ func (r *MgmtInstPResource) ImportState(ctx context.Context, req resource.Import
 }
 
 func getAndSetMgmtInstPAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *MgmtInstPResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full", data.Id.ValueString()), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "mgmtInstP,mgmtRsOoBCons,tagAnnotation,tagTag"), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -469,8 +498,11 @@ func getAndSetMgmtInstPAttributes(ctx context.Context, diags *diag.Diagnostics, 
 			if data.Prio.IsUnknown() {
 				data.Prio = types.StringNull()
 			}
+			MgmtRsOoBConsMgmtInstP := MgmtRsOoBConsMgmtInstPResourceModel{}
 			MgmtRsOoBConsMgmtInstPList := make([]MgmtRsOoBConsMgmtInstPResourceModel, 0)
+			TagAnnotationMgmtInstP := TagAnnotationMgmtInstPResourceModel{}
 			TagAnnotationMgmtInstPList := make([]TagAnnotationMgmtInstPResourceModel, 0)
+			TagTagMgmtInstP := TagTagMgmtInstPResourceModel{}
 			TagTagMgmtInstPList := make([]TagTagMgmtInstPResourceModel, 0)
 			_, ok := classReadInfo[0].(map[string]interface{})["children"]
 			if ok {
@@ -479,7 +511,6 @@ func getAndSetMgmtInstPAttributes(ctx context.Context, diags *diag.Diagnostics, 
 					for childClassName, childClassDetails := range child.(map[string]interface{}) {
 						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
 						if childClassName == "mgmtRsOoBCons" {
-							MgmtRsOoBConsMgmtInstP := MgmtRsOoBConsMgmtInstPResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "annotation" {
 									MgmtRsOoBConsMgmtInstP.Annotation = basetypes.NewStringValue(childAttributeValue.(string))
@@ -490,20 +521,11 @@ func getAndSetMgmtInstPAttributes(ctx context.Context, diags *diag.Diagnostics, 
 								if childAttributeName == "tnVzOOBBrCPName" {
 									MgmtRsOoBConsMgmtInstP.TnVzOOBBrCPName = basetypes.NewStringValue(childAttributeValue.(string))
 								}
-							}
-							if MgmtRsOoBConsMgmtInstP.Annotation.IsUnknown() {
-								MgmtRsOoBConsMgmtInstP.Annotation = types.StringNull()
-							}
-							if MgmtRsOoBConsMgmtInstP.Prio.IsUnknown() {
-								MgmtRsOoBConsMgmtInstP.Prio = types.StringNull()
-							}
-							if MgmtRsOoBConsMgmtInstP.TnVzOOBBrCPName.IsUnknown() {
-								MgmtRsOoBConsMgmtInstP.TnVzOOBBrCPName = types.StringNull()
+
 							}
 							MgmtRsOoBConsMgmtInstPList = append(MgmtRsOoBConsMgmtInstPList, MgmtRsOoBConsMgmtInstP)
 						}
 						if childClassName == "tagAnnotation" {
-							TagAnnotationMgmtInstP := TagAnnotationMgmtInstPResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagAnnotationMgmtInstP.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -511,17 +533,11 @@ func getAndSetMgmtInstPAttributes(ctx context.Context, diags *diag.Diagnostics, 
 								if childAttributeName == "value" {
 									TagAnnotationMgmtInstP.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
-							}
-							if TagAnnotationMgmtInstP.Key.IsUnknown() {
-								TagAnnotationMgmtInstP.Key = types.StringNull()
-							}
-							if TagAnnotationMgmtInstP.Value.IsUnknown() {
-								TagAnnotationMgmtInstP.Value = types.StringNull()
+
 							}
 							TagAnnotationMgmtInstPList = append(TagAnnotationMgmtInstPList, TagAnnotationMgmtInstP)
 						}
 						if childClassName == "tagTag" {
-							TagTagMgmtInstP := TagTagMgmtInstPResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagTagMgmtInstP.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -529,12 +545,7 @@ func getAndSetMgmtInstPAttributes(ctx context.Context, diags *diag.Diagnostics, 
 								if childAttributeName == "value" {
 									TagTagMgmtInstP.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
-							}
-							if TagTagMgmtInstP.Key.IsUnknown() {
-								TagTagMgmtInstP.Key = types.StringNull()
-							}
-							if TagTagMgmtInstP.Value.IsUnknown() {
-								TagTagMgmtInstP.Value = types.StringNull()
+
 							}
 							TagTagMgmtInstPList = append(TagTagMgmtInstPList, TagTagMgmtInstP)
 						}
@@ -574,14 +585,7 @@ func setMgmtInstPId(ctx context.Context, data *MgmtInstPResourceModel) {
 }
 
 func getMgmtInstPMgmtRsOoBConsChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtInstPResourceModel, mgmtRsOoBConsPlan, mgmtRsOoBConsState []MgmtRsOoBConsMgmtInstPResourceModel) []map[string]interface{} {
-	type childMapType struct {
-		Attributes map[string]interface{}   `json:"attributes"`
-		Children   []map[string]interface{} `json:"children"`
-	}
-	childMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
+	childMap := newAciObjectType()
 	childPayloads := []map[string]interface{}{}
 	if !data.MgmtRsOoBCons.IsUnknown() {
 		mgmtRsOoBConsIdentifiers := []MgmtRsOoBConsIdentifier{}
@@ -611,12 +615,10 @@ func getMgmtInstPMgmtRsOoBConsChildPayloads(ctx context.Context, diags *diag.Dia
 				}
 			}
 			if delete {
-				childMap := childMapType{
-					Attributes: make(map[string]interface{}),
-				}
-				childMap.Attributes["status"] = "deleted"
-				childMap.Attributes["tnVzOOBBrCPName"] = mgmtRsOoBCons.TnVzOOBBrCPName.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"mgmtRsOoBCons": childMap})
+				mgmtRsOoBConsChildMapForDelete := newAciObjectType()
+				mgmtRsOoBConsChildMapForDelete.Attributes["status"] = "deleted"
+				mgmtRsOoBConsChildMapForDelete.Attributes["tnVzOOBBrCPName"] = mgmtRsOoBCons.TnVzOOBBrCPName.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"mgmtRsOoBCons": mgmtRsOoBConsChildMapForDelete})
 			}
 		}
 	} else {
@@ -627,14 +629,7 @@ func getMgmtInstPMgmtRsOoBConsChildPayloads(ctx context.Context, diags *diag.Dia
 }
 
 func getMgmtInstPTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtInstPResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationMgmtInstPResourceModel) []map[string]interface{} {
-	type childMapType struct {
-		Attributes map[string]interface{}   `json:"attributes"`
-		Children   []map[string]interface{} `json:"children"`
-	}
-	childMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
+	childMap := newAciObjectType()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
@@ -659,12 +654,10 @@ func getMgmtInstPTagAnnotationChildPayloads(ctx context.Context, diags *diag.Dia
 				}
 			}
 			if delete {
-				childMap := childMapType{
-					Attributes: make(map[string]interface{}),
-				}
-				childMap.Attributes["status"] = "deleted"
-				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
+				tagAnnotationChildMapForDelete := newAciObjectType()
+				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
+				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
 			}
 		}
 	} else {
@@ -675,14 +668,7 @@ func getMgmtInstPTagAnnotationChildPayloads(ctx context.Context, diags *diag.Dia
 }
 
 func getMgmtInstPTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtInstPResourceModel, tagTagPlan, tagTagState []TagTagMgmtInstPResourceModel) []map[string]interface{} {
-	type childMapType struct {
-		Attributes map[string]interface{}   `json:"attributes"`
-		Children   []map[string]interface{} `json:"children"`
-	}
-	childMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
+	childMap := newAciObjectType()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
@@ -707,12 +693,10 @@ func getMgmtInstPTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostic
 				}
 			}
 			if delete {
-				childMap := childMapType{
-					Attributes: make(map[string]interface{}),
-				}
-				childMap.Attributes["status"] = "deleted"
-				childMap.Attributes["key"] = tagTag.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
+				tagTagChildMapForDelete := newAciObjectType()
+				tagTagChildMapForDelete.Attributes["status"] = "deleted"
+				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
 			}
 		}
 	} else {

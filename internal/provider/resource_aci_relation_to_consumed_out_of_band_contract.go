@@ -14,6 +14,7 @@ import (
 	"github.com/ciscoecosystem/aci-go-client/v2/client"
 	"github.com/ciscoecosystem/aci-go-client/v2/container"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -58,10 +59,30 @@ type TagAnnotationMgmtRsOoBConsResourceModel struct {
 	Value types.String `tfsdk:"value"`
 }
 
+func TagAnnotationMgmtRsOoBConsResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+func TagAnnotationMgmtRsOoBConsResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationMgmtRsOoBConsResourceModelAttributeTypes())
+}
+
 // TagTagMgmtRsOoBConsResourceModel describes the resource data model for the children without relation ships.
 type TagTagMgmtRsOoBConsResourceModel struct {
 	Key   types.String `tfsdk:"key"`
 	Value types.String `tfsdk:"value"`
+}
+
+func TagTagMgmtRsOoBConsResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+func TagTagMgmtRsOoBConsResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagMgmtRsOoBConsResourceModelAttributeTypes())
 }
 
 type MgmtRsOoBConsIdentifier struct {
@@ -133,7 +154,6 @@ func (r *MgmtRsOoBConsResource) Schema(ctx context.Context, req resource.SchemaR
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
-					SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -162,7 +182,6 @@ func (r *MgmtRsOoBConsResource) Schema(ctx context.Context, req resource.SchemaR
 				Computed:            true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
-					SetToSetNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -358,7 +377,7 @@ func (r *MgmtRsOoBConsResource) ImportState(ctx context.Context, req resource.Im
 }
 
 func getAndSetMgmtRsOoBConsAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *MgmtRsOoBConsResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full", data.Id.ValueString()), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "mgmtRsOoBCons,tagAnnotation,tagTag"), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -391,7 +410,9 @@ func getAndSetMgmtRsOoBConsAttributes(ctx context.Context, diags *diag.Diagnosti
 			if data.TnVzOOBBrCPName.IsUnknown() {
 				data.TnVzOOBBrCPName = types.StringNull()
 			}
+			TagAnnotationMgmtRsOoBCons := TagAnnotationMgmtRsOoBConsResourceModel{}
 			TagAnnotationMgmtRsOoBConsList := make([]TagAnnotationMgmtRsOoBConsResourceModel, 0)
+			TagTagMgmtRsOoBCons := TagTagMgmtRsOoBConsResourceModel{}
 			TagTagMgmtRsOoBConsList := make([]TagTagMgmtRsOoBConsResourceModel, 0)
 			_, ok := classReadInfo[0].(map[string]interface{})["children"]
 			if ok {
@@ -400,7 +421,6 @@ func getAndSetMgmtRsOoBConsAttributes(ctx context.Context, diags *diag.Diagnosti
 					for childClassName, childClassDetails := range child.(map[string]interface{}) {
 						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
 						if childClassName == "tagAnnotation" {
-							TagAnnotationMgmtRsOoBCons := TagAnnotationMgmtRsOoBConsResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagAnnotationMgmtRsOoBCons.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -408,17 +428,11 @@ func getAndSetMgmtRsOoBConsAttributes(ctx context.Context, diags *diag.Diagnosti
 								if childAttributeName == "value" {
 									TagAnnotationMgmtRsOoBCons.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
-							}
-							if TagAnnotationMgmtRsOoBCons.Key.IsUnknown() {
-								TagAnnotationMgmtRsOoBCons.Key = types.StringNull()
-							}
-							if TagAnnotationMgmtRsOoBCons.Value.IsUnknown() {
-								TagAnnotationMgmtRsOoBCons.Value = types.StringNull()
+
 							}
 							TagAnnotationMgmtRsOoBConsList = append(TagAnnotationMgmtRsOoBConsList, TagAnnotationMgmtRsOoBCons)
 						}
 						if childClassName == "tagTag" {
-							TagTagMgmtRsOoBCons := TagTagMgmtRsOoBConsResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagTagMgmtRsOoBCons.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -426,12 +440,7 @@ func getAndSetMgmtRsOoBConsAttributes(ctx context.Context, diags *diag.Diagnosti
 								if childAttributeName == "value" {
 									TagTagMgmtRsOoBCons.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
-							}
-							if TagTagMgmtRsOoBCons.Key.IsUnknown() {
-								TagTagMgmtRsOoBCons.Key = types.StringNull()
-							}
-							if TagTagMgmtRsOoBCons.Value.IsUnknown() {
-								TagTagMgmtRsOoBCons.Value = types.StringNull()
+
 							}
 							TagTagMgmtRsOoBConsList = append(TagTagMgmtRsOoBConsList, TagTagMgmtRsOoBCons)
 						}
@@ -485,14 +494,7 @@ func setMgmtRsOoBConsId(ctx context.Context, data *MgmtRsOoBConsResourceModel) {
 }
 
 func getMgmtRsOoBConsTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtRsOoBConsResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationMgmtRsOoBConsResourceModel) []map[string]interface{} {
-	type childMapType struct {
-		Attributes map[string]interface{}   `json:"attributes"`
-		Children   []map[string]interface{} `json:"children"`
-	}
-	childMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
+	childMap := newAciObjectType()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
@@ -517,12 +519,10 @@ func getMgmtRsOoBConsTagAnnotationChildPayloads(ctx context.Context, diags *diag
 				}
 			}
 			if delete {
-				childMap := childMapType{
-					Attributes: make(map[string]interface{}),
-				}
-				childMap.Attributes["status"] = "deleted"
-				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
+				tagAnnotationChildMapForDelete := newAciObjectType()
+				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
+				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
 			}
 		}
 	} else {
@@ -533,14 +533,7 @@ func getMgmtRsOoBConsTagAnnotationChildPayloads(ctx context.Context, diags *diag
 }
 
 func getMgmtRsOoBConsTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtRsOoBConsResourceModel, tagTagPlan, tagTagState []TagTagMgmtRsOoBConsResourceModel) []map[string]interface{} {
-	type childMapType struct {
-		Attributes map[string]interface{}   `json:"attributes"`
-		Children   []map[string]interface{} `json:"children"`
-	}
-	childMap := childMapType{
-		Attributes: make(map[string]interface{}),
-		Children:   make([]map[string]interface{}, 0),
-	}
+	childMap := newAciObjectType()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
@@ -565,12 +558,10 @@ func getMgmtRsOoBConsTagTagChildPayloads(ctx context.Context, diags *diag.Diagno
 				}
 			}
 			if delete {
-				childMap := childMapType{
-					Attributes: make(map[string]interface{}),
-				}
-				childMap.Attributes["status"] = "deleted"
-				childMap.Attributes["key"] = tagTag.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
+				tagTagChildMapForDelete := newAciObjectType()
+				tagTagChildMapForDelete.Attributes["status"] = "deleted"
+				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
 			}
 		}
 	} else {
