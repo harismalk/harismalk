@@ -69,6 +69,7 @@ func MgmtRsOoBConsMgmtInstPResourceModelAttributeTypes() map[string]attr.Type {
 		"out_of_band_contract_name": types.StringType,
 	}
 }
+
 func MgmtRsOoBConsMgmtInstPResourceModelElementType() attr.TypeWithAttributeTypes {
 	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, MgmtRsOoBConsMgmtInstPResourceModelAttributeTypes())
 }
@@ -85,6 +86,7 @@ func TagAnnotationMgmtInstPResourceModelAttributeTypes() map[string]attr.Type {
 		"value": types.StringType,
 	}
 }
+
 func TagAnnotationMgmtInstPResourceModelElementType() attr.TypeWithAttributeTypes {
 	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationMgmtInstPResourceModelAttributeTypes())
 }
@@ -101,6 +103,7 @@ func TagTagMgmtInstPResourceModelAttributeTypes() map[string]attr.Type {
 		"value": types.StringType,
 	}
 }
+
 func TagTagMgmtInstPResourceModelElementType() attr.TypeWithAttributeTypes {
 	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagMgmtInstPResourceModelAttributeTypes())
 }
@@ -585,20 +588,20 @@ func setMgmtInstPId(ctx context.Context, data *MgmtInstPResourceModel) {
 }
 
 func getMgmtInstPMgmtRsOoBConsChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtInstPResourceModel, mgmtRsOoBConsPlan, mgmtRsOoBConsState []MgmtRsOoBConsMgmtInstPResourceModel) []map[string]interface{} {
-	childMap := newAciObjectType()
+	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
-	if !data.MgmtRsOoBCons.IsUnknown() {
+	if !data.MgmtRsOoBCons.IsNull() && !data.MgmtRsOoBCons.IsUnknown() {
 		mgmtRsOoBConsIdentifiers := []MgmtRsOoBConsIdentifier{}
 		for _, mgmtRsOoBCons := range mgmtRsOoBConsPlan {
-			if !mgmtRsOoBCons.Annotation.IsUnknown() {
+			if !mgmtRsOoBCons.Annotation.IsNull() && !mgmtRsOoBCons.Annotation.IsUnknown() {
 				childMap.Attributes["annotation"] = mgmtRsOoBCons.Annotation.ValueString()
 			} else {
 				childMap.Attributes["annotation"] = globalAnnotation
 			}
-			if !mgmtRsOoBCons.Prio.IsUnknown() {
+			if !mgmtRsOoBCons.Prio.IsNull() && !mgmtRsOoBCons.Prio.IsUnknown() {
 				childMap.Attributes["prio"] = mgmtRsOoBCons.Prio.ValueString()
 			}
-			if !mgmtRsOoBCons.TnVzOOBBrCPName.IsUnknown() {
+			if !mgmtRsOoBCons.TnVzOOBBrCPName.IsNull() && !mgmtRsOoBCons.TnVzOOBBrCPName.IsUnknown() {
 				childMap.Attributes["tnVzOOBBrCPName"] = mgmtRsOoBCons.TnVzOOBBrCPName.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"mgmtRsOoBCons": childMap})
@@ -615,7 +618,7 @@ func getMgmtInstPMgmtRsOoBConsChildPayloads(ctx context.Context, diags *diag.Dia
 				}
 			}
 			if delete {
-				mgmtRsOoBConsChildMapForDelete := newAciObjectType()
+				mgmtRsOoBConsChildMapForDelete := NewAciObject()
 				mgmtRsOoBConsChildMapForDelete.Attributes["status"] = "deleted"
 				mgmtRsOoBConsChildMapForDelete.Attributes["tnVzOOBBrCPName"] = mgmtRsOoBCons.TnVzOOBBrCPName.ValueString()
 				childPayloads = append(childPayloads, map[string]interface{}{"mgmtRsOoBCons": mgmtRsOoBConsChildMapForDelete})
@@ -629,15 +632,15 @@ func getMgmtInstPMgmtRsOoBConsChildPayloads(ctx context.Context, diags *diag.Dia
 }
 
 func getMgmtInstPTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtInstPResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationMgmtInstPResourceModel) []map[string]interface{} {
-	childMap := newAciObjectType()
+	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
-	if !data.TagAnnotation.IsUnknown() {
+	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
 		for _, tagAnnotation := range tagAnnotationPlan {
-			if !tagAnnotation.Key.IsUnknown() {
+			if !tagAnnotation.Key.IsNull() && !tagAnnotation.Key.IsUnknown() {
 				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
 			}
-			if !tagAnnotation.Value.IsUnknown() {
+			if !tagAnnotation.Value.IsNull() && !tagAnnotation.Value.IsUnknown() {
 				childMap.Attributes["value"] = tagAnnotation.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
@@ -654,7 +657,7 @@ func getMgmtInstPTagAnnotationChildPayloads(ctx context.Context, diags *diag.Dia
 				}
 			}
 			if delete {
-				tagAnnotationChildMapForDelete := newAciObjectType()
+				tagAnnotationChildMapForDelete := NewAciObject()
 				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
 				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
 				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
@@ -668,15 +671,15 @@ func getMgmtInstPTagAnnotationChildPayloads(ctx context.Context, diags *diag.Dia
 }
 
 func getMgmtInstPTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtInstPResourceModel, tagTagPlan, tagTagState []TagTagMgmtInstPResourceModel) []map[string]interface{} {
-	childMap := newAciObjectType()
+	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
-	if !data.TagTag.IsUnknown() {
+	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
 		for _, tagTag := range tagTagPlan {
-			if !tagTag.Key.IsUnknown() {
+			if !tagTag.Key.IsNull() && !tagTag.Key.IsUnknown() {
 				childMap.Attributes["key"] = tagTag.Key.ValueString()
 			}
-			if !tagTag.Value.IsUnknown() {
+			if !tagTag.Value.IsNull() && !tagTag.Value.IsUnknown() {
 				childMap.Attributes["value"] = tagTag.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
@@ -693,7 +696,7 @@ func getMgmtInstPTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostic
 				}
 			}
 			if delete {
-				tagTagChildMapForDelete := newAciObjectType()
+				tagTagChildMapForDelete := NewAciObject()
 				tagTagChildMapForDelete.Attributes["status"] = "deleted"
 				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
 				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})

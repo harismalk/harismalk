@@ -65,6 +65,7 @@ func TagAnnotationMgmtSubnetResourceModelAttributeTypes() map[string]attr.Type {
 		"value": types.StringType,
 	}
 }
+
 func TagAnnotationMgmtSubnetResourceModelElementType() attr.TypeWithAttributeTypes {
 	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationMgmtSubnetResourceModelAttributeTypes())
 }
@@ -81,6 +82,7 @@ func TagTagMgmtSubnetResourceModelAttributeTypes() map[string]attr.Type {
 		"value": types.StringType,
 	}
 }
+
 func TagTagMgmtSubnetResourceModelElementType() attr.TypeWithAttributeTypes {
 	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagMgmtSubnetResourceModelAttributeTypes())
 }
@@ -521,15 +523,15 @@ func setMgmtSubnetId(ctx context.Context, data *MgmtSubnetResourceModel) {
 }
 
 func getMgmtSubnetTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtSubnetResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationMgmtSubnetResourceModel) []map[string]interface{} {
-	childMap := newAciObjectType()
+	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
-	if !data.TagAnnotation.IsUnknown() {
+	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
 		for _, tagAnnotation := range tagAnnotationPlan {
-			if !tagAnnotation.Key.IsUnknown() {
+			if !tagAnnotation.Key.IsNull() && !tagAnnotation.Key.IsUnknown() {
 				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
 			}
-			if !tagAnnotation.Value.IsUnknown() {
+			if !tagAnnotation.Value.IsNull() && !tagAnnotation.Value.IsUnknown() {
 				childMap.Attributes["value"] = tagAnnotation.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
@@ -546,7 +548,7 @@ func getMgmtSubnetTagAnnotationChildPayloads(ctx context.Context, diags *diag.Di
 				}
 			}
 			if delete {
-				tagAnnotationChildMapForDelete := newAciObjectType()
+				tagAnnotationChildMapForDelete := NewAciObject()
 				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
 				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
 				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
@@ -560,15 +562,15 @@ func getMgmtSubnetTagAnnotationChildPayloads(ctx context.Context, diags *diag.Di
 }
 
 func getMgmtSubnetTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtSubnetResourceModel, tagTagPlan, tagTagState []TagTagMgmtSubnetResourceModel) []map[string]interface{} {
-	childMap := newAciObjectType()
+	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
-	if !data.TagTag.IsUnknown() {
+	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
 		for _, tagTag := range tagTagPlan {
-			if !tagTag.Key.IsUnknown() {
+			if !tagTag.Key.IsNull() && !tagTag.Key.IsUnknown() {
 				childMap.Attributes["key"] = tagTag.Key.ValueString()
 			}
-			if !tagTag.Value.IsUnknown() {
+			if !tagTag.Value.IsNull() && !tagTag.Value.IsUnknown() {
 				childMap.Attributes["value"] = tagTag.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
@@ -585,7 +587,7 @@ func getMgmtSubnetTagTagChildPayloads(ctx context.Context, diags *diag.Diagnosti
 				}
 			}
 			if delete {
-				tagTagChildMapForDelete := newAciObjectType()
+				tagTagChildMapForDelete := NewAciObject()
 				tagTagChildMapForDelete.Attributes["status"] = "deleted"
 				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
 				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})

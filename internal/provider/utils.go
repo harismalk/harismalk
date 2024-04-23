@@ -15,13 +15,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
-type aciObjectType struct {
+type AciObjectType struct {
 	Attributes map[string]interface{}   `json:"attributes"`
 	Children   []map[string]interface{} `json:"children"`
 }
 
-func newAciObjectType() aciObjectType {
-	return aciObjectType{
+func NewAciObject() AciObjectType {
+	return AciObjectType{
 		Attributes: make(map[string]interface{}),
 		Children:   []map[string]interface{}{},
 	}
