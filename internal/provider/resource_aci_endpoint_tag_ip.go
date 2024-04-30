@@ -541,24 +541,24 @@ func setFvEpIpTagId(ctx context.Context, data *FvEpIpTagResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", data.ParentDn.ValueString(), rn))
 }
 
-func getFvEpIpTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpIpTagResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationFvEpIpTagResourceModel) []map[string]interface{} {
+func getFvEpIpTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpIpTagResourceModel, tagAnnotationFvEpIpTagPlan, tagAnnotationFvEpIpTagState []TagAnnotationFvEpIpTagResourceModel) []map[string]interface{} {
 	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
-		for _, tagAnnotation := range tagAnnotationPlan {
-			if !tagAnnotation.Key.IsNull() && !tagAnnotation.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
+		for _, tagAnnotationFvEpIpTag := range tagAnnotationFvEpIpTagPlan {
+			if !tagAnnotationFvEpIpTag.Key.IsNull() && !tagAnnotationFvEpIpTag.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagAnnotationFvEpIpTag.Key.ValueString()
 			}
-			if !tagAnnotation.Value.IsNull() && !tagAnnotation.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagAnnotation.Value.ValueString()
+			if !tagAnnotationFvEpIpTag.Value.IsNull() && !tagAnnotationFvEpIpTag.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagAnnotationFvEpIpTag.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
 			tagAnnotationIdentifier := TagAnnotationIdentifier{}
-			tagAnnotationIdentifier.Key = tagAnnotation.Key
+			tagAnnotationIdentifier.Key = tagAnnotationFvEpIpTag.Key
 			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
 		}
-		for _, tagAnnotation := range tagAnnotationState {
+		for _, tagAnnotation := range tagAnnotationFvEpIpTagState {
 			delete := true
 			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
 				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
@@ -580,24 +580,24 @@ func getFvEpIpTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Dia
 	return childPayloads
 }
 
-func getFvEpIpTagTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpIpTagResourceModel, tagTagPlan, tagTagState []TagTagFvEpIpTagResourceModel) []map[string]interface{} {
+func getFvEpIpTagTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpIpTagResourceModel, tagTagFvEpIpTagPlan, tagTagFvEpIpTagState []TagTagFvEpIpTagResourceModel) []map[string]interface{} {
 	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
-		for _, tagTag := range tagTagPlan {
-			if !tagTag.Key.IsNull() && !tagTag.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagTag.Key.ValueString()
+		for _, tagTagFvEpIpTag := range tagTagFvEpIpTagPlan {
+			if !tagTagFvEpIpTag.Key.IsNull() && !tagTagFvEpIpTag.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagTagFvEpIpTag.Key.ValueString()
 			}
-			if !tagTag.Value.IsNull() && !tagTag.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagTag.Value.ValueString()
+			if !tagTagFvEpIpTag.Value.IsNull() && !tagTagFvEpIpTag.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagTagFvEpIpTag.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
 			tagTagIdentifier := TagTagIdentifier{}
-			tagTagIdentifier.Key = tagTag.Key
+			tagTagIdentifier.Key = tagTagFvEpIpTag.Key
 			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
 		}
-		for _, tagTag := range tagTagState {
+		for _, tagTag := range tagTagFvEpIpTagState {
 			delete := true
 			for _, tagTagIdentifier := range tagTagIdentifiers {
 				if tagTagIdentifier.Key == tagTag.Key {

@@ -35,13 +35,13 @@ resource "aci_communication_policy" "full_example" {
   ]
   annotations = [
     {
-      key   = "annotations_1"
+      key   = "key_0"
       value = "value_1"
     }
   ]
   tags = [
     {
-      key   = "tags_1"
+      key   = "key_0"
       value = "value_1"
     }
   ]

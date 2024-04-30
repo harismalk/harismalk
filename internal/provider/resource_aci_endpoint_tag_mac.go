@@ -541,24 +541,24 @@ func setFvEpMacTagId(ctx context.Context, data *FvEpMacTagResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", data.ParentDn.ValueString(), rn))
 }
 
-func getFvEpMacTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpMacTagResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationFvEpMacTagResourceModel) []map[string]interface{} {
+func getFvEpMacTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpMacTagResourceModel, tagAnnotationFvEpMacTagPlan, tagAnnotationFvEpMacTagState []TagAnnotationFvEpMacTagResourceModel) []map[string]interface{} {
 	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
-		for _, tagAnnotation := range tagAnnotationPlan {
-			if !tagAnnotation.Key.IsNull() && !tagAnnotation.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
+		for _, tagAnnotationFvEpMacTag := range tagAnnotationFvEpMacTagPlan {
+			if !tagAnnotationFvEpMacTag.Key.IsNull() && !tagAnnotationFvEpMacTag.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagAnnotationFvEpMacTag.Key.ValueString()
 			}
-			if !tagAnnotation.Value.IsNull() && !tagAnnotation.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagAnnotation.Value.ValueString()
+			if !tagAnnotationFvEpMacTag.Value.IsNull() && !tagAnnotationFvEpMacTag.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagAnnotationFvEpMacTag.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
 			tagAnnotationIdentifier := TagAnnotationIdentifier{}
-			tagAnnotationIdentifier.Key = tagAnnotation.Key
+			tagAnnotationIdentifier.Key = tagAnnotationFvEpMacTag.Key
 			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
 		}
-		for _, tagAnnotation := range tagAnnotationState {
+		for _, tagAnnotation := range tagAnnotationFvEpMacTagState {
 			delete := true
 			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
 				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
@@ -580,24 +580,24 @@ func getFvEpMacTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Di
 	return childPayloads
 }
 
-func getFvEpMacTagTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpMacTagResourceModel, tagTagPlan, tagTagState []TagTagFvEpMacTagResourceModel) []map[string]interface{} {
+func getFvEpMacTagTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpMacTagResourceModel, tagTagFvEpMacTagPlan, tagTagFvEpMacTagState []TagTagFvEpMacTagResourceModel) []map[string]interface{} {
 	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
-		for _, tagTag := range tagTagPlan {
-			if !tagTag.Key.IsNull() && !tagTag.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagTag.Key.ValueString()
+		for _, tagTagFvEpMacTag := range tagTagFvEpMacTagPlan {
+			if !tagTagFvEpMacTag.Key.IsNull() && !tagTagFvEpMacTag.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagTagFvEpMacTag.Key.ValueString()
 			}
-			if !tagTag.Value.IsNull() && !tagTag.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagTag.Value.ValueString()
+			if !tagTagFvEpMacTag.Value.IsNull() && !tagTagFvEpMacTag.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagTagFvEpMacTag.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
 			tagTagIdentifier := TagTagIdentifier{}
-			tagTagIdentifier.Key = tagTag.Key
+			tagTagIdentifier.Key = tagTagFvEpMacTag.Key
 			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
 		}
-		for _, tagTag := range tagTagState {
+		for _, tagTag := range tagTagFvEpMacTagState {
 			delete := true
 			for _, tagTagIdentifier := range tagTagIdentifiers {
 				if tagTagIdentifier.Key == tagTag.Key {

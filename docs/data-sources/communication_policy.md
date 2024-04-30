@@ -52,7 +52,7 @@ data "aci_communication_policy" "example" {
 * `owner_tag` (ownerTag) - (string) A tag for enabling clients to add their own data. For example, to indicate who created this object.
 * `strict_security_on_apic_oob_subnet` (strictSecurityOnApicOOBSubnet) - (string) remove implicit access on apic oob from any apic OOB subnet IP.
 
-* `http_ssl_configuration` - (list) A list of Http Ssl Configuration objects ([commHttps](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/commHttps/overview)).
+* `http_ssl_configuration` - (list) A list of Http Ssl Configuration (ACI object [commHttps](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/commHttps/overview)).
   * `access_control_allow_credential` (accessControlAllowCredential) - (string) accessControlAllowCredential.
   * `access_control_allow_origins` (accessControlAllowOrigins) - (string) 
   * `admin_st` (adminSt) - (string) The state of HTTPS communication service. This can be enabled or disabled.
@@ -76,10 +76,10 @@ data "aci_communication_policy" "example" {
   * `throttle_st` (throttleSt) - (string) Login/refresh throttle state.
   * `visore_access` (visoreAccess) - (string) Visore Access.
 
-* `annotations` - (list) A list of Annotations objects ([tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview)). This attribute is supported in ACI versions: 3.2(1l) and later.
+* `annotations` - (list) A list of Annotations (ACI object [tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview)). This attribute is supported in ACI versions: 3.2(1l) and later.
   * `key` (key) - (string) The key used to uniquely identify this configuration object.
   * `value` (value) - (string) The value of the property.
 
-* `tags` - (list) A list of Tags objects ([tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview)). This attribute is supported in ACI versions: 3.2(1l) and later.
+* `tags` - (list) A list of Tags (ACI object [tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview)). This attribute is supported in ACI versions: 3.2(1l) and later.
   * `key` (key) - (string) The key used to uniquely identify this configuration object.
   * `value` (value) - (string) The value of the property.

@@ -578,24 +578,24 @@ func setL3extConsLblId(ctx context.Context, data *L3extConsLblResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", data.ParentDn.ValueString(), rn))
 }
 
-func getL3extConsLblTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *L3extConsLblResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationL3extConsLblResourceModel) []map[string]interface{} {
+func getL3extConsLblTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *L3extConsLblResourceModel, tagAnnotationL3extConsLblPlan, tagAnnotationL3extConsLblState []TagAnnotationL3extConsLblResourceModel) []map[string]interface{} {
 	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
-		for _, tagAnnotation := range tagAnnotationPlan {
-			if !tagAnnotation.Key.IsNull() && !tagAnnotation.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
+		for _, tagAnnotationL3extConsLbl := range tagAnnotationL3extConsLblPlan {
+			if !tagAnnotationL3extConsLbl.Key.IsNull() && !tagAnnotationL3extConsLbl.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagAnnotationL3extConsLbl.Key.ValueString()
 			}
-			if !tagAnnotation.Value.IsNull() && !tagAnnotation.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagAnnotation.Value.ValueString()
+			if !tagAnnotationL3extConsLbl.Value.IsNull() && !tagAnnotationL3extConsLbl.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagAnnotationL3extConsLbl.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
 			tagAnnotationIdentifier := TagAnnotationIdentifier{}
-			tagAnnotationIdentifier.Key = tagAnnotation.Key
+			tagAnnotationIdentifier.Key = tagAnnotationL3extConsLbl.Key
 			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
 		}
-		for _, tagAnnotation := range tagAnnotationState {
+		for _, tagAnnotation := range tagAnnotationL3extConsLblState {
 			delete := true
 			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
 				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
@@ -617,24 +617,24 @@ func getL3extConsLblTagAnnotationChildPayloads(ctx context.Context, diags *diag.
 	return childPayloads
 }
 
-func getL3extConsLblTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *L3extConsLblResourceModel, tagTagPlan, tagTagState []TagTagL3extConsLblResourceModel) []map[string]interface{} {
+func getL3extConsLblTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *L3extConsLblResourceModel, tagTagL3extConsLblPlan, tagTagL3extConsLblState []TagTagL3extConsLblResourceModel) []map[string]interface{} {
 	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
-		for _, tagTag := range tagTagPlan {
-			if !tagTag.Key.IsNull() && !tagTag.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagTag.Key.ValueString()
+		for _, tagTagL3extConsLbl := range tagTagL3extConsLblPlan {
+			if !tagTagL3extConsLbl.Key.IsNull() && !tagTagL3extConsLbl.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagTagL3extConsLbl.Key.ValueString()
 			}
-			if !tagTag.Value.IsNull() && !tagTag.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagTag.Value.ValueString()
+			if !tagTagL3extConsLbl.Value.IsNull() && !tagTagL3extConsLbl.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagTagL3extConsLbl.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
 			tagTagIdentifier := TagTagIdentifier{}
-			tagTagIdentifier.Key = tagTag.Key
+			tagTagIdentifier.Key = tagTagL3extConsLbl.Key
 			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
 		}
-		for _, tagTag := range tagTagState {
+		for _, tagTag := range tagTagL3extConsLblState {
 			delete := true
 			for _, tagTagIdentifier := range tagTagIdentifiers {
 				if tagTagIdentifier.Key == tagTag.Key {

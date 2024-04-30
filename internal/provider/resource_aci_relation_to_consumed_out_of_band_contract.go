@@ -495,24 +495,24 @@ func setMgmtRsOoBConsId(ctx context.Context, data *MgmtRsOoBConsResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", data.ParentDn.ValueString(), rn))
 }
 
-func getMgmtRsOoBConsTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtRsOoBConsResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationMgmtRsOoBConsResourceModel) []map[string]interface{} {
+func getMgmtRsOoBConsTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtRsOoBConsResourceModel, tagAnnotationMgmtRsOoBConsPlan, tagAnnotationMgmtRsOoBConsState []TagAnnotationMgmtRsOoBConsResourceModel) []map[string]interface{} {
 	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
-		for _, tagAnnotation := range tagAnnotationPlan {
-			if !tagAnnotation.Key.IsNull() && !tagAnnotation.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagAnnotation.Key.ValueString()
+		for _, tagAnnotationMgmtRsOoBCons := range tagAnnotationMgmtRsOoBConsPlan {
+			if !tagAnnotationMgmtRsOoBCons.Key.IsNull() && !tagAnnotationMgmtRsOoBCons.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagAnnotationMgmtRsOoBCons.Key.ValueString()
 			}
-			if !tagAnnotation.Value.IsNull() && !tagAnnotation.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagAnnotation.Value.ValueString()
+			if !tagAnnotationMgmtRsOoBCons.Value.IsNull() && !tagAnnotationMgmtRsOoBCons.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagAnnotationMgmtRsOoBCons.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
 			tagAnnotationIdentifier := TagAnnotationIdentifier{}
-			tagAnnotationIdentifier.Key = tagAnnotation.Key
+			tagAnnotationIdentifier.Key = tagAnnotationMgmtRsOoBCons.Key
 			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
 		}
-		for _, tagAnnotation := range tagAnnotationState {
+		for _, tagAnnotation := range tagAnnotationMgmtRsOoBConsState {
 			delete := true
 			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
 				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
@@ -534,24 +534,24 @@ func getMgmtRsOoBConsTagAnnotationChildPayloads(ctx context.Context, diags *diag
 	return childPayloads
 }
 
-func getMgmtRsOoBConsTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtRsOoBConsResourceModel, tagTagPlan, tagTagState []TagTagMgmtRsOoBConsResourceModel) []map[string]interface{} {
+func getMgmtRsOoBConsTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtRsOoBConsResourceModel, tagTagMgmtRsOoBConsPlan, tagTagMgmtRsOoBConsState []TagTagMgmtRsOoBConsResourceModel) []map[string]interface{} {
 	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
-		for _, tagTag := range tagTagPlan {
-			if !tagTag.Key.IsNull() && !tagTag.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagTag.Key.ValueString()
+		for _, tagTagMgmtRsOoBCons := range tagTagMgmtRsOoBConsPlan {
+			if !tagTagMgmtRsOoBCons.Key.IsNull() && !tagTagMgmtRsOoBCons.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagTagMgmtRsOoBCons.Key.ValueString()
 			}
-			if !tagTag.Value.IsNull() && !tagTag.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagTag.Value.ValueString()
+			if !tagTagMgmtRsOoBCons.Value.IsNull() && !tagTagMgmtRsOoBCons.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagTagMgmtRsOoBCons.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
 			tagTagIdentifier := TagTagIdentifier{}
-			tagTagIdentifier.Key = tagTag.Key
+			tagTagIdentifier.Key = tagTagMgmtRsOoBCons.Key
 			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
 		}
-		for _, tagTag := range tagTagState {
+		for _, tagTag := range tagTagMgmtRsOoBConsState {
 			delete := true
 			for _, tagTagIdentifier := range tagTagIdentifiers {
 				if tagTagIdentifier.Key == tagTag.Key {

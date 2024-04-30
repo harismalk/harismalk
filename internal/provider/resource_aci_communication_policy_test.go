@@ -93,9 +93,9 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "owner_key", ""),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "owner_tag", ""),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "strict_security_on_apic_oob_subnet", "false"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.key", "annotations_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.value", "value_1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.1.key", "annotations_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.1.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.1.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.#", "2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_credential", "disabled"),
@@ -143,9 +143,9 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.throttle_st", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.visore_access", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "tags_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.value", "value_1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.key", "tags_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.#", "2"),
 				),
@@ -160,9 +160,9 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "owner_key", ""),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "owner_tag", ""),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "strict_security_on_apic_oob_subnet", "false"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.key", "annotations_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.value", "value_1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.1.key", "annotations_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.1.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.1.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.#", "2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_credential", "disabled"),
@@ -210,9 +210,9 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.throttle_st", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.visore_access", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "tags_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.value", "value_1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.key", "tags_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.#", "2"),
 				),
@@ -227,7 +227,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "owner_key", ""),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "owner_tag", ""),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "strict_security_on_apic_oob_subnet", "false"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.key", "annotations_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.#", "1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_credential", "enabled"),
@@ -253,7 +253,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "tags_2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.#", "1"),
 				),
@@ -311,11 +311,11 @@ resource "aci_communication_policy" "test" {
   name = "test_name"
   annotations = [
 	{
-	  key = "annotations_1"
+	  key = "key_0"
 	  value = "value_1"
 	},
 	{
-	  key = "annotations_2"
+	  key = "key_1"
 	  value = "value_2"
 	},
   ]
@@ -371,11 +371,11 @@ resource "aci_communication_policy" "test" {
   ]
   tags = [
 	{
-	  key = "tags_1"
+	  key = "key_0"
 	  value = "value_1"
 	},
 	{
-	  key = "tags_2"
+	  key = "key_1"
 	  value = "value_2"
 	},
   ]
@@ -393,7 +393,7 @@ resource "aci_communication_policy" "test" {
   name = "test_name"
   annotations = [ 
 	{
-	  key = "annotations_2"
+	  key = "key_1"
 	  value = "value_2"
 	},
   ]
@@ -425,7 +425,7 @@ resource "aci_communication_policy" "test" {
   ]
   tags = [ 
 	{
-	  key = "tags_2"
+	  key = "key_1"
 	  value = "value_2"
 	},
   ]

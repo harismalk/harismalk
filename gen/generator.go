@@ -648,6 +648,7 @@ type Model struct {
 	Versions                  string
 	ParentName                string
 	GrandParentName           string
+	ParentHierarchy           string
 	ChildClasses              []string
 	ContainedBy               []string
 	Contains                  []string
@@ -723,7 +724,7 @@ type Definitions struct {
 }
 
 // Reads the class details from the meta file and sets all details to the Model
-func (m *Model) setClassModel(metaPath string, isChildIteration bool, definitions Definitions, parents, pkgNames, mainParentChildren, parentsList []string) {
+func (m *Model) setClassModel(metaPath string, isChildIteration bool, definitions Definitions, parents, pkgNames, mainParentChildren, parentHierarchyList []string) {
 	fileContent, err := os.ReadFile(fmt.Sprintf("%s/%s.json", metaPath, m.PkgName))
 	if err != nil {
 		log.Fatal("Error when opening file: ", err)
@@ -766,17 +767,21 @@ func (m *Model) setClassModel(metaPath string, isChildIteration bool, definition
 			- Incorrect: Parent -> Child -> Grandchild
 		// TODO add grandchild logic
 	*/
-	parentsList = append(parentsList, parents...)
-	if len(parents) != 0 {
-		m.SetGrandParentName(parentsList, parents[0])
+	m.ParentHierarchy = fmt.Sprintf("%s", strings.Join(reverseList(parentHierarchyList), ""))
+
+	if len(parentHierarchyList) == 0 {
+		parentHierarchyList = []string{m.ResourceClassName}
+	} else {
+		parentHierarchyList = append(parentHierarchyList, m.ResourceClassName)
 	}
+
 	if len(m.ChildClasses) > 0 {
 		mainParentChildren := append(mainParentChildren, m.ChildClasses...)
 		m.HasChild = true
 		m.Children = make(map[string]Model)
 		for _, child := range m.ChildClasses {
 			childModel := Model{PkgName: child}
-			childModel.setClassModel(metaPath, true, definitions, []string{m.ResourceClassName}, pkgNames, mainParentChildren, parentsList)
+			childModel.setClassModel(metaPath, true, definitions, []string{m.PkgName}, pkgNames, mainParentChildren, parentHierarchyList)
 			m.Children[child] = childModel
 			if childModel.HasValidValues {
 				m.HasValidValues = true
@@ -891,7 +896,7 @@ func (m *Model) SetClassChildren(classDetails interface{}, pkgNames, mainParentC
 		// TODO check if this condition is correct since there might be cases where that we should exclude
 		if !strings.HasSuffix(rn, "-") || strings.HasPrefix(rn, "rs") || slices.Contains(alwaysIncludeChildren, className.(string)) {
 			pkgName := strings.ReplaceAll(className.(string), ":", "")
-			if slices.Contains(pkgNames, pkgName) && !slices.Contains(mainParentChildren, pkgName) {
+			if slices.Contains(pkgNames, pkgName) {
 				childClasses = append(childClasses, pkgName)
 			}
 		}
@@ -961,6 +966,14 @@ func (m *Model) SetGrandParentName(parentList []string, parent string) {
 			}
 		}
 	}
+}
+
+func reverseList(items []string) []string {
+	reversedList := make([]string, len(items))
+	for i, item := range items {
+		reversedList[len(items)-1-i] = item
+	}
+	return reversedList
 }
 
 // Determine if a class is allowed to be deleted as defined in the classes.yaml file
@@ -1541,7 +1554,7 @@ func setDocumentationData(m *Model, definitions Definitions) {
 	if len(resourcesNotFound) != 0 && len(resourcesFound) < docsParentDnAmount {
 		if len(resourcesNotFound) > docsParentDnAmount-len(resourcesFound) {
 			// TODO catch default classes and add to documentation
-			resourcesNotFound = resourcesNotFound[0:(docsParentDnAmount - len(resourcesFound))]
+			//resourcesNotFound = resourcesNotFound[0:(docsParentDnAmount - len(resourcesFound))]
 			m.DocumentationParentDns = append(m.DocumentationParentDns, fmt.Sprintf("Too many classes to display, see model documentation for all possible classes of %s.", GetDevnetDocForClass(m.PkgName)))
 		} else {
 			var resourceDetails string
