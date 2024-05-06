@@ -515,8 +515,8 @@ func getAndSet{{.ResourceClassName}}Attributes(ctx context.Context, diags *diag.
 									}
 								}
 								{{- range .Children}}
-								{{.ResourceClassName}}Set,_:=types.SetValueFrom(ctx,{{.ResourceClassName}}{{.ParentHierarchy}}ResourceModelElementType(),{{.ResourceClassName}}{{.ParentHierarchy}}List)
-								{{.ParentHierarchy}}.{{.ResourceClassName}}={{.ResourceClassName}}Set
+								{{.ResourceClassName}}{{.ParentHierarchy}}Set,_:=types.SetValueFrom(ctx,{{.ResourceClassName}}{{.ParentHierarchy}}ResourceModelElementType(),{{.ResourceClassName}}{{.ParentHierarchy}}List)
+								{{.ParentHierarchy}}.{{.ResourceClassName}}={{.ResourceClassName}}{{.ParentHierarchy}}Set
 								{{- end}}
 								{{- else}}
 								}
@@ -594,7 +594,6 @@ func set{{.ResourceClassName}}Id(ctx context.Context, data *{{.ResourceClassName
 {{ range .Children}}
 {{- $child:= .}}
 func get{{$.ResourceClassName}}{{ .ResourceClassName }}ChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *{{$.ResourceClassName}}ResourceModel, {{.PkgName}}{{.ParentHierarchy}}Plan, {{.PkgName}}{{.ParentHierarchy}}State []{{.ResourceClassName}}{{$.ResourceClassName}}ResourceModel) []map[string]interface{} {
-	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	{{- $enteredGrandChildDeclarationZone := false }}
 	{{- range .Children}}	
@@ -612,6 +611,7 @@ func get{{$.ResourceClassName}}{{ .ResourceClassName }}ChildPayloads(ctx context
         {{ .PkgName }}Identifiers := []{{.ResourceClassName}}Identifier{}
         {{- end}}
 	for _, {{ .PkgName }}{{.ParentHierarchy}} := range {{ .PkgName }}{{.ParentHierarchy}}Plan {
+			childMap := NewAciObject()
             {{- range .Properties}}
             if !{{ .PkgName }}{{$child.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}.IsNull() && !{{ .PkgName }}{{$child.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}.IsUnknown(){
                 {{- if eq .ValueType "bitmask"}}
@@ -862,26 +862,15 @@ func {{.ResourceClassName}}{{.ParentHierarchy}}ResourceModelElementType() attr.T
 
 {{/* A sub template for the grand child attributes used in the Payload function. */}}
 {{- define "grandChildPayload" }}
+{{$grandChild:= .}}
 var {{.PkgName}}{{.ParentHierarchy}}Plan, {{.PkgName}}{{.ParentHierarchy}}State  []{{.ResourceClassName}}{{.ParentHierarchy}}ResourceModel
 {{.ParentHierarchy | lowerFirstCharacter}}.{{.ResourceClassName}}.ElementsAs(ctx, &{{.PkgName}}{{.ParentHierarchy}}Plan, false)
-for _, {{.ParentName | lowerFirstCharacter}}{{.ResourceClassName | lowerFirstCharacter}}State := range {{.ParentHierarchy | lowerFirstCharacter}}State {
-{{.ParentName | lowerFirstCharacter}}{{.ResourceClassName | lowerFirstCharacter}}State.{{.ResourceClassName}}.ElementsAs(ctx, &{{.PkgName}}{{.ParentHierarchy}}State, false)
-if len({{ .PkgName }}{{.ParentHierarchy}}Plan) == 0 && len({{.PkgName}}{{.ParentHierarchy}}State) == 1 {
-	{{- if .AllowDelete}}
-	{{.PkgName}}{{.ParentHierarchy}}ChildMap := NewAciObject()
-	{{.PkgName}}{{.ParentHierarchy}}ChildMap.Attributes["status"] = "deleted"
-	{{ .ParentHierarchy }}Children = append({{ .ParentHierarchy }}Children, map[string]interface{}{"{{.PkgName}}": {{.PkgName}}{{.ParentHierarchy}}ChildMap})
-	{{- else}}
-	diags.AddError(
-		"{{ .ResourceClassName }} object cannot be deleted",
-		"deletion of child is only possible upon deletion of the parent",
-	)
-	return nil
-	{{- end }}
-}
-}
 if !{{ .ParentHierarchy | lowerFirstCharacter}}.{{.ResourceClassName}}.IsNull() && !{{ .ParentHierarchy | lowerFirstCharacter}}.{{.ResourceClassName}}.IsUnknown(){
+{{- if .IdentifiedBy}}
+        {{ .PkgName }}Identifiers := []{{.ResourceClassName}}Identifier{}
+{{- end}}
 for _, {{ .PkgName }}{{.ParentHierarchy}} := range {{.PkgName}}{{.ParentHierarchy}}Plan {
+	{{.PkgName}}{{.ParentHierarchy}}ChildMap := NewAciObject()
 	{{- range .Properties}}
 	if !{{ .PkgName }}{{$.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}.IsNull() && !{{ .PkgName }}{{$.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}.IsUnknown(){
 		{{- if eq .ValueType "bitmask"}}
@@ -901,8 +890,63 @@ for _, {{ .PkgName }}{{.ParentHierarchy}} := range {{.PkgName}}{{.ParentHierarch
 		{{- template "grandChildPayload" . }}
 	{{- end}}
 	{{ .ParentHierarchy }}Children = append({{ .ParentHierarchy }}Children, map[string]interface{}{"{{.PkgName}}": {{.PkgName}}{{$.ParentHierarchy}}ChildMap})
+	{{- if .IdentifiedBy}}
+	{{ .PkgName }}Identifier := {{ .ResourceClassName }}Identifier{}
+		{{- range .Properties}}
+			{{- if .IsNaming}}
+	{{ .PkgName }}Identifier.{{.Name}} = {{ .PkgName }}{{$grandChild.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}
+			{{- end}}
+		{{- end}}
+	{{ .PkgName }}Identifiers = append({{ .PkgName }}Identifiers, {{ .PkgName }}Identifier)
+	{{- end}}
 	}
-  }
+	{{- if .IdentifiedBy}}
+	for _, {{ .PkgName }}{{.ParentHierarchy}}state := range {{.ParentHierarchy | lowerFirstCharacter}}State {
+		{{ .PkgName }}{{.ParentHierarchy}}state.{{.ResourceClassName}}.ElementsAs(ctx, &{{.PkgName}}{{.ParentHierarchy}}State, false)
+		for _, {{ .PkgName }}{{.ParentHierarchy}} := range {{ .PkgName }}{{.ParentHierarchy}}State {
+			delete := true
+		for _, {{ .PkgName }}Identifier := range {{ .PkgName }}Identifiers { {{$i := 1}}{{$length := len .IdentifiedBy}}
+			if 
+			{{- range .Properties}}
+				{{- if .IsNaming }}
+				{{ .PkgName }}Identifier.{{.Name}} == {{ .PkgName }}{{$grandChild.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}{{- if ne $length $i}} {{$i = add $i 1}} && {{- end}}
+				{{- end}}
+			{{- end}} {
+				delete = false
+				break
+			}
+		}
+		if delete {
+			{{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete := NewAciObject()
+			{{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete.Attributes["status"] = "deleted"
+		{{- range .Properties}}
+			{{- if .IsNaming }}
+			{{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete.Attributes["{{.PropertyName}}"] = {{ .PkgName }}{{$grandChild.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}.ValueString()
+			{{- end}}
+		{{- end}}
+			{{ .ParentHierarchy }}Children = append({{ .ParentHierarchy }}Children, map[string]interface{}{"{{ .PkgName }}": {{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete})
+		}
+	}
+	}
+		{{- else}}
+		for _, {{.ParentName | lowerFirstCharacter}}{{.ResourceClassName | lowerFirstCharacter}}State := range {{.ParentHierarchy | lowerFirstCharacter}}State {
+		{{.ParentName | lowerFirstCharacter}}{{.ResourceClassName | lowerFirstCharacter}}State.{{.ResourceClassName}}.ElementsAs(ctx, &{{.PkgName}}{{.ParentHierarchy}}State, false)
+		if len({{ .PkgName }}{{.ParentHierarchy}}Plan) == 0 && len({{.PkgName}}{{.ParentHierarchy}}State) == 1 {
+			{{- if .AllowDelete}}
+			{{.PkgName}}{{.ParentHierarchy}}ChildMap := NewAciObject()
+			{{.PkgName}}{{.ParentHierarchy}}ChildMap.Attributes["status"] = "deleted"
+			{{ .ParentHierarchy }}Children = append({{ .ParentHierarchy }}Children, map[string]interface{}{"{{.PkgName}}": {{.PkgName}}{{.ParentHierarchy}}ChildMap})
+			{{- else}}
+			diags.AddError(
+				"{{ .ResourceClassName }} object cannot be deleted",
+				"deletion of child is only possible upon deletion of the parent",
+			)
+			return nil
+			{{- end }}
+		  }
+		}
+		{{- end }}
+	}
 {{- end }}
 
 
@@ -982,8 +1026,8 @@ for childAttributeName, childAttributeValue := range {{.PkgName}}childAttributeV
 		}
 	}
 	{{- range .Children}}
-	{{.ResourceClassName}}Set,_:=types.SetValueFrom(ctx,{{.ResourceClassName}}{{.ParentHierarchy}}ResourceModelElementType(),{{.ResourceClassName}}{{.ParentHierarchy}}List)
-	{{.ParentHierarchy}}.{{.ResourceClassName}}={{.ResourceClassName}}Set
+	{{.ResourceClassName}}{{.ParentHierarchy}}Set,_:=types.SetValueFrom(ctx,{{.ResourceClassName}}{{.ParentHierarchy}}ResourceModelElementType(),{{.ResourceClassName}}{{.ParentHierarchy}}List)
+	{{.ParentHierarchy}}.{{.ResourceClassName}}={{.ResourceClassName}}{{.ParentHierarchy}}Set
 	{{- end}}
 	{{- else}}
 	}
@@ -995,7 +1039,6 @@ for childAttributeName, childAttributeValue := range {{.PkgName}}childAttributeV
 
 {{/* A sub template for grand child declaration in the child payload function. */}}
 {{- define "grandChildDeclarationInChildPayloadFunction" }}
-{{.PkgName}}{{.ParentHierarchy}}ChildMap := NewAciObject()
 {{- $enteredGrandChildDeclarationZone := false }}
 {{- range .Children}}
 	{{- $enteredGrandChildDeclarationZone = true }}

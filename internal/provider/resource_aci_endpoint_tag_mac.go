@@ -13,13 +13,11 @@ import (
 
 	"github.com/ciscoecosystem/aci-go-client/v2/client"
 	"github.com/ciscoecosystem/aci-go-client/v2/container"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -42,50 +40,14 @@ type FvEpMacTagResource struct {
 
 // FvEpMacTagResourceModel describes the resource data model.
 type FvEpMacTagResourceModel struct {
-	Id            types.String `tfsdk:"id"`
-	ParentDn      types.String `tfsdk:"parent_dn"`
-	Annotation    types.String `tfsdk:"annotation"`
-	BdName        types.String `tfsdk:"bd_name"`
-	FvEpMacTagId  types.String `tfsdk:"id_attribute"`
-	Mac           types.String `tfsdk:"mac"`
-	Name          types.String `tfsdk:"name"`
-	NameAlias     types.String `tfsdk:"name_alias"`
-	TagAnnotation types.Set    `tfsdk:"annotations"`
-	TagTag        types.Set    `tfsdk:"tags"`
-}
-
-// TagAnnotationFvEpMacTagResourceModel describes the resource data model for the children without relation ships.
-type TagAnnotationFvEpMacTagResourceModel struct {
-	Key   types.String `tfsdk:"key"`
-	Value types.String `tfsdk:"value"`
-}
-
-func TagAnnotationFvEpMacTagResourceModelAttributeTypes() map[string]attr.Type {
-	return map[string]attr.Type{
-		"key":   types.StringType,
-		"value": types.StringType,
-	}
-}
-
-func TagAnnotationFvEpMacTagResourceModelElementType() attr.TypeWithAttributeTypes {
-	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationFvEpMacTagResourceModelAttributeTypes())
-}
-
-// TagTagFvEpMacTagResourceModel describes the resource data model for the children without relation ships.
-type TagTagFvEpMacTagResourceModel struct {
-	Key   types.String `tfsdk:"key"`
-	Value types.String `tfsdk:"value"`
-}
-
-func TagTagFvEpMacTagResourceModelAttributeTypes() map[string]attr.Type {
-	return map[string]attr.Type{
-		"key":   types.StringType,
-		"value": types.StringType,
-	}
-}
-
-func TagTagFvEpMacTagResourceModelElementType() attr.TypeWithAttributeTypes {
-	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagFvEpMacTagResourceModelAttributeTypes())
+	Id           types.String `tfsdk:"id"`
+	ParentDn     types.String `tfsdk:"parent_dn"`
+	Annotation   types.String `tfsdk:"annotation"`
+	BdName       types.String `tfsdk:"bd_name"`
+	FvEpMacTagId types.String `tfsdk:"id_attribute"`
+	Mac          types.String `tfsdk:"mac"`
+	Name         types.String `tfsdk:"name"`
+	NameAlias    types.String `tfsdk:"name_alias"`
 }
 
 type FvEpMacTagIdentifier struct {
@@ -176,62 +138,6 @@ func (r *FvEpMacTagResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 				MarkdownDescription: `The name alias of the Endpoint Tag Mac object.`,
 			},
-			"annotations": schema.SetNestedAttribute{
-				MarkdownDescription: ``,
-				Optional:            true,
-				Computed:            true,
-				PlanModifiers: []planmodifier.Set{
-					setplanmodifier.UseStateForUnknown(),
-				},
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"key": schema.StringAttribute{
-							Required: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
-								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-							},
-							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
-						},
-						"value": schema.StringAttribute{
-							Required: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
-								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-							},
-							MarkdownDescription: `The value of the property.`,
-						},
-					},
-				},
-			},
-			"tags": schema.SetNestedAttribute{
-				MarkdownDescription: ``,
-				Optional:            true,
-				Computed:            true,
-				PlanModifiers: []planmodifier.Set{
-					setplanmodifier.UseStateForUnknown(),
-				},
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"key": schema.StringAttribute{
-							Required: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
-								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-							},
-							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
-						},
-						"value": schema.StringAttribute{
-							Required: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
-								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-							},
-							MarkdownDescription: `The value of the property.`,
-						},
-					},
-				},
-			},
 		},
 	}
 	tflog.Debug(ctx, "End schema of resource: aci_endpoint_tag_mac")
@@ -261,11 +167,6 @@ func (r *FvEpMacTagResource) Configure(ctx context.Context, req resource.Configu
 
 func (r *FvEpMacTagResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	tflog.Debug(ctx, "Start create of resource: aci_endpoint_tag_mac")
-	// On create retrieve information on current state prior to making any changes in order to determine child delete operations
-	var stateData *FvEpMacTagResourceModel
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &stateData)...)
-	setFvEpMacTagId(ctx, stateData)
-	getAndSetFvEpMacTagAttributes(ctx, &resp.Diagnostics, r.client, stateData)
 
 	var data *FvEpMacTagResourceModel
 
@@ -280,13 +181,7 @@ func (r *FvEpMacTagResource) Create(ctx context.Context, req resource.CreateRequ
 
 	tflog.Debug(ctx, fmt.Sprintf("Create of resource aci_endpoint_tag_mac with id '%s'", data.Id.ValueString()))
 
-	var tagAnnotationPlan, tagAnnotationState []TagAnnotationFvEpMacTagResourceModel
-	data.TagAnnotation.ElementsAs(ctx, &tagAnnotationPlan, false)
-	stateData.TagAnnotation.ElementsAs(ctx, &tagAnnotationState, false)
-	var tagTagPlan, tagTagState []TagTagFvEpMacTagResourceModel
-	data.TagTag.ElementsAs(ctx, &tagTagPlan, false)
-	stateData.TagTag.ElementsAs(ctx, &tagTagState, false)
-	jsonPayload := getFvEpMacTagCreateJsonPayload(ctx, &resp.Diagnostics, data, tagAnnotationPlan, tagAnnotationState, tagTagPlan, tagTagState)
+	jsonPayload := getFvEpMacTagCreateJsonPayload(ctx, &resp.Diagnostics, data)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -333,11 +228,9 @@ func (r *FvEpMacTagResource) Read(ctx context.Context, req resource.ReadRequest,
 func (r *FvEpMacTagResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	tflog.Debug(ctx, "Start update of resource: aci_endpoint_tag_mac")
 	var data *FvEpMacTagResourceModel
-	var stateData *FvEpMacTagResourceModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
-	resp.Diagnostics.Append(req.State.Get(ctx, &stateData)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -345,13 +238,7 @@ func (r *FvEpMacTagResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	tflog.Debug(ctx, fmt.Sprintf("Update of resource aci_endpoint_tag_mac with id '%s'", data.Id.ValueString()))
 
-	var tagAnnotationPlan, tagAnnotationState []TagAnnotationFvEpMacTagResourceModel
-	data.TagAnnotation.ElementsAs(ctx, &tagAnnotationPlan, false)
-	stateData.TagAnnotation.ElementsAs(ctx, &tagAnnotationState, false)
-	var tagTagPlan, tagTagState []TagTagFvEpMacTagResourceModel
-	data.TagTag.ElementsAs(ctx, &tagTagPlan, false)
-	stateData.TagTag.ElementsAs(ctx, &tagTagState, false)
-	jsonPayload := getFvEpMacTagCreateJsonPayload(ctx, &resp.Diagnostics, data, tagAnnotationPlan, tagAnnotationState, tagTagPlan, tagTagState)
+	jsonPayload := getFvEpMacTagCreateJsonPayload(ctx, &resp.Diagnostics, data)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -405,7 +292,7 @@ func (r *FvEpMacTagResource) ImportState(ctx context.Context, req resource.Impor
 }
 
 func getAndSetFvEpMacTagAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *FvEpMacTagResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "fvEpMacTag,tagAnnotation,tagTag"), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json", data.Id.ValueString()), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -456,47 +343,6 @@ func getAndSetFvEpMacTagAttributes(ctx context.Context, diags *diag.Diagnostics,
 			if data.NameAlias.IsUnknown() {
 				data.NameAlias = types.StringNull()
 			}
-			TagAnnotationFvEpMacTag := TagAnnotationFvEpMacTagResourceModel{}
-			TagAnnotationFvEpMacTagList := make([]TagAnnotationFvEpMacTagResourceModel, 0)
-			TagTagFvEpMacTag := TagTagFvEpMacTagResourceModel{}
-			TagTagFvEpMacTagList := make([]TagTagFvEpMacTagResourceModel, 0)
-			_, ok := classReadInfo[0].(map[string]interface{})["children"]
-			if ok {
-				children := classReadInfo[0].(map[string]interface{})["children"].([]interface{})
-				for _, child := range children {
-					for childClassName, childClassDetails := range child.(map[string]interface{}) {
-						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
-						if childClassName == "tagAnnotation" {
-							for childAttributeName, childAttributeValue := range childAttributes {
-								if childAttributeName == "key" {
-									TagAnnotationFvEpMacTag.Key = basetypes.NewStringValue(childAttributeValue.(string))
-								}
-								if childAttributeName == "value" {
-									TagAnnotationFvEpMacTag.Value = basetypes.NewStringValue(childAttributeValue.(string))
-								}
-
-							}
-							TagAnnotationFvEpMacTagList = append(TagAnnotationFvEpMacTagList, TagAnnotationFvEpMacTag)
-						}
-						if childClassName == "tagTag" {
-							for childAttributeName, childAttributeValue := range childAttributes {
-								if childAttributeName == "key" {
-									TagTagFvEpMacTag.Key = basetypes.NewStringValue(childAttributeValue.(string))
-								}
-								if childAttributeName == "value" {
-									TagTagFvEpMacTag.Value = basetypes.NewStringValue(childAttributeValue.(string))
-								}
-
-							}
-							TagTagFvEpMacTagList = append(TagTagFvEpMacTagList, TagTagFvEpMacTag)
-						}
-					}
-				}
-			}
-			tagAnnotationSet, _ := types.SetValueFrom(ctx, data.TagAnnotation.ElementType(ctx), TagAnnotationFvEpMacTagList)
-			data.TagAnnotation = tagAnnotationSet
-			tagTagSet, _ := types.SetValueFrom(ctx, data.TagTag.ElementType(ctx), TagTagFvEpMacTagList)
-			data.TagTag = tagTagSet
 		} else {
 			diags.AddError(
 				"too many results in response",
@@ -541,102 +387,9 @@ func setFvEpMacTagId(ctx context.Context, data *FvEpMacTagResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", data.ParentDn.ValueString(), rn))
 }
 
-func getFvEpMacTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpMacTagResourceModel, tagAnnotationFvEpMacTagPlan, tagAnnotationFvEpMacTagState []TagAnnotationFvEpMacTagResourceModel) []map[string]interface{} {
-	childMap := NewAciObject()
-	childPayloads := []map[string]interface{}{}
-	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
-		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
-		for _, tagAnnotationFvEpMacTag := range tagAnnotationFvEpMacTagPlan {
-			if !tagAnnotationFvEpMacTag.Key.IsNull() && !tagAnnotationFvEpMacTag.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagAnnotationFvEpMacTag.Key.ValueString()
-			}
-			if !tagAnnotationFvEpMacTag.Value.IsNull() && !tagAnnotationFvEpMacTag.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagAnnotationFvEpMacTag.Value.ValueString()
-			}
-			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
-			tagAnnotationIdentifier := TagAnnotationIdentifier{}
-			tagAnnotationIdentifier.Key = tagAnnotationFvEpMacTag.Key
-			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
-		}
-		for _, tagAnnotation := range tagAnnotationFvEpMacTagState {
-			delete := true
-			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
-				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
-					delete = false
-					break
-				}
-			}
-			if delete {
-				tagAnnotationChildMapForDelete := NewAciObject()
-				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
-				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
-			}
-		}
-	} else {
-		data.TagAnnotation = types.SetNull(data.TagAnnotation.ElementType(ctx))
-	}
-
-	return childPayloads
-}
-
-func getFvEpMacTagTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpMacTagResourceModel, tagTagFvEpMacTagPlan, tagTagFvEpMacTagState []TagTagFvEpMacTagResourceModel) []map[string]interface{} {
-	childMap := NewAciObject()
-	childPayloads := []map[string]interface{}{}
-	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
-		tagTagIdentifiers := []TagTagIdentifier{}
-		for _, tagTagFvEpMacTag := range tagTagFvEpMacTagPlan {
-			if !tagTagFvEpMacTag.Key.IsNull() && !tagTagFvEpMacTag.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagTagFvEpMacTag.Key.ValueString()
-			}
-			if !tagTagFvEpMacTag.Value.IsNull() && !tagTagFvEpMacTag.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagTagFvEpMacTag.Value.ValueString()
-			}
-			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
-			tagTagIdentifier := TagTagIdentifier{}
-			tagTagIdentifier.Key = tagTagFvEpMacTag.Key
-			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
-		}
-		for _, tagTag := range tagTagFvEpMacTagState {
-			delete := true
-			for _, tagTagIdentifier := range tagTagIdentifiers {
-				if tagTagIdentifier.Key == tagTag.Key {
-					delete = false
-					break
-				}
-			}
-			if delete {
-				tagTagChildMapForDelete := NewAciObject()
-				tagTagChildMapForDelete.Attributes["status"] = "deleted"
-				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
-			}
-		}
-	} else {
-		data.TagTag = types.SetNull(data.TagTag.ElementType(ctx))
-	}
-
-	return childPayloads
-}
-
-func getFvEpMacTagCreateJsonPayload(ctx context.Context, diags *diag.Diagnostics, data *FvEpMacTagResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationFvEpMacTagResourceModel, tagTagPlan, tagTagState []TagTagFvEpMacTagResourceModel) *container.Container {
+func getFvEpMacTagCreateJsonPayload(ctx context.Context, diags *diag.Diagnostics, data *FvEpMacTagResourceModel) *container.Container {
 	payloadMap := map[string]interface{}{}
 	payloadMap["attributes"] = map[string]string{}
-	childPayloads := []map[string]interface{}{}
-
-	TagAnnotationchildPayloads := getFvEpMacTagTagAnnotationChildPayloads(ctx, diags, data, tagAnnotationPlan, tagAnnotationState)
-	if TagAnnotationchildPayloads == nil {
-		return nil
-	}
-	childPayloads = append(childPayloads, TagAnnotationchildPayloads...)
-
-	TagTagchildPayloads := getFvEpMacTagTagTagChildPayloads(ctx, diags, data, tagTagPlan, tagTagState)
-	if TagTagchildPayloads == nil {
-		return nil
-	}
-	childPayloads = append(childPayloads, TagTagchildPayloads...)
-
-	payloadMap["children"] = childPayloads
 	if !data.Annotation.IsNull() && !data.Annotation.IsUnknown() {
 		payloadMap["attributes"].(map[string]string)["annotation"] = data.Annotation.ValueString()
 	}

@@ -223,3 +223,16 @@ commPol:
   contained_by:
       - "polUni"
   rn_prepend: "fabric"
+  children:
+    - tagAnnotation
+    - tagTag
+
+commHttps:
+  children:
+    - tagAnnotation
+    # - tagTag
+
+# commRsKeyRing:
+#   children:
+#     - tagAnnotation
+

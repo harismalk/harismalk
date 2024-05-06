@@ -85,7 +85,6 @@ type CommHttpsCommPolResourceModel struct {
 	CommRsClientCertCA           types.Set    `tfsdk:"tp"`
 	CommRsKeyRing                types.Set    `tfsdk:"key_ring"`
 	TagAnnotation                types.Set    `tfsdk:"annotations"`
-	TagTag                       types.Set    `tfsdk:"tags"`
 }
 
 func CommHttpsCommPolResourceModelAttributeTypes() map[string]attr.Type {
@@ -115,7 +114,6 @@ func CommHttpsCommPolResourceModelAttributeTypes() map[string]attr.Type {
 		"tp":                              types.SetType{ElemType: types.StringType},
 		"key_ring":                        types.SetType{ElemType: types.StringType},
 		"annotations":                     types.SetType{ElemType: types.StringType},
-		"tags":                            types.SetType{ElemType: types.StringType},
 	}
 }
 
@@ -125,18 +123,14 @@ func CommHttpsCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
 
 // CommRsClientCertCACommHttpsCommPolResourceModel describes the resource data model for the children without relation ships.
 type CommRsClientCertCACommHttpsCommPolResourceModel struct {
-	Annotation    types.String `tfsdk:"annotation"`
-	TDn           types.String `tfsdk:"target_dn"`
-	TagAnnotation types.Set    `tfsdk:"annotations"`
-	TagTag        types.Set    `tfsdk:"tags"`
+	Annotation types.String `tfsdk:"annotation"`
+	TDn        types.String `tfsdk:"target_dn"`
 }
 
 func CommRsClientCertCACommHttpsCommPolResourceModelAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
-		"annotation":  types.StringType,
-		"target_dn":   types.StringType,
-		"annotations": types.SetType{ElemType: types.StringType},
-		"tags":        types.SetType{ElemType: types.StringType},
+		"annotation": types.StringType,
+		"target_dn":  types.StringType,
 	}
 }
 
@@ -144,93 +138,21 @@ func CommRsClientCertCACommHttpsCommPolResourceModelElementType() attr.TypeWithA
 	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, CommRsClientCertCACommHttpsCommPolResourceModelAttributeTypes())
 }
 
-// TagAnnotationCommRsClientCertCACommHttpsCommPolResourceModel describes the resource data model for the children without relation ships.
-type TagAnnotationCommRsClientCertCACommHttpsCommPolResourceModel struct {
-	Key   types.String `tfsdk:"key"`
-	Value types.String `tfsdk:"value"`
-}
-
-func TagAnnotationCommRsClientCertCACommHttpsCommPolResourceModelAttributeTypes() map[string]attr.Type {
-	return map[string]attr.Type{
-		"key":   types.StringType,
-		"value": types.StringType,
-	}
-}
-
-func TagAnnotationCommRsClientCertCACommHttpsCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
-	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationCommRsClientCertCACommHttpsCommPolResourceModelAttributeTypes())
-}
-
-// TagTagCommRsClientCertCACommHttpsCommPolResourceModel describes the resource data model for the children without relation ships.
-type TagTagCommRsClientCertCACommHttpsCommPolResourceModel struct {
-	Key   types.String `tfsdk:"key"`
-	Value types.String `tfsdk:"value"`
-}
-
-func TagTagCommRsClientCertCACommHttpsCommPolResourceModelAttributeTypes() map[string]attr.Type {
-	return map[string]attr.Type{
-		"key":   types.StringType,
-		"value": types.StringType,
-	}
-}
-
-func TagTagCommRsClientCertCACommHttpsCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
-	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagCommRsClientCertCACommHttpsCommPolResourceModelAttributeTypes())
-}
-
 // CommRsKeyRingCommHttpsCommPolResourceModel describes the resource data model for the children without relation ships.
 type CommRsKeyRingCommHttpsCommPolResourceModel struct {
 	Annotation       types.String `tfsdk:"annotation"`
 	TnPkiKeyRingName types.String `tfsdk:"tn_pki_key_ring_name"`
-	TagAnnotation    types.Set    `tfsdk:"annotations"`
-	TagTag           types.Set    `tfsdk:"tags"`
 }
 
 func CommRsKeyRingCommHttpsCommPolResourceModelAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"annotation":           types.StringType,
 		"tn_pki_key_ring_name": types.StringType,
-		"annotations":          types.SetType{ElemType: types.StringType},
-		"tags":                 types.SetType{ElemType: types.StringType},
 	}
 }
 
 func CommRsKeyRingCommHttpsCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
 	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, CommRsKeyRingCommHttpsCommPolResourceModelAttributeTypes())
-}
-
-// TagAnnotationCommRsKeyRingCommHttpsCommPolResourceModel describes the resource data model for the children without relation ships.
-type TagAnnotationCommRsKeyRingCommHttpsCommPolResourceModel struct {
-	Key   types.String `tfsdk:"key"`
-	Value types.String `tfsdk:"value"`
-}
-
-func TagAnnotationCommRsKeyRingCommHttpsCommPolResourceModelAttributeTypes() map[string]attr.Type {
-	return map[string]attr.Type{
-		"key":   types.StringType,
-		"value": types.StringType,
-	}
-}
-
-func TagAnnotationCommRsKeyRingCommHttpsCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
-	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationCommRsKeyRingCommHttpsCommPolResourceModelAttributeTypes())
-}
-
-// TagTagCommRsKeyRingCommHttpsCommPolResourceModel describes the resource data model for the children without relation ships.
-type TagTagCommRsKeyRingCommHttpsCommPolResourceModel struct {
-	Key   types.String `tfsdk:"key"`
-	Value types.String `tfsdk:"value"`
-}
-
-func TagTagCommRsKeyRingCommHttpsCommPolResourceModelAttributeTypes() map[string]attr.Type {
-	return map[string]attr.Type{
-		"key":   types.StringType,
-		"value": types.StringType,
-	}
-}
-
-func TagTagCommRsKeyRingCommHttpsCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
-	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagCommRsKeyRingCommHttpsCommPolResourceModelAttributeTypes())
 }
 
 // TagAnnotationCommHttpsCommPolResourceModel describes the resource data model for the children without relation ships.
@@ -248,23 +170,6 @@ func TagAnnotationCommHttpsCommPolResourceModelAttributeTypes() map[string]attr.
 
 func TagAnnotationCommHttpsCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
 	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationCommHttpsCommPolResourceModelAttributeTypes())
-}
-
-// TagTagCommHttpsCommPolResourceModel describes the resource data model for the children without relation ships.
-type TagTagCommHttpsCommPolResourceModel struct {
-	Key   types.String `tfsdk:"key"`
-	Value types.String `tfsdk:"value"`
-}
-
-func TagTagCommHttpsCommPolResourceModelAttributeTypes() map[string]attr.Type {
-	return map[string]attr.Type{
-		"key":   types.StringType,
-		"value": types.StringType,
-	}
-}
-
-func TagTagCommHttpsCommPolResourceModelElementType() attr.TypeWithAttributeTypes {
-	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagCommHttpsCommPolResourceModelAttributeTypes())
 }
 
 // TagAnnotationCommPolResourceModel describes the resource data model for the children without relation ships.
@@ -668,62 +573,6 @@ func (r *CommPolResource) Schema(ctx context.Context, req resource.SchemaRequest
 										},
 										MarkdownDescription: `The distinguished name of the target.`,
 									},
-									"annotations": schema.SetNestedAttribute{
-										MarkdownDescription: ``,
-										Optional:            true,
-										Computed:            true,
-										PlanModifiers: []planmodifier.Set{
-											setplanmodifier.UseStateForUnknown(),
-										},
-										NestedObject: schema.NestedAttributeObject{
-											Attributes: map[string]schema.Attribute{
-												"key": schema.StringAttribute{
-													Required: true,
-													PlanModifiers: []planmodifier.String{
-														stringplanmodifier.UseStateForUnknown(),
-														SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-													},
-													MarkdownDescription: `The key used to uniquely identify this configuration object.`,
-												},
-												"value": schema.StringAttribute{
-													Required: true,
-													PlanModifiers: []planmodifier.String{
-														stringplanmodifier.UseStateForUnknown(),
-														SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-													},
-													MarkdownDescription: `The value of the property.`,
-												},
-											},
-										},
-									},
-									"tags": schema.SetNestedAttribute{
-										MarkdownDescription: ``,
-										Optional:            true,
-										Computed:            true,
-										PlanModifiers: []planmodifier.Set{
-											setplanmodifier.UseStateForUnknown(),
-										},
-										NestedObject: schema.NestedAttributeObject{
-											Attributes: map[string]schema.Attribute{
-												"key": schema.StringAttribute{
-													Required: true,
-													PlanModifiers: []planmodifier.String{
-														stringplanmodifier.UseStateForUnknown(),
-														SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-													},
-													MarkdownDescription: `The key used to uniquely identify this configuration object.`,
-												},
-												"value": schema.StringAttribute{
-													Required: true,
-													PlanModifiers: []planmodifier.String{
-														stringplanmodifier.UseStateForUnknown(),
-														SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-													},
-													MarkdownDescription: `The value of the property.`,
-												},
-											},
-										},
-									},
 								},
 							},
 						},
@@ -757,94 +606,10 @@ func (r *CommPolResource) Schema(ctx context.Context, req resource.SchemaRequest
 										},
 										MarkdownDescription: `The HTTP connection key ring. Each PKI device holds a pair of asymmetric Rivest-Shamir-Adleman (RSA) or Elliptic Curve Cryptography (ECC) encryption keys, one kept private and one made public, stored in an internal key ring.`,
 									},
-									"annotations": schema.SetNestedAttribute{
-										MarkdownDescription: ``,
-										Optional:            true,
-										Computed:            true,
-										PlanModifiers: []planmodifier.Set{
-											setplanmodifier.UseStateForUnknown(),
-										},
-										NestedObject: schema.NestedAttributeObject{
-											Attributes: map[string]schema.Attribute{
-												"key": schema.StringAttribute{
-													Required: true,
-													PlanModifiers: []planmodifier.String{
-														stringplanmodifier.UseStateForUnknown(),
-														SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-													},
-													MarkdownDescription: `The key used to uniquely identify this configuration object.`,
-												},
-												"value": schema.StringAttribute{
-													Required: true,
-													PlanModifiers: []planmodifier.String{
-														stringplanmodifier.UseStateForUnknown(),
-														SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-													},
-													MarkdownDescription: `The value of the property.`,
-												},
-											},
-										},
-									},
-									"tags": schema.SetNestedAttribute{
-										MarkdownDescription: ``,
-										Optional:            true,
-										Computed:            true,
-										PlanModifiers: []planmodifier.Set{
-											setplanmodifier.UseStateForUnknown(),
-										},
-										NestedObject: schema.NestedAttributeObject{
-											Attributes: map[string]schema.Attribute{
-												"key": schema.StringAttribute{
-													Required: true,
-													PlanModifiers: []planmodifier.String{
-														stringplanmodifier.UseStateForUnknown(),
-														SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-													},
-													MarkdownDescription: `The key used to uniquely identify this configuration object.`,
-												},
-												"value": schema.StringAttribute{
-													Required: true,
-													PlanModifiers: []planmodifier.String{
-														stringplanmodifier.UseStateForUnknown(),
-														SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-													},
-													MarkdownDescription: `The value of the property.`,
-												},
-											},
-										},
-									},
 								},
 							},
 						},
 						"annotations": schema.SetNestedAttribute{
-							MarkdownDescription: ``,
-							Optional:            true,
-							Computed:            true,
-							PlanModifiers: []planmodifier.Set{
-								setplanmodifier.UseStateForUnknown(),
-							},
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"key": schema.StringAttribute{
-										Required: true,
-										PlanModifiers: []planmodifier.String{
-											stringplanmodifier.UseStateForUnknown(),
-											SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-										},
-										MarkdownDescription: `The key used to uniquely identify this configuration object.`,
-									},
-									"value": schema.StringAttribute{
-										Required: true,
-										PlanModifiers: []planmodifier.String{
-											stringplanmodifier.UseStateForUnknown(),
-											SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-										},
-										MarkdownDescription: `The value of the property.`,
-									},
-								},
-							},
-						},
-						"tags": schema.SetNestedAttribute{
 							MarkdownDescription: ``,
 							Optional:            true,
 							Computed:            true,
@@ -1110,7 +875,7 @@ func (r *CommPolResource) ImportState(ctx context.Context, req resource.ImportSt
 }
 
 func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *CommPolResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "commPol,commHttps,tagAnnotation,tagTag,commRsClientCertCA,commRsKeyRing,tagAnnotation,tagTag,tagAnnotation,tagTag,tagAnnotation,tagTag"), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "commPol,commHttps,tagAnnotation,tagTag,commRsClientCertCA,commRsKeyRing,tagAnnotation"), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -1170,20 +935,10 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 			CommHttpsCommPolList := make([]CommHttpsCommPolResourceModel, 0)
 			CommRsClientCertCACommHttpsCommPol := CommRsClientCertCACommHttpsCommPolResourceModel{}
 			CommRsClientCertCACommHttpsCommPolList := make([]CommRsClientCertCACommHttpsCommPolResourceModel, 0)
-			TagAnnotationCommRsClientCertCACommHttpsCommPol := TagAnnotationCommRsClientCertCACommHttpsCommPolResourceModel{}
-			TagAnnotationCommRsClientCertCACommHttpsCommPolList := make([]TagAnnotationCommRsClientCertCACommHttpsCommPolResourceModel, 0)
-			TagTagCommRsClientCertCACommHttpsCommPol := TagTagCommRsClientCertCACommHttpsCommPolResourceModel{}
-			TagTagCommRsClientCertCACommHttpsCommPolList := make([]TagTagCommRsClientCertCACommHttpsCommPolResourceModel, 0)
 			CommRsKeyRingCommHttpsCommPol := CommRsKeyRingCommHttpsCommPolResourceModel{}
 			CommRsKeyRingCommHttpsCommPolList := make([]CommRsKeyRingCommHttpsCommPolResourceModel, 0)
-			TagAnnotationCommRsKeyRingCommHttpsCommPol := TagAnnotationCommRsKeyRingCommHttpsCommPolResourceModel{}
-			TagAnnotationCommRsKeyRingCommHttpsCommPolList := make([]TagAnnotationCommRsKeyRingCommHttpsCommPolResourceModel, 0)
-			TagTagCommRsKeyRingCommHttpsCommPol := TagTagCommRsKeyRingCommHttpsCommPolResourceModel{}
-			TagTagCommRsKeyRingCommHttpsCommPolList := make([]TagTagCommRsKeyRingCommHttpsCommPolResourceModel, 0)
 			TagAnnotationCommHttpsCommPol := TagAnnotationCommHttpsCommPolResourceModel{}
 			TagAnnotationCommHttpsCommPolList := make([]TagAnnotationCommHttpsCommPolResourceModel, 0)
-			TagTagCommHttpsCommPol := TagTagCommHttpsCommPolResourceModel{}
-			TagTagCommHttpsCommPolList := make([]TagTagCommHttpsCommPolResourceModel, 0)
 			TagAnnotationCommPol := TagAnnotationCommPolResourceModel{}
 			TagAnnotationCommPolList := make([]TagAnnotationCommPolResourceModel, 0)
 			TagTagCommPol := TagTagCommPolResourceModel{}
@@ -1283,41 +1038,6 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 													CommRsClientCertCACommHttpsCommPol.TDn = basetypes.NewStringValue(childAttributeValue.(string))
 												}
 											}
-											childrenOfCommRsClientCertCACommHttpsCommPol, childrenOfCommRsClientCertCACommHttpsCommPolExist := childClassDetailsCommHttpsCommPol.(map[string]interface{})["children"]
-											if childrenOfCommRsClientCertCACommHttpsCommPolExist {
-												for _, childCommRsClientCertCACommHttpsCommPol := range childrenOfCommRsClientCertCACommHttpsCommPol.([]interface{}) {
-													for childClassNameCommRsClientCertCACommHttpsCommPol, childClassDetailsCommRsClientCertCACommHttpsCommPol := range childCommRsClientCertCACommHttpsCommPol.(map[string]interface{}) {
-														if childClassNameCommRsClientCertCACommHttpsCommPol == "tagAnnotation" {
-															tagAnnotationchildAttributeValue := childClassDetailsCommRsClientCertCACommHttpsCommPol.(map[string]interface{})["attributes"].(map[string]interface{})
-															for childAttributeName, childAttributeValue := range tagAnnotationchildAttributeValue {
-																if childAttributeName == "key" {
-																	TagAnnotationCommRsClientCertCACommHttpsCommPol.Key = basetypes.NewStringValue(childAttributeValue.(string))
-																}
-																if childAttributeName == "value" {
-																	TagAnnotationCommRsClientCertCACommHttpsCommPol.Value = basetypes.NewStringValue(childAttributeValue.(string))
-																}
-															}
-															TagAnnotationCommRsClientCertCACommHttpsCommPolList = append(TagAnnotationCommRsClientCertCACommHttpsCommPolList, TagAnnotationCommRsClientCertCACommHttpsCommPol)
-														}
-														if childClassNameCommRsClientCertCACommHttpsCommPol == "tagTag" {
-															tagTagchildAttributeValue := childClassDetailsCommRsClientCertCACommHttpsCommPol.(map[string]interface{})["attributes"].(map[string]interface{})
-															for childAttributeName, childAttributeValue := range tagTagchildAttributeValue {
-																if childAttributeName == "key" {
-																	TagTagCommRsClientCertCACommHttpsCommPol.Key = basetypes.NewStringValue(childAttributeValue.(string))
-																}
-																if childAttributeName == "value" {
-																	TagTagCommRsClientCertCACommHttpsCommPol.Value = basetypes.NewStringValue(childAttributeValue.(string))
-																}
-															}
-															TagTagCommRsClientCertCACommHttpsCommPolList = append(TagTagCommRsClientCertCACommHttpsCommPolList, TagTagCommRsClientCertCACommHttpsCommPol)
-														}
-													}
-												}
-											}
-											TagAnnotationSet, _ := types.SetValueFrom(ctx, TagAnnotationCommRsClientCertCACommHttpsCommPolResourceModelElementType(), TagAnnotationCommRsClientCertCACommHttpsCommPolList)
-											CommRsClientCertCACommHttpsCommPol.TagAnnotation = TagAnnotationSet
-											TagTagSet, _ := types.SetValueFrom(ctx, TagTagCommRsClientCertCACommHttpsCommPolResourceModelElementType(), TagTagCommRsClientCertCACommHttpsCommPolList)
-											CommRsClientCertCACommHttpsCommPol.TagTag = TagTagSet
 											CommRsClientCertCACommHttpsCommPolList = append(CommRsClientCertCACommHttpsCommPolList, CommRsClientCertCACommHttpsCommPol)
 										}
 										if childClassNameCommHttpsCommPol == "commRsKeyRing" {
@@ -1330,41 +1050,6 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 													CommRsKeyRingCommHttpsCommPol.TnPkiKeyRingName = basetypes.NewStringValue(childAttributeValue.(string))
 												}
 											}
-											childrenOfCommRsKeyRingCommHttpsCommPol, childrenOfCommRsKeyRingCommHttpsCommPolExist := childClassDetailsCommHttpsCommPol.(map[string]interface{})["children"]
-											if childrenOfCommRsKeyRingCommHttpsCommPolExist {
-												for _, childCommRsKeyRingCommHttpsCommPol := range childrenOfCommRsKeyRingCommHttpsCommPol.([]interface{}) {
-													for childClassNameCommRsKeyRingCommHttpsCommPol, childClassDetailsCommRsKeyRingCommHttpsCommPol := range childCommRsKeyRingCommHttpsCommPol.(map[string]interface{}) {
-														if childClassNameCommRsKeyRingCommHttpsCommPol == "tagAnnotation" {
-															tagAnnotationchildAttributeValue := childClassDetailsCommRsKeyRingCommHttpsCommPol.(map[string]interface{})["attributes"].(map[string]interface{})
-															for childAttributeName, childAttributeValue := range tagAnnotationchildAttributeValue {
-																if childAttributeName == "key" {
-																	TagAnnotationCommRsKeyRingCommHttpsCommPol.Key = basetypes.NewStringValue(childAttributeValue.(string))
-																}
-																if childAttributeName == "value" {
-																	TagAnnotationCommRsKeyRingCommHttpsCommPol.Value = basetypes.NewStringValue(childAttributeValue.(string))
-																}
-															}
-															TagAnnotationCommRsKeyRingCommHttpsCommPolList = append(TagAnnotationCommRsKeyRingCommHttpsCommPolList, TagAnnotationCommRsKeyRingCommHttpsCommPol)
-														}
-														if childClassNameCommRsKeyRingCommHttpsCommPol == "tagTag" {
-															tagTagchildAttributeValue := childClassDetailsCommRsKeyRingCommHttpsCommPol.(map[string]interface{})["attributes"].(map[string]interface{})
-															for childAttributeName, childAttributeValue := range tagTagchildAttributeValue {
-																if childAttributeName == "key" {
-																	TagTagCommRsKeyRingCommHttpsCommPol.Key = basetypes.NewStringValue(childAttributeValue.(string))
-																}
-																if childAttributeName == "value" {
-																	TagTagCommRsKeyRingCommHttpsCommPol.Value = basetypes.NewStringValue(childAttributeValue.(string))
-																}
-															}
-															TagTagCommRsKeyRingCommHttpsCommPolList = append(TagTagCommRsKeyRingCommHttpsCommPolList, TagTagCommRsKeyRingCommHttpsCommPol)
-														}
-													}
-												}
-											}
-											TagAnnotationSet, _ := types.SetValueFrom(ctx, TagAnnotationCommRsKeyRingCommHttpsCommPolResourceModelElementType(), TagAnnotationCommRsKeyRingCommHttpsCommPolList)
-											CommRsKeyRingCommHttpsCommPol.TagAnnotation = TagAnnotationSet
-											TagTagSet, _ := types.SetValueFrom(ctx, TagTagCommRsKeyRingCommHttpsCommPolResourceModelElementType(), TagTagCommRsKeyRingCommHttpsCommPolList)
-											CommRsKeyRingCommHttpsCommPol.TagTag = TagTagSet
 											CommRsKeyRingCommHttpsCommPolList = append(CommRsKeyRingCommHttpsCommPolList, CommRsKeyRingCommHttpsCommPol)
 										}
 										if childClassNameCommHttpsCommPol == "tagAnnotation" {
@@ -1379,29 +1064,15 @@ func getAndSetCommPolAttributes(ctx context.Context, diags *diag.Diagnostics, cl
 											}
 											TagAnnotationCommHttpsCommPolList = append(TagAnnotationCommHttpsCommPolList, TagAnnotationCommHttpsCommPol)
 										}
-										if childClassNameCommHttpsCommPol == "tagTag" {
-											tagTagchildAttributeValue := childClassDetailsCommHttpsCommPol.(map[string]interface{})["attributes"].(map[string]interface{})
-											for childAttributeName, childAttributeValue := range tagTagchildAttributeValue {
-												if childAttributeName == "key" {
-													TagTagCommHttpsCommPol.Key = basetypes.NewStringValue(childAttributeValue.(string))
-												}
-												if childAttributeName == "value" {
-													TagTagCommHttpsCommPol.Value = basetypes.NewStringValue(childAttributeValue.(string))
-												}
-											}
-											TagTagCommHttpsCommPolList = append(TagTagCommHttpsCommPolList, TagTagCommHttpsCommPol)
-										}
 									}
 								}
 							}
-							CommRsClientCertCASet, _ := types.SetValueFrom(ctx, CommRsClientCertCACommHttpsCommPolResourceModelElementType(), CommRsClientCertCACommHttpsCommPolList)
-							CommHttpsCommPol.CommRsClientCertCA = CommRsClientCertCASet
-							CommRsKeyRingSet, _ := types.SetValueFrom(ctx, CommRsKeyRingCommHttpsCommPolResourceModelElementType(), CommRsKeyRingCommHttpsCommPolList)
-							CommHttpsCommPol.CommRsKeyRing = CommRsKeyRingSet
-							TagAnnotationSet, _ := types.SetValueFrom(ctx, TagAnnotationCommHttpsCommPolResourceModelElementType(), TagAnnotationCommHttpsCommPolList)
-							CommHttpsCommPol.TagAnnotation = TagAnnotationSet
-							TagTagSet, _ := types.SetValueFrom(ctx, TagTagCommHttpsCommPolResourceModelElementType(), TagTagCommHttpsCommPolList)
-							CommHttpsCommPol.TagTag = TagTagSet
+							CommRsClientCertCACommHttpsCommPolSet, _ := types.SetValueFrom(ctx, CommRsClientCertCACommHttpsCommPolResourceModelElementType(), CommRsClientCertCACommHttpsCommPolList)
+							CommHttpsCommPol.CommRsClientCertCA = CommRsClientCertCACommHttpsCommPolSet
+							CommRsKeyRingCommHttpsCommPolSet, _ := types.SetValueFrom(ctx, CommRsKeyRingCommHttpsCommPolResourceModelElementType(), CommRsKeyRingCommHttpsCommPolList)
+							CommHttpsCommPol.CommRsKeyRing = CommRsKeyRingCommHttpsCommPolSet
+							TagAnnotationCommHttpsCommPolSet, _ := types.SetValueFrom(ctx, TagAnnotationCommHttpsCommPolResourceModelElementType(), TagAnnotationCommHttpsCommPolList)
+							CommHttpsCommPol.TagAnnotation = TagAnnotationCommHttpsCommPolSet
 							CommHttpsCommPolList = append(CommHttpsCommPolList, CommHttpsCommPol)
 						}
 						if childClassName == "tagAnnotation" {
@@ -1464,21 +1135,11 @@ func setCommPolId(ctx context.Context, data *CommPolResourceModel) {
 }
 
 func getCommPolCommHttpsChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *CommPolResourceModel, commHttpsCommPolPlan, commHttpsCommPolState []CommHttpsCommPolResourceModel) []map[string]interface{} {
-	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
-	commRsClientCertCACommHttpsCommPolChildMap := NewAciObject()
-	tagAnnotationCommRsClientCertCACommHttpsCommPolChildMap := NewAciObject()
-	tagTagCommRsClientCertCACommHttpsCommPolChildMap := NewAciObject()
-	CommRsClientCertCACommHttpsCommPolChildren := make([]map[string]interface{}, 0)
-	commRsKeyRingCommHttpsCommPolChildMap := NewAciObject()
-	tagAnnotationCommRsKeyRingCommHttpsCommPolChildMap := NewAciObject()
-	tagTagCommRsKeyRingCommHttpsCommPolChildMap := NewAciObject()
-	CommRsKeyRingCommHttpsCommPolChildren := make([]map[string]interface{}, 0)
-	tagAnnotationCommHttpsCommPolChildMap := NewAciObject()
-	tagTagCommHttpsCommPolChildMap := NewAciObject()
 	CommHttpsCommPolChildren := make([]map[string]interface{}, 0)
 	if !data.CommHttps.IsNull() && !data.CommHttps.IsUnknown() {
 		for _, commHttpsCommPol := range commHttpsCommPolPlan {
+			childMap := NewAciObject()
 			if !commHttpsCommPol.AccessControlAllowCredential.IsNull() && !commHttpsCommPol.AccessControlAllowCredential.IsUnknown() {
 				childMap.Attributes["accessControlAllowCredential"] = commHttpsCommPol.AccessControlAllowCredential.ValueString()
 			}
@@ -1549,18 +1210,12 @@ func getCommPolCommHttpsChildPayloads(ctx context.Context, diags *diag.Diagnosti
 			if !commHttpsCommPol.VisoreAccess.IsNull() && !commHttpsCommPol.VisoreAccess.IsUnknown() {
 				childMap.Attributes["visoreAccess"] = commHttpsCommPol.VisoreAccess.ValueString()
 			}
+
 			var commRsClientCertCACommHttpsCommPolPlan, commRsClientCertCACommHttpsCommPolState []CommRsClientCertCACommHttpsCommPolResourceModel
 			commHttpsCommPol.CommRsClientCertCA.ElementsAs(ctx, &commRsClientCertCACommHttpsCommPolPlan, false)
-			for _, commHttpscommRsClientCertCAState := range commHttpsCommPolState {
-				commHttpscommRsClientCertCAState.CommRsClientCertCA.ElementsAs(ctx, &commRsClientCertCACommHttpsCommPolState, false)
-				if len(commRsClientCertCACommHttpsCommPolPlan) == 0 && len(commRsClientCertCACommHttpsCommPolState) == 1 {
-					commRsClientCertCACommHttpsCommPolChildMap := NewAciObject()
-					commRsClientCertCACommHttpsCommPolChildMap.Attributes["status"] = "deleted"
-					CommHttpsCommPolChildren = append(CommHttpsCommPolChildren, map[string]interface{}{"commRsClientCertCA": commRsClientCertCACommHttpsCommPolChildMap})
-				}
-			}
 			if !commHttpsCommPol.CommRsClientCertCA.IsNull() && !commHttpsCommPol.CommRsClientCertCA.IsUnknown() {
 				for _, commRsClientCertCACommHttpsCommPol := range commRsClientCertCACommHttpsCommPolPlan {
+					commRsClientCertCACommHttpsCommPolChildMap := NewAciObject()
 					if !commRsClientCertCACommHttpsCommPol.Annotation.IsNull() && !commRsClientCertCACommHttpsCommPol.Annotation.IsUnknown() {
 						commRsClientCertCACommHttpsCommPolChildMap.Attributes["annotation"] = commRsClientCertCACommHttpsCommPol.Annotation.ValueString()
 					} else {
@@ -1569,65 +1224,23 @@ func getCommPolCommHttpsChildPayloads(ctx context.Context, diags *diag.Diagnosti
 					if !commRsClientCertCACommHttpsCommPol.TDn.IsNull() && !commRsClientCertCACommHttpsCommPol.TDn.IsUnknown() {
 						commRsClientCertCACommHttpsCommPolChildMap.Attributes["tDn"] = commRsClientCertCACommHttpsCommPol.TDn.ValueString()
 					}
-					var tagAnnotationCommRsClientCertCACommHttpsCommPolPlan, tagAnnotationCommRsClientCertCACommHttpsCommPolState []TagAnnotationCommRsClientCertCACommHttpsCommPolResourceModel
-					commRsClientCertCACommHttpsCommPol.TagAnnotation.ElementsAs(ctx, &tagAnnotationCommRsClientCertCACommHttpsCommPolPlan, false)
-					for _, commRsClientCertCAtagAnnotationState := range commRsClientCertCACommHttpsCommPolState {
-						commRsClientCertCAtagAnnotationState.TagAnnotation.ElementsAs(ctx, &tagAnnotationCommRsClientCertCACommHttpsCommPolState, false)
-						if len(tagAnnotationCommRsClientCertCACommHttpsCommPolPlan) == 0 && len(tagAnnotationCommRsClientCertCACommHttpsCommPolState) == 1 {
-							tagAnnotationCommRsClientCertCACommHttpsCommPolChildMap := NewAciObject()
-							tagAnnotationCommRsClientCertCACommHttpsCommPolChildMap.Attributes["status"] = "deleted"
-							CommRsClientCertCACommHttpsCommPolChildren = append(CommRsClientCertCACommHttpsCommPolChildren, map[string]interface{}{"tagAnnotation": tagAnnotationCommRsClientCertCACommHttpsCommPolChildMap})
-						}
-					}
-					if !commRsClientCertCACommHttpsCommPol.TagAnnotation.IsNull() && !commRsClientCertCACommHttpsCommPol.TagAnnotation.IsUnknown() {
-						for _, tagAnnotationCommRsClientCertCACommHttpsCommPol := range tagAnnotationCommRsClientCertCACommHttpsCommPolPlan {
-							if !tagAnnotationCommRsClientCertCACommHttpsCommPol.Key.IsNull() && !tagAnnotationCommRsClientCertCACommHttpsCommPol.Key.IsUnknown() {
-								tagAnnotationCommRsClientCertCACommHttpsCommPolChildMap.Attributes["key"] = tagAnnotationCommRsClientCertCACommHttpsCommPol.Key.ValueString()
-							}
-							if !tagAnnotationCommRsClientCertCACommHttpsCommPol.Value.IsNull() && !tagAnnotationCommRsClientCertCACommHttpsCommPol.Value.IsUnknown() {
-								tagAnnotationCommRsClientCertCACommHttpsCommPolChildMap.Attributes["value"] = tagAnnotationCommRsClientCertCACommHttpsCommPol.Value.ValueString()
-							}
-							CommRsClientCertCACommHttpsCommPolChildren = append(CommRsClientCertCACommHttpsCommPolChildren, map[string]interface{}{"tagAnnotation": tagAnnotationCommRsClientCertCACommHttpsCommPolChildMap})
-						}
-					}
-					var tagTagCommRsClientCertCACommHttpsCommPolPlan, tagTagCommRsClientCertCACommHttpsCommPolState []TagTagCommRsClientCertCACommHttpsCommPolResourceModel
-					commRsClientCertCACommHttpsCommPol.TagTag.ElementsAs(ctx, &tagTagCommRsClientCertCACommHttpsCommPolPlan, false)
-					for _, commRsClientCertCAtagTagState := range commRsClientCertCACommHttpsCommPolState {
-						commRsClientCertCAtagTagState.TagTag.ElementsAs(ctx, &tagTagCommRsClientCertCACommHttpsCommPolState, false)
-						if len(tagTagCommRsClientCertCACommHttpsCommPolPlan) == 0 && len(tagTagCommRsClientCertCACommHttpsCommPolState) == 1 {
-							tagTagCommRsClientCertCACommHttpsCommPolChildMap := NewAciObject()
-							tagTagCommRsClientCertCACommHttpsCommPolChildMap.Attributes["status"] = "deleted"
-							CommRsClientCertCACommHttpsCommPolChildren = append(CommRsClientCertCACommHttpsCommPolChildren, map[string]interface{}{"tagTag": tagTagCommRsClientCertCACommHttpsCommPolChildMap})
-						}
-					}
-					if !commRsClientCertCACommHttpsCommPol.TagTag.IsNull() && !commRsClientCertCACommHttpsCommPol.TagTag.IsUnknown() {
-						for _, tagTagCommRsClientCertCACommHttpsCommPol := range tagTagCommRsClientCertCACommHttpsCommPolPlan {
-							if !tagTagCommRsClientCertCACommHttpsCommPol.Key.IsNull() && !tagTagCommRsClientCertCACommHttpsCommPol.Key.IsUnknown() {
-								tagTagCommRsClientCertCACommHttpsCommPolChildMap.Attributes["key"] = tagTagCommRsClientCertCACommHttpsCommPol.Key.ValueString()
-							}
-							if !tagTagCommRsClientCertCACommHttpsCommPol.Value.IsNull() && !tagTagCommRsClientCertCACommHttpsCommPol.Value.IsUnknown() {
-								tagTagCommRsClientCertCACommHttpsCommPolChildMap.Attributes["value"] = tagTagCommRsClientCertCACommHttpsCommPol.Value.ValueString()
-							}
-							CommRsClientCertCACommHttpsCommPolChildren = append(CommRsClientCertCACommHttpsCommPolChildren, map[string]interface{}{"tagTag": tagTagCommRsClientCertCACommHttpsCommPolChildMap})
-						}
-					}
 					CommHttpsCommPolChildren = append(CommHttpsCommPolChildren, map[string]interface{}{"commRsClientCertCA": commRsClientCertCACommHttpsCommPolChildMap})
 				}
-			}
-			var commRsKeyRingCommHttpsCommPolPlan, commRsKeyRingCommHttpsCommPolState []CommRsKeyRingCommHttpsCommPolResourceModel
-			commHttpsCommPol.CommRsKeyRing.ElementsAs(ctx, &commRsKeyRingCommHttpsCommPolPlan, false)
-			for _, commHttpscommRsKeyRingState := range commHttpsCommPolState {
-				commHttpscommRsKeyRingState.CommRsKeyRing.ElementsAs(ctx, &commRsKeyRingCommHttpsCommPolState, false)
-				if len(commRsKeyRingCommHttpsCommPolPlan) == 0 && len(commRsKeyRingCommHttpsCommPolState) == 1 {
-					diags.AddError(
-						"CommRsKeyRing object cannot be deleted",
-						"deletion of child is only possible upon deletion of the parent",
-					)
-					return nil
+				for _, commHttpscommRsClientCertCAState := range commHttpsCommPolState {
+					commHttpscommRsClientCertCAState.CommRsClientCertCA.ElementsAs(ctx, &commRsClientCertCACommHttpsCommPolState, false)
+					if len(commRsClientCertCACommHttpsCommPolPlan) == 0 && len(commRsClientCertCACommHttpsCommPolState) == 1 {
+						commRsClientCertCACommHttpsCommPolChildMap := NewAciObject()
+						commRsClientCertCACommHttpsCommPolChildMap.Attributes["status"] = "deleted"
+						CommHttpsCommPolChildren = append(CommHttpsCommPolChildren, map[string]interface{}{"commRsClientCertCA": commRsClientCertCACommHttpsCommPolChildMap})
+					}
 				}
 			}
+
+			var commRsKeyRingCommHttpsCommPolPlan, commRsKeyRingCommHttpsCommPolState []CommRsKeyRingCommHttpsCommPolResourceModel
+			commHttpsCommPol.CommRsKeyRing.ElementsAs(ctx, &commRsKeyRingCommHttpsCommPolPlan, false)
 			if !commHttpsCommPol.CommRsKeyRing.IsNull() && !commHttpsCommPol.CommRsKeyRing.IsUnknown() {
 				for _, commRsKeyRingCommHttpsCommPol := range commRsKeyRingCommHttpsCommPolPlan {
+					commRsKeyRingCommHttpsCommPolChildMap := NewAciObject()
 					if !commRsKeyRingCommHttpsCommPol.Annotation.IsNull() && !commRsKeyRingCommHttpsCommPol.Annotation.IsUnknown() {
 						commRsKeyRingCommHttpsCommPolChildMap.Attributes["annotation"] = commRsKeyRingCommHttpsCommPol.Annotation.ValueString()
 					} else {
@@ -1636,63 +1249,26 @@ func getCommPolCommHttpsChildPayloads(ctx context.Context, diags *diag.Diagnosti
 					if !commRsKeyRingCommHttpsCommPol.TnPkiKeyRingName.IsNull() && !commRsKeyRingCommHttpsCommPol.TnPkiKeyRingName.IsUnknown() {
 						commRsKeyRingCommHttpsCommPolChildMap.Attributes["tnPkiKeyRingName"] = commRsKeyRingCommHttpsCommPol.TnPkiKeyRingName.ValueString()
 					}
-					var tagAnnotationCommRsKeyRingCommHttpsCommPolPlan, tagAnnotationCommRsKeyRingCommHttpsCommPolState []TagAnnotationCommRsKeyRingCommHttpsCommPolResourceModel
-					commRsKeyRingCommHttpsCommPol.TagAnnotation.ElementsAs(ctx, &tagAnnotationCommRsKeyRingCommHttpsCommPolPlan, false)
-					for _, commRsKeyRingtagAnnotationState := range commRsKeyRingCommHttpsCommPolState {
-						commRsKeyRingtagAnnotationState.TagAnnotation.ElementsAs(ctx, &tagAnnotationCommRsKeyRingCommHttpsCommPolState, false)
-						if len(tagAnnotationCommRsKeyRingCommHttpsCommPolPlan) == 0 && len(tagAnnotationCommRsKeyRingCommHttpsCommPolState) == 1 {
-							tagAnnotationCommRsKeyRingCommHttpsCommPolChildMap := NewAciObject()
-							tagAnnotationCommRsKeyRingCommHttpsCommPolChildMap.Attributes["status"] = "deleted"
-							CommRsKeyRingCommHttpsCommPolChildren = append(CommRsKeyRingCommHttpsCommPolChildren, map[string]interface{}{"tagAnnotation": tagAnnotationCommRsKeyRingCommHttpsCommPolChildMap})
-						}
-					}
-					if !commRsKeyRingCommHttpsCommPol.TagAnnotation.IsNull() && !commRsKeyRingCommHttpsCommPol.TagAnnotation.IsUnknown() {
-						for _, tagAnnotationCommRsKeyRingCommHttpsCommPol := range tagAnnotationCommRsKeyRingCommHttpsCommPolPlan {
-							if !tagAnnotationCommRsKeyRingCommHttpsCommPol.Key.IsNull() && !tagAnnotationCommRsKeyRingCommHttpsCommPol.Key.IsUnknown() {
-								tagAnnotationCommRsKeyRingCommHttpsCommPolChildMap.Attributes["key"] = tagAnnotationCommRsKeyRingCommHttpsCommPol.Key.ValueString()
-							}
-							if !tagAnnotationCommRsKeyRingCommHttpsCommPol.Value.IsNull() && !tagAnnotationCommRsKeyRingCommHttpsCommPol.Value.IsUnknown() {
-								tagAnnotationCommRsKeyRingCommHttpsCommPolChildMap.Attributes["value"] = tagAnnotationCommRsKeyRingCommHttpsCommPol.Value.ValueString()
-							}
-							CommRsKeyRingCommHttpsCommPolChildren = append(CommRsKeyRingCommHttpsCommPolChildren, map[string]interface{}{"tagAnnotation": tagAnnotationCommRsKeyRingCommHttpsCommPolChildMap})
-						}
-					}
-					var tagTagCommRsKeyRingCommHttpsCommPolPlan, tagTagCommRsKeyRingCommHttpsCommPolState []TagTagCommRsKeyRingCommHttpsCommPolResourceModel
-					commRsKeyRingCommHttpsCommPol.TagTag.ElementsAs(ctx, &tagTagCommRsKeyRingCommHttpsCommPolPlan, false)
-					for _, commRsKeyRingtagTagState := range commRsKeyRingCommHttpsCommPolState {
-						commRsKeyRingtagTagState.TagTag.ElementsAs(ctx, &tagTagCommRsKeyRingCommHttpsCommPolState, false)
-						if len(tagTagCommRsKeyRingCommHttpsCommPolPlan) == 0 && len(tagTagCommRsKeyRingCommHttpsCommPolState) == 1 {
-							tagTagCommRsKeyRingCommHttpsCommPolChildMap := NewAciObject()
-							tagTagCommRsKeyRingCommHttpsCommPolChildMap.Attributes["status"] = "deleted"
-							CommRsKeyRingCommHttpsCommPolChildren = append(CommRsKeyRingCommHttpsCommPolChildren, map[string]interface{}{"tagTag": tagTagCommRsKeyRingCommHttpsCommPolChildMap})
-						}
-					}
-					if !commRsKeyRingCommHttpsCommPol.TagTag.IsNull() && !commRsKeyRingCommHttpsCommPol.TagTag.IsUnknown() {
-						for _, tagTagCommRsKeyRingCommHttpsCommPol := range tagTagCommRsKeyRingCommHttpsCommPolPlan {
-							if !tagTagCommRsKeyRingCommHttpsCommPol.Key.IsNull() && !tagTagCommRsKeyRingCommHttpsCommPol.Key.IsUnknown() {
-								tagTagCommRsKeyRingCommHttpsCommPolChildMap.Attributes["key"] = tagTagCommRsKeyRingCommHttpsCommPol.Key.ValueString()
-							}
-							if !tagTagCommRsKeyRingCommHttpsCommPol.Value.IsNull() && !tagTagCommRsKeyRingCommHttpsCommPol.Value.IsUnknown() {
-								tagTagCommRsKeyRingCommHttpsCommPolChildMap.Attributes["value"] = tagTagCommRsKeyRingCommHttpsCommPol.Value.ValueString()
-							}
-							CommRsKeyRingCommHttpsCommPolChildren = append(CommRsKeyRingCommHttpsCommPolChildren, map[string]interface{}{"tagTag": tagTagCommRsKeyRingCommHttpsCommPolChildMap})
-						}
-					}
 					CommHttpsCommPolChildren = append(CommHttpsCommPolChildren, map[string]interface{}{"commRsKeyRing": commRsKeyRingCommHttpsCommPolChildMap})
 				}
-			}
-			var tagAnnotationCommHttpsCommPolPlan, tagAnnotationCommHttpsCommPolState []TagAnnotationCommHttpsCommPolResourceModel
-			commHttpsCommPol.TagAnnotation.ElementsAs(ctx, &tagAnnotationCommHttpsCommPolPlan, false)
-			for _, commHttpstagAnnotationState := range commHttpsCommPolState {
-				commHttpstagAnnotationState.TagAnnotation.ElementsAs(ctx, &tagAnnotationCommHttpsCommPolState, false)
-				if len(tagAnnotationCommHttpsCommPolPlan) == 0 && len(tagAnnotationCommHttpsCommPolState) == 1 {
-					tagAnnotationCommHttpsCommPolChildMap := NewAciObject()
-					tagAnnotationCommHttpsCommPolChildMap.Attributes["status"] = "deleted"
-					CommHttpsCommPolChildren = append(CommHttpsCommPolChildren, map[string]interface{}{"tagAnnotation": tagAnnotationCommHttpsCommPolChildMap})
+				for _, commHttpscommRsKeyRingState := range commHttpsCommPolState {
+					commHttpscommRsKeyRingState.CommRsKeyRing.ElementsAs(ctx, &commRsKeyRingCommHttpsCommPolState, false)
+					if len(commRsKeyRingCommHttpsCommPolPlan) == 0 && len(commRsKeyRingCommHttpsCommPolState) == 1 {
+						diags.AddError(
+							"CommRsKeyRing object cannot be deleted",
+							"deletion of child is only possible upon deletion of the parent",
+						)
+						return nil
+					}
 				}
 			}
+
+			var tagAnnotationCommHttpsCommPolPlan, tagAnnotationCommHttpsCommPolState []TagAnnotationCommHttpsCommPolResourceModel
+			commHttpsCommPol.TagAnnotation.ElementsAs(ctx, &tagAnnotationCommHttpsCommPolPlan, false)
 			if !commHttpsCommPol.TagAnnotation.IsNull() && !commHttpsCommPol.TagAnnotation.IsUnknown() {
+				tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
 				for _, tagAnnotationCommHttpsCommPol := range tagAnnotationCommHttpsCommPolPlan {
+					tagAnnotationCommHttpsCommPolChildMap := NewAciObject()
 					if !tagAnnotationCommHttpsCommPol.Key.IsNull() && !tagAnnotationCommHttpsCommPol.Key.IsUnknown() {
 						tagAnnotationCommHttpsCommPolChildMap.Attributes["key"] = tagAnnotationCommHttpsCommPol.Key.ValueString()
 					}
@@ -1700,27 +1276,27 @@ func getCommPolCommHttpsChildPayloads(ctx context.Context, diags *diag.Diagnosti
 						tagAnnotationCommHttpsCommPolChildMap.Attributes["value"] = tagAnnotationCommHttpsCommPol.Value.ValueString()
 					}
 					CommHttpsCommPolChildren = append(CommHttpsCommPolChildren, map[string]interface{}{"tagAnnotation": tagAnnotationCommHttpsCommPolChildMap})
+					tagAnnotationIdentifier := TagAnnotationIdentifier{}
+					tagAnnotationIdentifier.Key = tagAnnotationCommHttpsCommPol.Key
+					tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
 				}
-			}
-			var tagTagCommHttpsCommPolPlan, tagTagCommHttpsCommPolState []TagTagCommHttpsCommPolResourceModel
-			commHttpsCommPol.TagTag.ElementsAs(ctx, &tagTagCommHttpsCommPolPlan, false)
-			for _, commHttpstagTagState := range commHttpsCommPolState {
-				commHttpstagTagState.TagTag.ElementsAs(ctx, &tagTagCommHttpsCommPolState, false)
-				if len(tagTagCommHttpsCommPolPlan) == 0 && len(tagTagCommHttpsCommPolState) == 1 {
-					tagTagCommHttpsCommPolChildMap := NewAciObject()
-					tagTagCommHttpsCommPolChildMap.Attributes["status"] = "deleted"
-					CommHttpsCommPolChildren = append(CommHttpsCommPolChildren, map[string]interface{}{"tagTag": tagTagCommHttpsCommPolChildMap})
-				}
-			}
-			if !commHttpsCommPol.TagTag.IsNull() && !commHttpsCommPol.TagTag.IsUnknown() {
-				for _, tagTagCommHttpsCommPol := range tagTagCommHttpsCommPolPlan {
-					if !tagTagCommHttpsCommPol.Key.IsNull() && !tagTagCommHttpsCommPol.Key.IsUnknown() {
-						tagTagCommHttpsCommPolChildMap.Attributes["key"] = tagTagCommHttpsCommPol.Key.ValueString()
+				for _, tagAnnotationCommHttpsCommPolstate := range commHttpsCommPolState {
+					tagAnnotationCommHttpsCommPolstate.TagAnnotation.ElementsAs(ctx, &tagAnnotationCommHttpsCommPolState, false)
+					for _, tagAnnotationCommHttpsCommPol := range tagAnnotationCommHttpsCommPolState {
+						delete := true
+						for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
+							if tagAnnotationIdentifier.Key == tagAnnotationCommHttpsCommPol.Key {
+								delete = false
+								break
+							}
+						}
+						if delete {
+							tagAnnotationCommHttpsCommPolChildMapForDelete := NewAciObject()
+							tagAnnotationCommHttpsCommPolChildMapForDelete.Attributes["status"] = "deleted"
+							tagAnnotationCommHttpsCommPolChildMapForDelete.Attributes["key"] = tagAnnotationCommHttpsCommPol.Key.ValueString()
+							CommHttpsCommPolChildren = append(CommHttpsCommPolChildren, map[string]interface{}{"tagAnnotation": tagAnnotationCommHttpsCommPolChildMapForDelete})
+						}
 					}
-					if !tagTagCommHttpsCommPol.Value.IsNull() && !tagTagCommHttpsCommPol.Value.IsUnknown() {
-						tagTagCommHttpsCommPolChildMap.Attributes["value"] = tagTagCommHttpsCommPol.Value.ValueString()
-					}
-					CommHttpsCommPolChildren = append(CommHttpsCommPolChildren, map[string]interface{}{"tagTag": tagTagCommHttpsCommPolChildMap})
 				}
 			}
 			childMap.Children = CommHttpsCommPolChildren
@@ -1741,11 +1317,11 @@ func getCommPolCommHttpsChildPayloads(ctx context.Context, diags *diag.Diagnosti
 }
 
 func getCommPolTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *CommPolResourceModel, tagAnnotationCommPolPlan, tagAnnotationCommPolState []TagAnnotationCommPolResourceModel) []map[string]interface{} {
-	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
 		for _, tagAnnotationCommPol := range tagAnnotationCommPolPlan {
+			childMap := NewAciObject()
 			if !tagAnnotationCommPol.Key.IsNull() && !tagAnnotationCommPol.Key.IsUnknown() {
 				childMap.Attributes["key"] = tagAnnotationCommPol.Key.ValueString()
 			}
@@ -1780,11 +1356,11 @@ func getCommPolTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagn
 }
 
 func getCommPolTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *CommPolResourceModel, tagTagCommPolPlan, tagTagCommPolState []TagTagCommPolResourceModel) []map[string]interface{} {
-	childMap := NewAciObject()
 	childPayloads := []map[string]interface{}{}
 	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
 		for _, tagTagCommPol := range tagTagCommPolPlan {
+			childMap := NewAciObject()
 			if !tagTagCommPol.Key.IsNull() && !tagTagCommPol.Key.IsUnknown() {
 				childMap.Attributes["key"] = tagTagCommPol.Key.ValueString()
 			}

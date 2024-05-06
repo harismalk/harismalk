@@ -13,13 +13,11 @@ import (
 
 	"github.com/ciscoecosystem/aci-go-client/v2/client"
 	"github.com/ciscoecosystem/aci-go-client/v2/container"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -42,49 +40,13 @@ type FvFBRMemberResource struct {
 
 // FvFBRMemberResourceModel describes the resource data model.
 type FvFBRMemberResourceModel struct {
-	Id            types.String `tfsdk:"id"`
-	ParentDn      types.String `tfsdk:"parent_dn"`
-	Annotation    types.String `tfsdk:"annotation"`
-	Descr         types.String `tfsdk:"description"`
-	Name          types.String `tfsdk:"name"`
-	NameAlias     types.String `tfsdk:"name_alias"`
-	RnhAddr       types.String `tfsdk:"fallback_member"`
-	TagAnnotation types.Set    `tfsdk:"annotations"`
-	TagTag        types.Set    `tfsdk:"tags"`
-}
-
-// TagAnnotationFvFBRMemberResourceModel describes the resource data model for the children without relation ships.
-type TagAnnotationFvFBRMemberResourceModel struct {
-	Key   types.String `tfsdk:"key"`
-	Value types.String `tfsdk:"value"`
-}
-
-func TagAnnotationFvFBRMemberResourceModelAttributeTypes() map[string]attr.Type {
-	return map[string]attr.Type{
-		"key":   types.StringType,
-		"value": types.StringType,
-	}
-}
-
-func TagAnnotationFvFBRMemberResourceModelElementType() attr.TypeWithAttributeTypes {
-	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationFvFBRMemberResourceModelAttributeTypes())
-}
-
-// TagTagFvFBRMemberResourceModel describes the resource data model for the children without relation ships.
-type TagTagFvFBRMemberResourceModel struct {
-	Key   types.String `tfsdk:"key"`
-	Value types.String `tfsdk:"value"`
-}
-
-func TagTagFvFBRMemberResourceModelAttributeTypes() map[string]attr.Type {
-	return map[string]attr.Type{
-		"key":   types.StringType,
-		"value": types.StringType,
-	}
-}
-
-func TagTagFvFBRMemberResourceModelElementType() attr.TypeWithAttributeTypes {
-	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagFvFBRMemberResourceModelAttributeTypes())
+	Id         types.String `tfsdk:"id"`
+	ParentDn   types.String `tfsdk:"parent_dn"`
+	Annotation types.String `tfsdk:"annotation"`
+	Descr      types.String `tfsdk:"description"`
+	Name       types.String `tfsdk:"name"`
+	NameAlias  types.String `tfsdk:"name_alias"`
+	RnhAddr    types.String `tfsdk:"fallback_member"`
 }
 
 type FvFBRMemberIdentifier struct {
@@ -165,62 +127,6 @@ func (r *FvFBRMemberResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 				MarkdownDescription: `The address of the VRF Fallback Route Group Member object.`,
 			},
-			"annotations": schema.SetNestedAttribute{
-				MarkdownDescription: ``,
-				Optional:            true,
-				Computed:            true,
-				PlanModifiers: []planmodifier.Set{
-					setplanmodifier.UseStateForUnknown(),
-				},
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"key": schema.StringAttribute{
-							Required: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
-								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-							},
-							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
-						},
-						"value": schema.StringAttribute{
-							Required: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
-								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-							},
-							MarkdownDescription: `The value of the property.`,
-						},
-					},
-				},
-			},
-			"tags": schema.SetNestedAttribute{
-				MarkdownDescription: ``,
-				Optional:            true,
-				Computed:            true,
-				PlanModifiers: []planmodifier.Set{
-					setplanmodifier.UseStateForUnknown(),
-				},
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"key": schema.StringAttribute{
-							Required: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
-								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-							},
-							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
-						},
-						"value": schema.StringAttribute{
-							Required: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
-								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
-							},
-							MarkdownDescription: `The value of the property.`,
-						},
-					},
-				},
-			},
 		},
 	}
 	tflog.Debug(ctx, "End schema of resource: aci_vrf_fallback_route_group_member")
@@ -250,11 +156,6 @@ func (r *FvFBRMemberResource) Configure(ctx context.Context, req resource.Config
 
 func (r *FvFBRMemberResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	tflog.Debug(ctx, "Start create of resource: aci_vrf_fallback_route_group_member")
-	// On create retrieve information on current state prior to making any changes in order to determine child delete operations
-	var stateData *FvFBRMemberResourceModel
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &stateData)...)
-	setFvFBRMemberId(ctx, stateData)
-	getAndSetFvFBRMemberAttributes(ctx, &resp.Diagnostics, r.client, stateData)
 
 	var data *FvFBRMemberResourceModel
 
@@ -269,13 +170,7 @@ func (r *FvFBRMemberResource) Create(ctx context.Context, req resource.CreateReq
 
 	tflog.Debug(ctx, fmt.Sprintf("Create of resource aci_vrf_fallback_route_group_member with id '%s'", data.Id.ValueString()))
 
-	var tagAnnotationPlan, tagAnnotationState []TagAnnotationFvFBRMemberResourceModel
-	data.TagAnnotation.ElementsAs(ctx, &tagAnnotationPlan, false)
-	stateData.TagAnnotation.ElementsAs(ctx, &tagAnnotationState, false)
-	var tagTagPlan, tagTagState []TagTagFvFBRMemberResourceModel
-	data.TagTag.ElementsAs(ctx, &tagTagPlan, false)
-	stateData.TagTag.ElementsAs(ctx, &tagTagState, false)
-	jsonPayload := getFvFBRMemberCreateJsonPayload(ctx, &resp.Diagnostics, data, tagAnnotationPlan, tagAnnotationState, tagTagPlan, tagTagState)
+	jsonPayload := getFvFBRMemberCreateJsonPayload(ctx, &resp.Diagnostics, data)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -322,11 +217,9 @@ func (r *FvFBRMemberResource) Read(ctx context.Context, req resource.ReadRequest
 func (r *FvFBRMemberResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	tflog.Debug(ctx, "Start update of resource: aci_vrf_fallback_route_group_member")
 	var data *FvFBRMemberResourceModel
-	var stateData *FvFBRMemberResourceModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
-	resp.Diagnostics.Append(req.State.Get(ctx, &stateData)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -334,13 +227,7 @@ func (r *FvFBRMemberResource) Update(ctx context.Context, req resource.UpdateReq
 
 	tflog.Debug(ctx, fmt.Sprintf("Update of resource aci_vrf_fallback_route_group_member with id '%s'", data.Id.ValueString()))
 
-	var tagAnnotationPlan, tagAnnotationState []TagAnnotationFvFBRMemberResourceModel
-	data.TagAnnotation.ElementsAs(ctx, &tagAnnotationPlan, false)
-	stateData.TagAnnotation.ElementsAs(ctx, &tagAnnotationState, false)
-	var tagTagPlan, tagTagState []TagTagFvFBRMemberResourceModel
-	data.TagTag.ElementsAs(ctx, &tagTagPlan, false)
-	stateData.TagTag.ElementsAs(ctx, &tagTagState, false)
-	jsonPayload := getFvFBRMemberCreateJsonPayload(ctx, &resp.Diagnostics, data, tagAnnotationPlan, tagAnnotationState, tagTagPlan, tagTagState)
+	jsonPayload := getFvFBRMemberCreateJsonPayload(ctx, &resp.Diagnostics, data)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -394,7 +281,7 @@ func (r *FvFBRMemberResource) ImportState(ctx context.Context, req resource.Impo
 }
 
 func getAndSetFvFBRMemberAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *FvFBRMemberResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "fvFBRMember,tagAnnotation,tagTag"), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json", data.Id.ValueString()), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -439,47 +326,6 @@ func getAndSetFvFBRMemberAttributes(ctx context.Context, diags *diag.Diagnostics
 			if data.RnhAddr.IsUnknown() {
 				data.RnhAddr = types.StringNull()
 			}
-			TagAnnotationFvFBRMember := TagAnnotationFvFBRMemberResourceModel{}
-			TagAnnotationFvFBRMemberList := make([]TagAnnotationFvFBRMemberResourceModel, 0)
-			TagTagFvFBRMember := TagTagFvFBRMemberResourceModel{}
-			TagTagFvFBRMemberList := make([]TagTagFvFBRMemberResourceModel, 0)
-			_, ok := classReadInfo[0].(map[string]interface{})["children"]
-			if ok {
-				children := classReadInfo[0].(map[string]interface{})["children"].([]interface{})
-				for _, child := range children {
-					for childClassName, childClassDetails := range child.(map[string]interface{}) {
-						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
-						if childClassName == "tagAnnotation" {
-							for childAttributeName, childAttributeValue := range childAttributes {
-								if childAttributeName == "key" {
-									TagAnnotationFvFBRMember.Key = basetypes.NewStringValue(childAttributeValue.(string))
-								}
-								if childAttributeName == "value" {
-									TagAnnotationFvFBRMember.Value = basetypes.NewStringValue(childAttributeValue.(string))
-								}
-
-							}
-							TagAnnotationFvFBRMemberList = append(TagAnnotationFvFBRMemberList, TagAnnotationFvFBRMember)
-						}
-						if childClassName == "tagTag" {
-							for childAttributeName, childAttributeValue := range childAttributes {
-								if childAttributeName == "key" {
-									TagTagFvFBRMember.Key = basetypes.NewStringValue(childAttributeValue.(string))
-								}
-								if childAttributeName == "value" {
-									TagTagFvFBRMember.Value = basetypes.NewStringValue(childAttributeValue.(string))
-								}
-
-							}
-							TagTagFvFBRMemberList = append(TagTagFvFBRMemberList, TagTagFvFBRMember)
-						}
-					}
-				}
-			}
-			tagAnnotationSet, _ := types.SetValueFrom(ctx, data.TagAnnotation.ElementType(ctx), TagAnnotationFvFBRMemberList)
-			data.TagAnnotation = tagAnnotationSet
-			tagTagSet, _ := types.SetValueFrom(ctx, data.TagTag.ElementType(ctx), TagTagFvFBRMemberList)
-			data.TagTag = tagTagSet
 		} else {
 			diags.AddError(
 				"too many results in response",
@@ -522,102 +368,9 @@ func setFvFBRMemberId(ctx context.Context, data *FvFBRMemberResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", data.ParentDn.ValueString(), rn))
 }
 
-func getFvFBRMemberTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvFBRMemberResourceModel, tagAnnotationFvFBRMemberPlan, tagAnnotationFvFBRMemberState []TagAnnotationFvFBRMemberResourceModel) []map[string]interface{} {
-	childMap := NewAciObject()
-	childPayloads := []map[string]interface{}{}
-	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
-		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
-		for _, tagAnnotationFvFBRMember := range tagAnnotationFvFBRMemberPlan {
-			if !tagAnnotationFvFBRMember.Key.IsNull() && !tagAnnotationFvFBRMember.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagAnnotationFvFBRMember.Key.ValueString()
-			}
-			if !tagAnnotationFvFBRMember.Value.IsNull() && !tagAnnotationFvFBRMember.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagAnnotationFvFBRMember.Value.ValueString()
-			}
-			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
-			tagAnnotationIdentifier := TagAnnotationIdentifier{}
-			tagAnnotationIdentifier.Key = tagAnnotationFvFBRMember.Key
-			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
-		}
-		for _, tagAnnotation := range tagAnnotationFvFBRMemberState {
-			delete := true
-			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
-				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
-					delete = false
-					break
-				}
-			}
-			if delete {
-				tagAnnotationChildMapForDelete := NewAciObject()
-				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
-				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
-			}
-		}
-	} else {
-		data.TagAnnotation = types.SetNull(data.TagAnnotation.ElementType(ctx))
-	}
-
-	return childPayloads
-}
-
-func getFvFBRMemberTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvFBRMemberResourceModel, tagTagFvFBRMemberPlan, tagTagFvFBRMemberState []TagTagFvFBRMemberResourceModel) []map[string]interface{} {
-	childMap := NewAciObject()
-	childPayloads := []map[string]interface{}{}
-	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
-		tagTagIdentifiers := []TagTagIdentifier{}
-		for _, tagTagFvFBRMember := range tagTagFvFBRMemberPlan {
-			if !tagTagFvFBRMember.Key.IsNull() && !tagTagFvFBRMember.Key.IsUnknown() {
-				childMap.Attributes["key"] = tagTagFvFBRMember.Key.ValueString()
-			}
-			if !tagTagFvFBRMember.Value.IsNull() && !tagTagFvFBRMember.Value.IsUnknown() {
-				childMap.Attributes["value"] = tagTagFvFBRMember.Value.ValueString()
-			}
-			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
-			tagTagIdentifier := TagTagIdentifier{}
-			tagTagIdentifier.Key = tagTagFvFBRMember.Key
-			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
-		}
-		for _, tagTag := range tagTagFvFBRMemberState {
-			delete := true
-			for _, tagTagIdentifier := range tagTagIdentifiers {
-				if tagTagIdentifier.Key == tagTag.Key {
-					delete = false
-					break
-				}
-			}
-			if delete {
-				tagTagChildMapForDelete := NewAciObject()
-				tagTagChildMapForDelete.Attributes["status"] = "deleted"
-				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
-			}
-		}
-	} else {
-		data.TagTag = types.SetNull(data.TagTag.ElementType(ctx))
-	}
-
-	return childPayloads
-}
-
-func getFvFBRMemberCreateJsonPayload(ctx context.Context, diags *diag.Diagnostics, data *FvFBRMemberResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationFvFBRMemberResourceModel, tagTagPlan, tagTagState []TagTagFvFBRMemberResourceModel) *container.Container {
+func getFvFBRMemberCreateJsonPayload(ctx context.Context, diags *diag.Diagnostics, data *FvFBRMemberResourceModel) *container.Container {
 	payloadMap := map[string]interface{}{}
 	payloadMap["attributes"] = map[string]string{}
-	childPayloads := []map[string]interface{}{}
-
-	TagAnnotationchildPayloads := getFvFBRMemberTagAnnotationChildPayloads(ctx, diags, data, tagAnnotationPlan, tagAnnotationState)
-	if TagAnnotationchildPayloads == nil {
-		return nil
-	}
-	childPayloads = append(childPayloads, TagAnnotationchildPayloads...)
-
-	TagTagchildPayloads := getFvFBRMemberTagTagChildPayloads(ctx, diags, data, tagTagPlan, tagTagState)
-	if TagTagchildPayloads == nil {
-		return nil
-	}
-	childPayloads = append(childPayloads, TagTagchildPayloads...)
-
-	payloadMap["children"] = childPayloads
 	if !data.Annotation.IsNull() && !data.Annotation.IsUnknown() {
 		payloadMap["attributes"].(map[string]string)["annotation"] = data.Annotation.ValueString()
 	}

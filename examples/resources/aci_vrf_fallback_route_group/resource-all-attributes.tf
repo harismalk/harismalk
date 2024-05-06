@@ -14,16 +14,4 @@ resource "aci_vrf_fallback_route_group" "full_example_vrf" {
       fallback_member = "2.2.2.2"
     }
   ]
-  annotations = [
-    {
-      key   = "key_0"
-      value = "value_1"
-    }
-  ]
-  tags = [
-    {
-      key   = "key_0"
-      value = "value_1"
-    }
-  ]
 }

@@ -9,16 +9,4 @@ resource "aci_l3out_consumer_label" "full_example_l3_outside" {
   owner_key   = "owner_key"
   owner_tag   = "owner_tag"
   tag         = "lemon-chiffon"
-  annotations = [
-    {
-      key   = "key_0"
-      value = "value_1"
-    }
-  ]
-  tags = [
-    {
-      key   = "key_0"
-      value = "value_1"
-    }
-  ]
 }

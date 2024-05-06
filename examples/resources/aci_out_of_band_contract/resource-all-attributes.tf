@@ -10,16 +10,4 @@ resource "aci_out_of_band_contract" "full_example" {
   priority    = "level1"
   scope       = "application-profile"
   target_dscp = "AF11"
-  annotations = [
-    {
-      key   = "key_0"
-      value = "value_1"
-    }
-  ]
-  tags = [
-    {
-      key   = "key_0"
-      value = "value_1"
-    }
-  ]
 }

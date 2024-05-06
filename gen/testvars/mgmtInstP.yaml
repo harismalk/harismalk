@@ -33,17 +33,3 @@ children:
       priority: "level2"
       out_of_band_contract_name: "out_of_band_contract_name_1"
       
-  annotations:
-    - key: "key_0"
-      value: "value_1"
-      
-    - key: "key_1"
-      value: "value_2"
-      
-  tags:
-    - key: "key_0"
-      value: "value_1"
-      
-    - key: "key_1"
-      value: "value_2"
-      
