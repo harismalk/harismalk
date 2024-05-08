@@ -54,3 +54,11 @@ data "aci_out_of_band_contract" "example" {
 * `priority` (prio) - (string) The priority of the Out Of Band Contract object.
 * `scope` (scope) - (string) Represents the scope of this contract. If the scope is set as application-profile, the epg can only communicate with epgs in the same application-profile.
 * `target_dscp` (targetDscp) - (string) The target DSCP value of the Out Of Band Contract object.
+
+* `annotations` - (list) A list of Annotations (ACI object [tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview)). This attribute is supported in ACI versions: 3.2(1l) and later.
+  * `key` (key) - (string) The key used to uniquely identify this configuration object.
+  * `value` (value) - (string) The value of the property.
+
+* `tags` - (list) A list of Tags (ACI object [tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview)). This attribute is supported in ACI versions: 3.2(1l) and later.
+  * `key` (key) - (string) The key used to uniquely identify this configuration object.
+  * `value` (value) - (string) The value of the property.

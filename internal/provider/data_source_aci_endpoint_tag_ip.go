@@ -72,6 +72,38 @@ func (d *FvEpIpTagDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Computed:            true,
 				MarkdownDescription: `The name alias of the Endpoint Tag Ip object.`,
 			},
+			"annotations": schema.SetNestedAttribute{
+				MarkdownDescription: ``,
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+						},
+						"value": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The value of the property.`,
+						},
+					},
+				},
+			},
+			"tags": schema.SetNestedAttribute{
+				MarkdownDescription: ``,
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+						},
+						"value": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The value of the property.`,
+						},
+					},
+				},
+			},
 		},
 	}
 	tflog.Debug(ctx, "End schema of datasource: aci_endpoint_tag_ip")

@@ -112,7 +112,7 @@ var duplicateLabels = []string{}
 var resourceNames = map[string]string{}
 var rnPrefix = map[string]string{}
 var targetRelationalPropertyClasses = map[string]string{}
-var alwaysIncludeChildren = []string{}
+var alwaysIncludeChildren = []string{"tag:Annotation", "tag:Tag"}
 var excludeChildResourceNamesFromDocs = []string{"", "annotation", "tag"}
 
 func GetResourceNameAsDescription(s string, definitions Definitions) string {

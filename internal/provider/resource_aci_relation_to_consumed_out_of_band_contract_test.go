@@ -65,6 +65,82 @@ func TestAccResourceMgmtRsOoBConsWithMgmtInstP(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "priority", "unspecified"),
 				),
 			},
+			// Update with children
+			{
+				Config:             testConfigMgmtRsOoBConsChildrenDependencyWithMgmtInstP,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "out_of_band_contract_name", "test_tn_vz_oob_br_cp_name"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "priority", "unspecified"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.1.value", "value_2"),
+				),
+			},
+			// Import testing with children
+			{
+				ResourceName:      "aci_relation_to_consumed_out_of_band_contract.test",
+				ImportState:       true,
+				ImportStateVerify: true,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "out_of_band_contract_name", "test_tn_vz_oob_br_cp_name"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "priority", "unspecified"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.1.value", "value_2"),
+				),
+			},
+			// Update with children removed from config
+			{
+				Config:             testConfigMgmtRsOoBConsChildrenRemoveFromConfigDependencyWithMgmtInstP,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.#", "2"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.#", "2"),
+				),
+			},
+			// Update with children first child removed
+			{
+				Config:             testConfigMgmtRsOoBConsChildrenRemoveOneDependencyWithMgmtInstP,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.#", "1"),
+				),
+			},
+			// Update with all children removed
+			{
+				Config:             testConfigMgmtRsOoBConsChildrenRemoveAllDependencyWithMgmtInstP,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.#", "0"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.#", "0"),
+				),
+			},
 		},
 	})
 }
@@ -91,5 +167,66 @@ resource "aci_relation_to_consumed_out_of_band_contract" "test" {
   out_of_band_contract_name = "test_tn_vz_oob_br_cp_name"
   annotation = "orchestrator:terraform"
   priority = "unspecified"
+}
+`
+const testConfigMgmtRsOoBConsChildrenDependencyWithMgmtInstP = testConfigMgmtInstPMin + `
+resource "aci_relation_to_consumed_out_of_band_contract" "test" {
+  parent_dn = aci_external_management_network_instance_profile.test.id
+  out_of_band_contract_name = "test_tn_vz_oob_br_cp_name"
+  annotations = [
+	{
+	  key = "key_0"
+	  value = "value_1"
+	},
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+  tags = [
+	{
+	  key = "key_0"
+	  value = "value_1"
+	},
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+}
+`
+
+const testConfigMgmtRsOoBConsChildrenRemoveFromConfigDependencyWithMgmtInstP = testConfigMgmtInstPMin + `
+resource "aci_relation_to_consumed_out_of_band_contract" "test" {
+  parent_dn = aci_external_management_network_instance_profile.test.id
+  out_of_band_contract_name = "test_tn_vz_oob_br_cp_name"
+}
+`
+
+const testConfigMgmtRsOoBConsChildrenRemoveOneDependencyWithMgmtInstP = testConfigMgmtInstPMin + `
+resource "aci_relation_to_consumed_out_of_band_contract" "test" {
+  parent_dn = aci_external_management_network_instance_profile.test.id
+  out_of_band_contract_name = "test_tn_vz_oob_br_cp_name"
+  annotations = [ 
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+  tags = [ 
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+}
+`
+
+const testConfigMgmtRsOoBConsChildrenRemoveAllDependencyWithMgmtInstP = testConfigMgmtInstPMin + `
+resource "aci_relation_to_consumed_out_of_band_contract" "test" {
+  parent_dn = aci_external_management_network_instance_profile.test.id
+  out_of_band_contract_name = "test_tn_vz_oob_br_cp_name"
+  annotations = []
+  tags = []
 }
 `

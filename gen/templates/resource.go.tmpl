@@ -781,7 +781,7 @@ func {{.ResourceClassName}}{{.ParentHierarchy}}ResourceModelAttributeTypes() map
 		{{- end}}
 	{{- end}}
 	{{- range .Children}}
-	"{{ .ResourceName }}": types.SetType{ElemType: types.StringType},
+	"{{ .ResourceName }}": types.SetType{ElemType: {{.ResourceClassName}}{{.ParentHierarchy}}ResourceModelElementType()},
 	{{- end}}
     }
 }
@@ -865,6 +865,9 @@ func {{.ResourceClassName}}{{.ParentHierarchy}}ResourceModelElementType() attr.T
 {{$grandChild:= .}}
 var {{.PkgName}}{{.ParentHierarchy}}Plan, {{.PkgName}}{{.ParentHierarchy}}State  []{{.ResourceClassName}}{{.ParentHierarchy}}ResourceModel
 {{.ParentHierarchy | lowerFirstCharacter}}.{{.ResourceClassName}}.ElementsAs(ctx, &{{.PkgName}}{{.ParentHierarchy}}Plan, false)
+for _, {{ .PkgName }}{{.ParentHierarchy}}state := range {{.ParentHierarchy | lowerFirstCharacter}}State {
+	{{ .PkgName }}{{.ParentHierarchy}}state.{{.ResourceClassName}}.ElementsAs(ctx, &{{.PkgName}}{{.ParentHierarchy}}State, false)
+}
 if !{{ .ParentHierarchy | lowerFirstCharacter}}.{{.ResourceClassName}}.IsNull() && !{{ .ParentHierarchy | lowerFirstCharacter}}.{{.ResourceClassName}}.IsUnknown(){
 {{- if .IdentifiedBy}}
         {{ .PkgName }}Identifiers := []{{.ResourceClassName}}Identifier{}
@@ -886,8 +889,16 @@ for _, {{ .PkgName }}{{.ParentHierarchy}} := range {{.PkgName}}{{.ParentHierarch
 		{{.PkgName}}{{$.ParentHierarchy}}ChildMap.Attributes["annotation"] = globalAnnotation
 	} {{- end}}
 	{{- end}}
+	{{- $enteredGreatGrandChildPayloadZone := false }}
 	{{- range .Children}}
+	{{- $enteredGreatGrandChildPayloadZone = true }}
 		{{- template "grandChildPayload" . }}
+	{{- end}}
+	{{- range .Children}}
+		{{- if $enteredGreatGrandChildPayloadZone }}
+			{{- $enteredGreatGrandChildPayloadZone = false }}
+	{{$.PkgName}}{{$.ParentHierarchy}}ChildMap.Children = {{.ParentHierarchy}}Children
+		{{- end}}
 	{{- end}}
 	{{ .ParentHierarchy }}Children = append({{ .ParentHierarchy }}Children, map[string]interface{}{"{{.PkgName}}": {{.PkgName}}{{$.ParentHierarchy}}ChildMap})
 	{{- if .IdentifiedBy}}
@@ -901,36 +912,31 @@ for _, {{ .PkgName }}{{.ParentHierarchy}} := range {{.PkgName}}{{.ParentHierarch
 	{{- end}}
 	}
 	{{- if .IdentifiedBy}}
-	for _, {{ .PkgName }}{{.ParentHierarchy}}state := range {{.ParentHierarchy | lowerFirstCharacter}}State {
-		{{ .PkgName }}{{.ParentHierarchy}}state.{{.ResourceClassName}}.ElementsAs(ctx, &{{.PkgName}}{{.ParentHierarchy}}State, false)
-		for _, {{ .PkgName }}{{.ParentHierarchy}} := range {{ .PkgName }}{{.ParentHierarchy}}State {
-			delete := true
-		for _, {{ .PkgName }}Identifier := range {{ .PkgName }}Identifiers { {{$i := 1}}{{$length := len .IdentifiedBy}}
-			if 
-			{{- range .Properties}}
-				{{- if .IsNaming }}
-				{{ .PkgName }}Identifier.{{.Name}} == {{ .PkgName }}{{$grandChild.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}{{- if ne $length $i}} {{$i = add $i 1}} && {{- end}}
-				{{- end}}
-			{{- end}} {
-				delete = false
-				break
-			}
-		}
-		if delete {
-			{{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete := NewAciObject()
-			{{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete.Attributes["status"] = "deleted"
+	for _, {{ .PkgName }}{{.ParentHierarchy}} := range {{ .PkgName }}{{.ParentHierarchy}}State {
+		delete := true
+	for _, {{ .PkgName }}Identifier := range {{ .PkgName }}Identifiers { {{$i := 1}}{{$length := len .IdentifiedBy}}
+		if 
 		{{- range .Properties}}
 			{{- if .IsNaming }}
-			{{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete.Attributes["{{.PropertyName}}"] = {{ .PkgName }}{{$grandChild.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}.ValueString()
+			{{ .PkgName }}Identifier.{{.Name}} == {{ .PkgName }}{{$grandChild.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}{{- if ne $length $i}} {{$i = add $i 1}} && {{- end}}
 			{{- end}}
-		{{- end}}
-			{{ .ParentHierarchy }}Children = append({{ .ParentHierarchy }}Children, map[string]interface{}{"{{ .PkgName }}": {{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete})
+		{{- end}} {
+			delete = false
+			break
 		}
 	}
+	if delete {
+		{{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete := NewAciObject()
+		{{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete.Attributes["status"] = "deleted"
+	{{- range .Properties}}
+		{{- if .IsNaming }}
+		{{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete.Attributes["{{.PropertyName}}"] = {{ .PkgName }}{{$grandChild.ParentHierarchy}}.{{- if eq .Name "Id"}}{{.ResourceClassName}}{{ .Name }}{{- else}}{{.Name}}{{- end}}.ValueString()
+		{{- end}}
+	{{- end}}
+		{{ .ParentHierarchy }}Children = append({{ .ParentHierarchy }}Children, map[string]interface{}{"{{ .PkgName }}": {{.PkgName}}{{$.ParentHierarchy}}ChildMapForDelete})
+		}
 	}
-		{{- else}}
-		for _, {{.ParentName | lowerFirstCharacter}}{{.ResourceClassName | lowerFirstCharacter}}State := range {{.ParentHierarchy | lowerFirstCharacter}}State {
-		{{.ParentName | lowerFirstCharacter}}{{.ResourceClassName | lowerFirstCharacter}}State.{{.ResourceClassName}}.ElementsAs(ctx, &{{.PkgName}}{{.ParentHierarchy}}State, false)
+	{{- else}}
 		if len({{ .PkgName }}{{.ParentHierarchy}}Plan) == 0 && len({{.PkgName}}{{.ParentHierarchy}}State) == 1 {
 			{{- if .AllowDelete}}
 			{{.PkgName}}{{.ParentHierarchy}}ChildMap := NewAciObject()
@@ -944,7 +950,6 @@ for _, {{ .PkgName }}{{.ParentHierarchy}} := range {{.PkgName}}{{.ParentHierarch
 			return nil
 			{{- end }}
 		  }
-		}
 		{{- end }}
 	}
 {{- end }}

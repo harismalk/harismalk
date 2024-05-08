@@ -61,6 +61,80 @@ func TestAccResourceL3extRsOutToFBRGroupWithL3extOut(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotation", "orchestrator:terraform"),
 				),
 			},
+			// Update with children
+			{
+				Config:             testConfigL3extRsOutToFBRGroupChildrenDependencyWithL3extOut,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "target_dn", "uni/tn-test_tenant/ctx-test_vrf/fbrg-fallback_route_group"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.1.value", "value_2"),
+				),
+			},
+			// Import testing with children
+			{
+				ResourceName:      "aci_relation_to_fallback_route_group.test",
+				ImportState:       true,
+				ImportStateVerify: true,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "target_dn", "uni/tn-test_tenant/ctx-test_vrf/fbrg-fallback_route_group"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.1.value", "value_2"),
+				),
+			},
+			// Update with children removed from config
+			{
+				Config:             testConfigL3extRsOutToFBRGroupChildrenRemoveFromConfigDependencyWithL3extOut,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.#", "2"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.#", "2"),
+				),
+			},
+			// Update with children first child removed
+			{
+				Config:             testConfigL3extRsOutToFBRGroupChildrenRemoveOneDependencyWithL3extOut,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.#", "1"),
+				),
+			},
+			// Update with all children removed
+			{
+				Config:             testConfigL3extRsOutToFBRGroupChildrenRemoveAllDependencyWithL3extOut,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.#", "0"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.#", "0"),
+				),
+			},
 		},
 	})
 }
@@ -92,5 +166,66 @@ resource "aci_relation_to_fallback_route_group" "test" {
   parent_dn = aci_l3_outside.test.id
   target_dn = aci_vrf_fallback_route_group.test.id
   annotation = "orchestrator:terraform"
+}
+`
+const testConfigL3extRsOutToFBRGroupChildrenDependencyWithL3extOut = testConfigfvFBRGroupMinDependencyWithFvCtx + testConfigL3extOutMinDependencyWithFvTenant + `
+resource "aci_relation_to_fallback_route_group" "test" {
+  parent_dn = aci_l3_outside.test.id
+  target_dn = aci_vrf_fallback_route_group.test.id
+  annotations = [
+	{
+	  key = "key_0"
+	  value = "value_1"
+	},
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+  tags = [
+	{
+	  key = "key_0"
+	  value = "value_1"
+	},
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+}
+`
+
+const testConfigL3extRsOutToFBRGroupChildrenRemoveFromConfigDependencyWithL3extOut = testConfigfvFBRGroupMinDependencyWithFvCtx + testConfigL3extOutMinDependencyWithFvTenant + `
+resource "aci_relation_to_fallback_route_group" "test" {
+  parent_dn = aci_l3_outside.test.id
+  target_dn = aci_vrf_fallback_route_group.test.id
+}
+`
+
+const testConfigL3extRsOutToFBRGroupChildrenRemoveOneDependencyWithL3extOut = testConfigfvFBRGroupMinDependencyWithFvCtx + testConfigL3extOutMinDependencyWithFvTenant + `
+resource "aci_relation_to_fallback_route_group" "test" {
+  parent_dn = aci_l3_outside.test.id
+  target_dn = aci_vrf_fallback_route_group.test.id
+  annotations = [ 
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+  tags = [ 
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+}
+`
+
+const testConfigL3extRsOutToFBRGroupChildrenRemoveAllDependencyWithL3extOut = testConfigfvFBRGroupMinDependencyWithFvCtx + testConfigL3extOutMinDependencyWithFvTenant + `
+resource "aci_relation_to_fallback_route_group" "test" {
+  parent_dn = aci_l3_outside.test.id
+  target_dn = aci_vrf_fallback_route_group.test.id
+  annotations = []
+  tags = []
 }
 `

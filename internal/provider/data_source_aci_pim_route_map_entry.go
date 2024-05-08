@@ -84,6 +84,38 @@ func (d *PimRouteMapEntryDataSource) Schema(ctx context.Context, req datasource.
 				Computed:            true,
 				MarkdownDescription: `The source ip of the Pim Route Map Entry object.`,
 			},
+			"annotations": schema.SetNestedAttribute{
+				MarkdownDescription: ``,
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+						},
+						"value": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The value of the property.`,
+						},
+					},
+				},
+			},
+			"tags": schema.SetNestedAttribute{
+				MarkdownDescription: ``,
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+						},
+						"value": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The value of the property.`,
+						},
+					},
+				},
+			},
 		},
 	}
 	tflog.Debug(ctx, "End schema of datasource: aci_pim_route_map_entry")

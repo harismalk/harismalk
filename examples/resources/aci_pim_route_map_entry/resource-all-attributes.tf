@@ -10,4 +10,16 @@ resource "aci_pim_route_map_entry" "full_example_pim_route_map_policy" {
   order               = "1"
   rendezvous_point_ip = "0.0.0.0"
   source_ip           = "1.1.1.1/30"
+  annotations = [
+    {
+      key   = "key_0"
+      value = "value_1"
+    }
+  ]
+  tags = [
+    {
+      key   = "key_0"
+      value = "value_1"
+    }
+  ]
 }

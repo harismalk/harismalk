@@ -14,11 +14,13 @@ import (
 	"github.com/ciscoecosystem/aci-go-client/v2/client"
 	"github.com/ciscoecosystem/aci-go-client/v2/container"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -42,17 +44,53 @@ type VzOOBBrCPResource struct {
 
 // VzOOBBrCPResourceModel describes the resource data model.
 type VzOOBBrCPResourceModel struct {
-	Id         types.String `tfsdk:"id"`
-	Annotation types.String `tfsdk:"annotation"`
-	Descr      types.String `tfsdk:"description"`
-	Intent     types.String `tfsdk:"intent"`
-	Name       types.String `tfsdk:"name"`
-	NameAlias  types.String `tfsdk:"name_alias"`
-	OwnerKey   types.String `tfsdk:"owner_key"`
-	OwnerTag   types.String `tfsdk:"owner_tag"`
-	Prio       types.String `tfsdk:"priority"`
-	Scope      types.String `tfsdk:"scope"`
-	TargetDscp types.String `tfsdk:"target_dscp"`
+	Id            types.String `tfsdk:"id"`
+	Annotation    types.String `tfsdk:"annotation"`
+	Descr         types.String `tfsdk:"description"`
+	Intent        types.String `tfsdk:"intent"`
+	Name          types.String `tfsdk:"name"`
+	NameAlias     types.String `tfsdk:"name_alias"`
+	OwnerKey      types.String `tfsdk:"owner_key"`
+	OwnerTag      types.String `tfsdk:"owner_tag"`
+	Prio          types.String `tfsdk:"priority"`
+	Scope         types.String `tfsdk:"scope"`
+	TargetDscp    types.String `tfsdk:"target_dscp"`
+	TagAnnotation types.Set    `tfsdk:"annotations"`
+	TagTag        types.Set    `tfsdk:"tags"`
+}
+
+// TagAnnotationVzOOBBrCPResourceModel describes the resource data model for the children without relation ships.
+type TagAnnotationVzOOBBrCPResourceModel struct {
+	Key   types.String `tfsdk:"key"`
+	Value types.String `tfsdk:"value"`
+}
+
+func TagAnnotationVzOOBBrCPResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagAnnotationVzOOBBrCPResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationVzOOBBrCPResourceModelAttributeTypes())
+}
+
+// TagTagVzOOBBrCPResourceModel describes the resource data model for the children without relation ships.
+type TagTagVzOOBBrCPResourceModel struct {
+	Key   types.String `tfsdk:"key"`
+	Value types.String `tfsdk:"value"`
+}
+
+func TagTagVzOOBBrCPResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagTagVzOOBBrCPResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagVzOOBBrCPResourceModelAttributeTypes())
 }
 
 type VzOOBBrCPIdentifier struct {
@@ -182,6 +220,62 @@ func (r *VzOOBBrCPResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 				MarkdownDescription: `The target DSCP value of the Out Of Band Contract object.`,
 			},
+			"annotations": schema.SetNestedAttribute{
+				MarkdownDescription: ``,
+				Optional:            true,
+				Computed:            true,
+				PlanModifiers: []planmodifier.Set{
+					setplanmodifier.UseStateForUnknown(),
+				},
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Required: true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+							},
+							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+						},
+						"value": schema.StringAttribute{
+							Required: true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+							},
+							MarkdownDescription: `The value of the property.`,
+						},
+					},
+				},
+			},
+			"tags": schema.SetNestedAttribute{
+				MarkdownDescription: ``,
+				Optional:            true,
+				Computed:            true,
+				PlanModifiers: []planmodifier.Set{
+					setplanmodifier.UseStateForUnknown(),
+				},
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Required: true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+							},
+							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+						},
+						"value": schema.StringAttribute{
+							Required: true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+							},
+							MarkdownDescription: `The value of the property.`,
+						},
+					},
+				},
+			},
 		},
 	}
 	tflog.Debug(ctx, "End schema of resource: aci_out_of_band_contract")
@@ -211,6 +305,11 @@ func (r *VzOOBBrCPResource) Configure(ctx context.Context, req resource.Configur
 
 func (r *VzOOBBrCPResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	tflog.Debug(ctx, "Start create of resource: aci_out_of_band_contract")
+	// On create retrieve information on current state prior to making any changes in order to determine child delete operations
+	var stateData *VzOOBBrCPResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &stateData)...)
+	setVzOOBBrCPId(ctx, stateData)
+	getAndSetVzOOBBrCPAttributes(ctx, &resp.Diagnostics, r.client, stateData)
 
 	var data *VzOOBBrCPResourceModel
 
@@ -225,7 +324,13 @@ func (r *VzOOBBrCPResource) Create(ctx context.Context, req resource.CreateReque
 
 	tflog.Debug(ctx, fmt.Sprintf("Create of resource aci_out_of_band_contract with id '%s'", data.Id.ValueString()))
 
-	jsonPayload := getVzOOBBrCPCreateJsonPayload(ctx, &resp.Diagnostics, data)
+	var tagAnnotationPlan, tagAnnotationState []TagAnnotationVzOOBBrCPResourceModel
+	data.TagAnnotation.ElementsAs(ctx, &tagAnnotationPlan, false)
+	stateData.TagAnnotation.ElementsAs(ctx, &tagAnnotationState, false)
+	var tagTagPlan, tagTagState []TagTagVzOOBBrCPResourceModel
+	data.TagTag.ElementsAs(ctx, &tagTagPlan, false)
+	stateData.TagTag.ElementsAs(ctx, &tagTagState, false)
+	jsonPayload := getVzOOBBrCPCreateJsonPayload(ctx, &resp.Diagnostics, data, tagAnnotationPlan, tagAnnotationState, tagTagPlan, tagTagState)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -272,9 +377,11 @@ func (r *VzOOBBrCPResource) Read(ctx context.Context, req resource.ReadRequest, 
 func (r *VzOOBBrCPResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	tflog.Debug(ctx, "Start update of resource: aci_out_of_band_contract")
 	var data *VzOOBBrCPResourceModel
+	var stateData *VzOOBBrCPResourceModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+	resp.Diagnostics.Append(req.State.Get(ctx, &stateData)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -282,7 +389,13 @@ func (r *VzOOBBrCPResource) Update(ctx context.Context, req resource.UpdateReque
 
 	tflog.Debug(ctx, fmt.Sprintf("Update of resource aci_out_of_band_contract with id '%s'", data.Id.ValueString()))
 
-	jsonPayload := getVzOOBBrCPCreateJsonPayload(ctx, &resp.Diagnostics, data)
+	var tagAnnotationPlan, tagAnnotationState []TagAnnotationVzOOBBrCPResourceModel
+	data.TagAnnotation.ElementsAs(ctx, &tagAnnotationPlan, false)
+	stateData.TagAnnotation.ElementsAs(ctx, &tagAnnotationState, false)
+	var tagTagPlan, tagTagState []TagTagVzOOBBrCPResourceModel
+	data.TagTag.ElementsAs(ctx, &tagTagPlan, false)
+	stateData.TagTag.ElementsAs(ctx, &tagTagState, false)
+	jsonPayload := getVzOOBBrCPCreateJsonPayload(ctx, &resp.Diagnostics, data, tagAnnotationPlan, tagAnnotationState, tagTagPlan, tagTagState)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -336,7 +449,7 @@ func (r *VzOOBBrCPResource) ImportState(ctx context.Context, req resource.Import
 }
 
 func getAndSetVzOOBBrCPAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *VzOOBBrCPResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json", data.Id.ValueString()), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "vzOOBBrCP,tagAnnotation,tagTag"), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -410,6 +523,47 @@ func getAndSetVzOOBBrCPAttributes(ctx context.Context, diags *diag.Diagnostics, 
 			if data.TargetDscp.IsUnknown() {
 				data.TargetDscp = types.StringNull()
 			}
+			TagAnnotationVzOOBBrCP := TagAnnotationVzOOBBrCPResourceModel{}
+			TagAnnotationVzOOBBrCPList := make([]TagAnnotationVzOOBBrCPResourceModel, 0)
+			TagTagVzOOBBrCP := TagTagVzOOBBrCPResourceModel{}
+			TagTagVzOOBBrCPList := make([]TagTagVzOOBBrCPResourceModel, 0)
+			_, ok := classReadInfo[0].(map[string]interface{})["children"]
+			if ok {
+				children := classReadInfo[0].(map[string]interface{})["children"].([]interface{})
+				for _, child := range children {
+					for childClassName, childClassDetails := range child.(map[string]interface{}) {
+						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
+						if childClassName == "tagAnnotation" {
+							for childAttributeName, childAttributeValue := range childAttributes {
+								if childAttributeName == "key" {
+									TagAnnotationVzOOBBrCP.Key = basetypes.NewStringValue(childAttributeValue.(string))
+								}
+								if childAttributeName == "value" {
+									TagAnnotationVzOOBBrCP.Value = basetypes.NewStringValue(childAttributeValue.(string))
+								}
+
+							}
+							TagAnnotationVzOOBBrCPList = append(TagAnnotationVzOOBBrCPList, TagAnnotationVzOOBBrCP)
+						}
+						if childClassName == "tagTag" {
+							for childAttributeName, childAttributeValue := range childAttributes {
+								if childAttributeName == "key" {
+									TagTagVzOOBBrCP.Key = basetypes.NewStringValue(childAttributeValue.(string))
+								}
+								if childAttributeName == "value" {
+									TagTagVzOOBBrCP.Value = basetypes.NewStringValue(childAttributeValue.(string))
+								}
+
+							}
+							TagTagVzOOBBrCPList = append(TagTagVzOOBBrCPList, TagTagVzOOBBrCP)
+						}
+					}
+				}
+			}
+			tagAnnotationSet, _ := types.SetValueFrom(ctx, data.TagAnnotation.ElementType(ctx), TagAnnotationVzOOBBrCPList)
+			data.TagAnnotation = tagAnnotationSet
+			tagTagSet, _ := types.SetValueFrom(ctx, data.TagTag.ElementType(ctx), TagTagVzOOBBrCPList)
+			data.TagTag = tagTagSet
 		} else {
 			diags.AddError(
 				"too many results in response",
@@ -436,9 +590,102 @@ func setVzOOBBrCPId(ctx context.Context, data *VzOOBBrCPResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", strings.Split([]string{"uni/tn-mgmt/oobbrc-{name}"}[0], "/")[0], rn))
 }
 
-func getVzOOBBrCPCreateJsonPayload(ctx context.Context, diags *diag.Diagnostics, data *VzOOBBrCPResourceModel) *container.Container {
+func getVzOOBBrCPTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *VzOOBBrCPResourceModel, tagAnnotationVzOOBBrCPPlan, tagAnnotationVzOOBBrCPState []TagAnnotationVzOOBBrCPResourceModel) []map[string]interface{} {
+	childPayloads := []map[string]interface{}{}
+	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
+		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
+		for _, tagAnnotationVzOOBBrCP := range tagAnnotationVzOOBBrCPPlan {
+			childMap := NewAciObject()
+			if !tagAnnotationVzOOBBrCP.Key.IsNull() && !tagAnnotationVzOOBBrCP.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagAnnotationVzOOBBrCP.Key.ValueString()
+			}
+			if !tagAnnotationVzOOBBrCP.Value.IsNull() && !tagAnnotationVzOOBBrCP.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagAnnotationVzOOBBrCP.Value.ValueString()
+			}
+			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
+			tagAnnotationIdentifier := TagAnnotationIdentifier{}
+			tagAnnotationIdentifier.Key = tagAnnotationVzOOBBrCP.Key
+			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
+		}
+		for _, tagAnnotation := range tagAnnotationVzOOBBrCPState {
+			delete := true
+			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
+				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
+					delete = false
+					break
+				}
+			}
+			if delete {
+				tagAnnotationChildMapForDelete := NewAciObject()
+				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
+				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
+			}
+		}
+	} else {
+		data.TagAnnotation = types.SetNull(data.TagAnnotation.ElementType(ctx))
+	}
+
+	return childPayloads
+}
+
+func getVzOOBBrCPTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *VzOOBBrCPResourceModel, tagTagVzOOBBrCPPlan, tagTagVzOOBBrCPState []TagTagVzOOBBrCPResourceModel) []map[string]interface{} {
+	childPayloads := []map[string]interface{}{}
+	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
+		tagTagIdentifiers := []TagTagIdentifier{}
+		for _, tagTagVzOOBBrCP := range tagTagVzOOBBrCPPlan {
+			childMap := NewAciObject()
+			if !tagTagVzOOBBrCP.Key.IsNull() && !tagTagVzOOBBrCP.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagTagVzOOBBrCP.Key.ValueString()
+			}
+			if !tagTagVzOOBBrCP.Value.IsNull() && !tagTagVzOOBBrCP.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagTagVzOOBBrCP.Value.ValueString()
+			}
+			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
+			tagTagIdentifier := TagTagIdentifier{}
+			tagTagIdentifier.Key = tagTagVzOOBBrCP.Key
+			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
+		}
+		for _, tagTag := range tagTagVzOOBBrCPState {
+			delete := true
+			for _, tagTagIdentifier := range tagTagIdentifiers {
+				if tagTagIdentifier.Key == tagTag.Key {
+					delete = false
+					break
+				}
+			}
+			if delete {
+				tagTagChildMapForDelete := NewAciObject()
+				tagTagChildMapForDelete.Attributes["status"] = "deleted"
+				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
+			}
+		}
+	} else {
+		data.TagTag = types.SetNull(data.TagTag.ElementType(ctx))
+	}
+
+	return childPayloads
+}
+
+func getVzOOBBrCPCreateJsonPayload(ctx context.Context, diags *diag.Diagnostics, data *VzOOBBrCPResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationVzOOBBrCPResourceModel, tagTagPlan, tagTagState []TagTagVzOOBBrCPResourceModel) *container.Container {
 	payloadMap := map[string]interface{}{}
 	payloadMap["attributes"] = map[string]string{}
+	childPayloads := []map[string]interface{}{}
+
+	TagAnnotationchildPayloads := getVzOOBBrCPTagAnnotationChildPayloads(ctx, diags, data, tagAnnotationPlan, tagAnnotationState)
+	if TagAnnotationchildPayloads == nil {
+		return nil
+	}
+	childPayloads = append(childPayloads, TagAnnotationchildPayloads...)
+
+	TagTagchildPayloads := getVzOOBBrCPTagTagChildPayloads(ctx, diags, data, tagTagPlan, tagTagState)
+	if TagTagchildPayloads == nil {
+		return nil
+	}
+	childPayloads = append(childPayloads, TagTagchildPayloads...)
+
+	payloadMap["children"] = childPayloads
 	if !data.Annotation.IsNull() && !data.Annotation.IsUnknown() {
 		payloadMap["attributes"].(map[string]string)["annotation"] = data.Annotation.ValueString()
 	}

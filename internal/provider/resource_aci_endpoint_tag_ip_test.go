@@ -78,6 +78,88 @@ func TestAccResourceFvEpIpTagWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "name_alias", ""),
 				),
 			},
+			// Update with children
+			{
+				Config:             testConfigFvEpIpTagChildrenDependencyWithFvTenant,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "ip", "10.0.0.2"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "vrf_name", "test_ctx_name"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "id_attribute", "0"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "name", ""),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "name_alias", ""),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.1.value", "value_2"),
+				),
+			},
+			// Import testing with children
+			{
+				ResourceName:      "aci_endpoint_tag_ip.test",
+				ImportState:       true,
+				ImportStateVerify: true,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "ip", "10.0.0.2"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "vrf_name", "test_ctx_name"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "id_attribute", "0"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "name", ""),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "name_alias", ""),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.1.value", "value_2"),
+				),
+			},
+			// Update with children removed from config
+			{
+				Config:             testConfigFvEpIpTagChildrenRemoveFromConfigDependencyWithFvTenant,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.#", "2"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.0.key", "key_0"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.0.value", "value_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.1.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.#", "2"),
+				),
+			},
+			// Update with children first child removed
+			{
+				Config:             testConfigFvEpIpTagChildrenRemoveOneDependencyWithFvTenant,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.0.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.0.key", "key_1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.#", "1"),
+				),
+			},
+			// Update with all children removed
+			{
+				Config:             testConfigFvEpIpTagChildrenRemoveAllDependencyWithFvTenant,
+				ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "annotations.#", "0"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_ip.test", "tags.#", "0"),
+				),
+			},
 		},
 	})
 }
@@ -111,5 +193,70 @@ resource "aci_endpoint_tag_ip" "test" {
   id_attribute = "0"
   name = ""
   name_alias = ""
+}
+`
+const testConfigFvEpIpTagChildrenDependencyWithFvTenant = testConfigFvTenantMin + `
+resource "aci_endpoint_tag_ip" "test" {
+  parent_dn = aci_tenant.test.id
+  ip = "10.0.0.2"
+  vrf_name = "test_ctx_name"
+  annotations = [
+	{
+	  key = "key_0"
+	  value = "value_1"
+	},
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+  tags = [
+	{
+	  key = "key_0"
+	  value = "value_1"
+	},
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+}
+`
+
+const testConfigFvEpIpTagChildrenRemoveFromConfigDependencyWithFvTenant = testConfigFvTenantMin + `
+resource "aci_endpoint_tag_ip" "test" {
+  parent_dn = aci_tenant.test.id
+  ip = "10.0.0.2"
+  vrf_name = "test_ctx_name"
+}
+`
+
+const testConfigFvEpIpTagChildrenRemoveOneDependencyWithFvTenant = testConfigFvTenantMin + `
+resource "aci_endpoint_tag_ip" "test" {
+  parent_dn = aci_tenant.test.id
+  ip = "10.0.0.2"
+  vrf_name = "test_ctx_name"
+  annotations = [ 
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+  tags = [ 
+	{
+	  key = "key_1"
+	  value = "value_2"
+	},
+  ]
+}
+`
+
+const testConfigFvEpIpTagChildrenRemoveAllDependencyWithFvTenant = testConfigFvTenantMin + `
+resource "aci_endpoint_tag_ip" "test" {
+  parent_dn = aci_tenant.test.id
+  ip = "10.0.0.2"
+  vrf_name = "test_ctx_name"
+  annotations = []
+  tags = []
 }
 `

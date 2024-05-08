@@ -13,11 +13,13 @@ import (
 
 	"github.com/ciscoecosystem/aci-go-client/v2/client"
 	"github.com/ciscoecosystem/aci-go-client/v2/container"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -40,13 +42,49 @@ type MgmtSubnetResource struct {
 
 // MgmtSubnetResourceModel describes the resource data model.
 type MgmtSubnetResourceModel struct {
-	Id         types.String `tfsdk:"id"`
-	ParentDn   types.String `tfsdk:"parent_dn"`
-	Annotation types.String `tfsdk:"annotation"`
-	Descr      types.String `tfsdk:"description"`
-	Ip         types.String `tfsdk:"ip"`
-	Name       types.String `tfsdk:"name"`
-	NameAlias  types.String `tfsdk:"name_alias"`
+	Id            types.String `tfsdk:"id"`
+	ParentDn      types.String `tfsdk:"parent_dn"`
+	Annotation    types.String `tfsdk:"annotation"`
+	Descr         types.String `tfsdk:"description"`
+	Ip            types.String `tfsdk:"ip"`
+	Name          types.String `tfsdk:"name"`
+	NameAlias     types.String `tfsdk:"name_alias"`
+	TagAnnotation types.Set    `tfsdk:"annotations"`
+	TagTag        types.Set    `tfsdk:"tags"`
+}
+
+// TagAnnotationMgmtSubnetResourceModel describes the resource data model for the children without relation ships.
+type TagAnnotationMgmtSubnetResourceModel struct {
+	Key   types.String `tfsdk:"key"`
+	Value types.String `tfsdk:"value"`
+}
+
+func TagAnnotationMgmtSubnetResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagAnnotationMgmtSubnetResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationMgmtSubnetResourceModelAttributeTypes())
+}
+
+// TagTagMgmtSubnetResourceModel describes the resource data model for the children without relation ships.
+type TagTagMgmtSubnetResourceModel struct {
+	Key   types.String `tfsdk:"key"`
+	Value types.String `tfsdk:"value"`
+}
+
+func TagTagMgmtSubnetResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagTagMgmtSubnetResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagMgmtSubnetResourceModelAttributeTypes())
 }
 
 type MgmtSubnetIdentifier struct {
@@ -127,6 +165,62 @@ func (r *MgmtSubnetResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 				MarkdownDescription: `The name alias of the External Management Network Subnet object.`,
 			},
+			"annotations": schema.SetNestedAttribute{
+				MarkdownDescription: ``,
+				Optional:            true,
+				Computed:            true,
+				PlanModifiers: []planmodifier.Set{
+					setplanmodifier.UseStateForUnknown(),
+				},
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Required: true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+							},
+							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+						},
+						"value": schema.StringAttribute{
+							Required: true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+							},
+							MarkdownDescription: `The value of the property.`,
+						},
+					},
+				},
+			},
+			"tags": schema.SetNestedAttribute{
+				MarkdownDescription: ``,
+				Optional:            true,
+				Computed:            true,
+				PlanModifiers: []planmodifier.Set{
+					setplanmodifier.UseStateForUnknown(),
+				},
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Required: true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+							},
+							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+						},
+						"value": schema.StringAttribute{
+							Required: true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+							},
+							MarkdownDescription: `The value of the property.`,
+						},
+					},
+				},
+			},
 		},
 	}
 	tflog.Debug(ctx, "End schema of resource: aci_external_management_network_subnet")
@@ -156,6 +250,11 @@ func (r *MgmtSubnetResource) Configure(ctx context.Context, req resource.Configu
 
 func (r *MgmtSubnetResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	tflog.Debug(ctx, "Start create of resource: aci_external_management_network_subnet")
+	// On create retrieve information on current state prior to making any changes in order to determine child delete operations
+	var stateData *MgmtSubnetResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &stateData)...)
+	setMgmtSubnetId(ctx, stateData)
+	getAndSetMgmtSubnetAttributes(ctx, &resp.Diagnostics, r.client, stateData)
 
 	var data *MgmtSubnetResourceModel
 
@@ -170,7 +269,13 @@ func (r *MgmtSubnetResource) Create(ctx context.Context, req resource.CreateRequ
 
 	tflog.Debug(ctx, fmt.Sprintf("Create of resource aci_external_management_network_subnet with id '%s'", data.Id.ValueString()))
 
-	jsonPayload := getMgmtSubnetCreateJsonPayload(ctx, &resp.Diagnostics, data)
+	var tagAnnotationPlan, tagAnnotationState []TagAnnotationMgmtSubnetResourceModel
+	data.TagAnnotation.ElementsAs(ctx, &tagAnnotationPlan, false)
+	stateData.TagAnnotation.ElementsAs(ctx, &tagAnnotationState, false)
+	var tagTagPlan, tagTagState []TagTagMgmtSubnetResourceModel
+	data.TagTag.ElementsAs(ctx, &tagTagPlan, false)
+	stateData.TagTag.ElementsAs(ctx, &tagTagState, false)
+	jsonPayload := getMgmtSubnetCreateJsonPayload(ctx, &resp.Diagnostics, data, tagAnnotationPlan, tagAnnotationState, tagTagPlan, tagTagState)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -217,9 +322,11 @@ func (r *MgmtSubnetResource) Read(ctx context.Context, req resource.ReadRequest,
 func (r *MgmtSubnetResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	tflog.Debug(ctx, "Start update of resource: aci_external_management_network_subnet")
 	var data *MgmtSubnetResourceModel
+	var stateData *MgmtSubnetResourceModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+	resp.Diagnostics.Append(req.State.Get(ctx, &stateData)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -227,7 +334,13 @@ func (r *MgmtSubnetResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	tflog.Debug(ctx, fmt.Sprintf("Update of resource aci_external_management_network_subnet with id '%s'", data.Id.ValueString()))
 
-	jsonPayload := getMgmtSubnetCreateJsonPayload(ctx, &resp.Diagnostics, data)
+	var tagAnnotationPlan, tagAnnotationState []TagAnnotationMgmtSubnetResourceModel
+	data.TagAnnotation.ElementsAs(ctx, &tagAnnotationPlan, false)
+	stateData.TagAnnotation.ElementsAs(ctx, &tagAnnotationState, false)
+	var tagTagPlan, tagTagState []TagTagMgmtSubnetResourceModel
+	data.TagTag.ElementsAs(ctx, &tagTagPlan, false)
+	stateData.TagTag.ElementsAs(ctx, &tagTagState, false)
+	jsonPayload := getMgmtSubnetCreateJsonPayload(ctx, &resp.Diagnostics, data, tagAnnotationPlan, tagAnnotationState, tagTagPlan, tagTagState)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -281,7 +394,7 @@ func (r *MgmtSubnetResource) ImportState(ctx context.Context, req resource.Impor
 }
 
 func getAndSetMgmtSubnetAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *MgmtSubnetResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json", data.Id.ValueString()), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "mgmtSubnet,tagAnnotation,tagTag"), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -326,6 +439,47 @@ func getAndSetMgmtSubnetAttributes(ctx context.Context, diags *diag.Diagnostics,
 			if data.NameAlias.IsUnknown() {
 				data.NameAlias = types.StringNull()
 			}
+			TagAnnotationMgmtSubnet := TagAnnotationMgmtSubnetResourceModel{}
+			TagAnnotationMgmtSubnetList := make([]TagAnnotationMgmtSubnetResourceModel, 0)
+			TagTagMgmtSubnet := TagTagMgmtSubnetResourceModel{}
+			TagTagMgmtSubnetList := make([]TagTagMgmtSubnetResourceModel, 0)
+			_, ok := classReadInfo[0].(map[string]interface{})["children"]
+			if ok {
+				children := classReadInfo[0].(map[string]interface{})["children"].([]interface{})
+				for _, child := range children {
+					for childClassName, childClassDetails := range child.(map[string]interface{}) {
+						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
+						if childClassName == "tagAnnotation" {
+							for childAttributeName, childAttributeValue := range childAttributes {
+								if childAttributeName == "key" {
+									TagAnnotationMgmtSubnet.Key = basetypes.NewStringValue(childAttributeValue.(string))
+								}
+								if childAttributeName == "value" {
+									TagAnnotationMgmtSubnet.Value = basetypes.NewStringValue(childAttributeValue.(string))
+								}
+
+							}
+							TagAnnotationMgmtSubnetList = append(TagAnnotationMgmtSubnetList, TagAnnotationMgmtSubnet)
+						}
+						if childClassName == "tagTag" {
+							for childAttributeName, childAttributeValue := range childAttributes {
+								if childAttributeName == "key" {
+									TagTagMgmtSubnet.Key = basetypes.NewStringValue(childAttributeValue.(string))
+								}
+								if childAttributeName == "value" {
+									TagTagMgmtSubnet.Value = basetypes.NewStringValue(childAttributeValue.(string))
+								}
+
+							}
+							TagTagMgmtSubnetList = append(TagTagMgmtSubnetList, TagTagMgmtSubnet)
+						}
+					}
+				}
+			}
+			tagAnnotationSet, _ := types.SetValueFrom(ctx, data.TagAnnotation.ElementType(ctx), TagAnnotationMgmtSubnetList)
+			data.TagAnnotation = tagAnnotationSet
+			tagTagSet, _ := types.SetValueFrom(ctx, data.TagTag.ElementType(ctx), TagTagMgmtSubnetList)
+			data.TagTag = tagTagSet
 		} else {
 			diags.AddError(
 				"too many results in response",
@@ -368,9 +522,102 @@ func setMgmtSubnetId(ctx context.Context, data *MgmtSubnetResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", data.ParentDn.ValueString(), rn))
 }
 
-func getMgmtSubnetCreateJsonPayload(ctx context.Context, diags *diag.Diagnostics, data *MgmtSubnetResourceModel) *container.Container {
+func getMgmtSubnetTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtSubnetResourceModel, tagAnnotationMgmtSubnetPlan, tagAnnotationMgmtSubnetState []TagAnnotationMgmtSubnetResourceModel) []map[string]interface{} {
+	childPayloads := []map[string]interface{}{}
+	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
+		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
+		for _, tagAnnotationMgmtSubnet := range tagAnnotationMgmtSubnetPlan {
+			childMap := NewAciObject()
+			if !tagAnnotationMgmtSubnet.Key.IsNull() && !tagAnnotationMgmtSubnet.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagAnnotationMgmtSubnet.Key.ValueString()
+			}
+			if !tagAnnotationMgmtSubnet.Value.IsNull() && !tagAnnotationMgmtSubnet.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagAnnotationMgmtSubnet.Value.ValueString()
+			}
+			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
+			tagAnnotationIdentifier := TagAnnotationIdentifier{}
+			tagAnnotationIdentifier.Key = tagAnnotationMgmtSubnet.Key
+			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
+		}
+		for _, tagAnnotation := range tagAnnotationMgmtSubnetState {
+			delete := true
+			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
+				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
+					delete = false
+					break
+				}
+			}
+			if delete {
+				tagAnnotationChildMapForDelete := NewAciObject()
+				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
+				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
+			}
+		}
+	} else {
+		data.TagAnnotation = types.SetNull(data.TagAnnotation.ElementType(ctx))
+	}
+
+	return childPayloads
+}
+
+func getMgmtSubnetTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *MgmtSubnetResourceModel, tagTagMgmtSubnetPlan, tagTagMgmtSubnetState []TagTagMgmtSubnetResourceModel) []map[string]interface{} {
+	childPayloads := []map[string]interface{}{}
+	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
+		tagTagIdentifiers := []TagTagIdentifier{}
+		for _, tagTagMgmtSubnet := range tagTagMgmtSubnetPlan {
+			childMap := NewAciObject()
+			if !tagTagMgmtSubnet.Key.IsNull() && !tagTagMgmtSubnet.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagTagMgmtSubnet.Key.ValueString()
+			}
+			if !tagTagMgmtSubnet.Value.IsNull() && !tagTagMgmtSubnet.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagTagMgmtSubnet.Value.ValueString()
+			}
+			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
+			tagTagIdentifier := TagTagIdentifier{}
+			tagTagIdentifier.Key = tagTagMgmtSubnet.Key
+			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
+		}
+		for _, tagTag := range tagTagMgmtSubnetState {
+			delete := true
+			for _, tagTagIdentifier := range tagTagIdentifiers {
+				if tagTagIdentifier.Key == tagTag.Key {
+					delete = false
+					break
+				}
+			}
+			if delete {
+				tagTagChildMapForDelete := NewAciObject()
+				tagTagChildMapForDelete.Attributes["status"] = "deleted"
+				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
+			}
+		}
+	} else {
+		data.TagTag = types.SetNull(data.TagTag.ElementType(ctx))
+	}
+
+	return childPayloads
+}
+
+func getMgmtSubnetCreateJsonPayload(ctx context.Context, diags *diag.Diagnostics, data *MgmtSubnetResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationMgmtSubnetResourceModel, tagTagPlan, tagTagState []TagTagMgmtSubnetResourceModel) *container.Container {
 	payloadMap := map[string]interface{}{}
 	payloadMap["attributes"] = map[string]string{}
+	childPayloads := []map[string]interface{}{}
+
+	TagAnnotationchildPayloads := getMgmtSubnetTagAnnotationChildPayloads(ctx, diags, data, tagAnnotationPlan, tagAnnotationState)
+	if TagAnnotationchildPayloads == nil {
+		return nil
+	}
+	childPayloads = append(childPayloads, TagAnnotationchildPayloads...)
+
+	TagTagchildPayloads := getMgmtSubnetTagTagChildPayloads(ctx, diags, data, tagTagPlan, tagTagState)
+	if TagTagchildPayloads == nil {
+		return nil
+	}
+	childPayloads = append(childPayloads, TagTagchildPayloads...)
+
+	payloadMap["children"] = childPayloads
 	if !data.Annotation.IsNull() && !data.Annotation.IsUnknown() {
 		payloadMap["attributes"].(map[string]string)["annotation"] = data.Annotation.ValueString()
 	}

@@ -72,6 +72,38 @@ func (d *PimRouteMapPolDataSource) Schema(ctx context.Context, req datasource.Sc
 				Computed:            true,
 				MarkdownDescription: `A tag for enabling clients to add their own data. For example, to indicate who created this object.`,
 			},
+			"annotations": schema.SetNestedAttribute{
+				MarkdownDescription: ``,
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+						},
+						"value": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The value of the property.`,
+						},
+					},
+				},
+			},
+			"tags": schema.SetNestedAttribute{
+				MarkdownDescription: ``,
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+						},
+						"value": schema.StringAttribute{
+							Computed:            true,
+							MarkdownDescription: `The value of the property.`,
+						},
+					},
+				},
+			},
 		},
 	}
 	tflog.Debug(ctx, "End schema of datasource: aci_pim_route_map_policy")

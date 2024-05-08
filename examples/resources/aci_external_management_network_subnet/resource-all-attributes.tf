@@ -6,4 +6,16 @@ resource "aci_external_management_network_subnet" "full_example_external_managem
   ip          = "1.1.1.0/24"
   name        = "name"
   name_alias  = "name_alias"
+  annotations = [
+    {
+      key   = "key_0"
+      value = "value_1"
+    }
+  ]
+  tags = [
+    {
+      key   = "key_0"
+      value = "value_1"
+    }
+  ]
 }
