@@ -92,14 +92,14 @@ All examples for the External Management Network Subnet resource can be found in
 * `name_alias` (nameAlias) - (string) The name alias of the External Management Network Subnet object.
 
 * `annotations` - (list) A list of Annotations (ACI object [tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview)). Annotations can also be configured using a separate [aci_annotation](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/annotation) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
-  
+   
   #### Required ####
   
   * `key` (key) - (string) The key used to uniquely identify this configuration object.
   * `value` (value) - (string) The value of the property.
 
 * `tags` - (list) A list of Tags (ACI object [tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview)). Tags can also be configured using a separate [aci_tag](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/tag) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
-  
+   
   #### Required ####
   
   * `key` (key) - (string) The key used to uniquely identify this configuration object.
@@ -122,3 +122,5 @@ import {
   to = aci_external_management_network_subnet.example_external_management_network_instance_profile
 }
 ```
+
+

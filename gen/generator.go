@@ -104,6 +104,7 @@ var templateFuncs = template.FuncMap{
 	"getDevnetDocForClass":         GetDevnetDocForClass,
 	"lowerFirstCharacter":          LowerFirstCharacter,
 	"isListEmpty":                  func(stringList []string) bool { return len(stringList) == 0 },
+	"addToTemplateProperties":      AddToTemplateProperties,
 }
 
 // Global variables used for unique resource name setting based on label from meta data
@@ -233,6 +234,44 @@ func LowerFirstCharacter(str string) string {
 		return ""
 	}
 	return strings.ToLower(string(str[0])) + str[1:]
+}
+
+func DictForTemplates(values ...interface{}) (map[string]interface{}, error) {
+	if len(values)%2 != 0 {
+		return nil, fmt.Errorf("invalid number of arguments passed to the dict")
+	}
+	dict := make(map[string]interface{})
+	for i := 0; i < len(values); i += 2 {
+		key, ok := values[i].(string)
+		if !ok {
+			return nil, fmt.Errorf("dict keys must be strings")
+		}
+		dict[key] = values[i+1]
+	}
+	return dict, nil
+}
+
+// AddToTemplate creates a copy of the context with the new fields provided in the form of key value pairs
+func AddToTemplateProperties(model Model, values ...interface{}) (*Model, error) {
+	// Create a copy of the model
+	newModel := model
+	updates, err := DictForTemplates(values...)
+	if err != nil {
+		return nil, err
+	}
+
+	if newModel.TemplateProperties == nil {
+		newModel.TemplateProperties = make(map[string]interface{})
+	}
+
+	for k, v := range newModel.TemplateProperties {
+		newModel.TemplateProperties[k] = v
+	}
+	for k, v := range updates {
+		newModel.TemplateProperties[k] = v
+	}
+
+	return &newModel, nil
 }
 
 // Renders the templates and writes a file to the output directory
@@ -672,6 +711,7 @@ type Model struct {
 	Properties                map[string]Property
 	NamedProperties           map[string]Property
 	Children                  map[string]Model
+	DirectParent              *Model
 	Configuration             map[string]interface{}
 	TestVars                  map[string]interface{}
 	Definitions               Definitions
@@ -691,6 +731,7 @@ type Model struct {
 	HasNamedProperties        bool
 	HasChildNamedProperties   bool
 	Include                   bool
+	TemplateProperties        map[string]interface{}
 }
 
 // A Property represents a ACI class property
@@ -781,6 +822,7 @@ func (m *Model) setClassModel(metaPath string, isChildIteration bool, definition
 		m.Children = make(map[string]Model)
 		for _, child := range m.ChildClasses {
 			childModel := Model{PkgName: child}
+			childModel.setDirectParent(m)
 			childModel.setClassModel(metaPath, true, definitions, []string{m.PkgName}, pkgNames, mainParentChildren, parentHierarchyList)
 			m.Children[child] = childModel
 			if childModel.HasValidValues {
@@ -966,6 +1008,10 @@ func (m *Model) SetGrandParentName(parentList []string, parent string) {
 			}
 		}
 	}
+}
+
+func (m *Model) setDirectParent(parentModel *Model) {
+	m.DirectParent = parentModel
 }
 
 func reverseList(items []string) []string {
