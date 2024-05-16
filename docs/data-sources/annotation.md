@@ -77,7 +77,6 @@ data "aci_annotation" "example_application_epg" {
   - [aci_netflow_exporter_policy](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/netflow_exporter_policy) ([netflowExporterPol](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/netflowExporterPol/overview))
 =======
   - [aci_pim_route_map_entry](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/pim_route_map_entry) ([pimRouteMapEntry](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/pimRouteMapEntry/overview))
-  - [aci_pim_route_map_policy](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/pim_route_map_policy) ([pimRouteMapPol](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/pimRouteMapPol/overview))
   - Too many classes to display, see model documentation for all possible classes of [tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview).
 >>>>>>> 1210cc50 ([ignore] Changed full identifier to parent hierarchy)
 * `key` (key) - (string) The key used to uniquely identify this configuration object.
