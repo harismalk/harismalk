@@ -264,7 +264,4 @@ import {
 }
 ```
 
-## Child Resources
-  
-  - [aci_http_ssl_configuration](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/http_ssl_configuration)
 

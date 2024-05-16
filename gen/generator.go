@@ -115,6 +115,7 @@ var rnPrefix = map[string]string{}
 var targetRelationalPropertyClasses = map[string]string{}
 var alwaysIncludeChildren = []string{"tag:Annotation", "tag:Tag"}
 var excludeChildResourceNamesFromDocs = []string{"", "annotation", "tag"}
+var excludeResources []interface{}
 
 func GetResourceNameAsDescription(s string, definitions Definitions) string {
 	resourceName := cases.Title(language.English).String(strings.ReplaceAll(s, "_", " "))
@@ -341,6 +342,10 @@ func getClassModels(definitions Definitions) map[string]Model {
 		classModel := Model{PkgName: pkgName}
 		classModel.setClassModel(metaPath, false, definitions, []string{}, pkgNames, nil, nil)
 		classModels[pkgName] = classModel
+
+		if len(classModel.IdentifiedBy) == 0 || classModel.Exclude {
+			excludeResources = append(excludeResources, pkgName)
+		}
 	}
 	return classModels
 }
@@ -598,7 +603,7 @@ func main() {
 	for _, model := range classModels {
 
 		// Only render resources and datasources when the class has a unique identifier or is marked as include in the classes definitions YAML file
-		if len(model.IdentifiedBy) > 0 || model.Include {
+		if (len(model.IdentifiedBy) > 0 && !model.Exclude) || model.Include {
 
 			// All classmodels have been read, thus now the model, child and relational resources names can be set
 			// When done before additional files would need to be opened and read which would slow down the generation process
@@ -731,6 +736,7 @@ type Model struct {
 	HasNamedProperties        bool
 	HasChildNamedProperties   bool
 	Include                   bool
+	Exclude                   bool
 	TemplateProperties        map[string]interface{}
 }
 
@@ -788,6 +794,7 @@ func (m *Model) setClassModel(metaPath string, isChildIteration bool, definition
 		m.SetClassDnFormats(classDetails)
 		m.SetClassIdentifiers(classDetails)
 		m.SetClassInclude()
+		m.SetClassExclude()
 		m.SetClassAllowDelete(classDetails)
 		m.SetClassContainedByAndParent(classDetails, parents)
 		m.SetClassContains(classDetails)
@@ -983,6 +990,18 @@ func (m *Model) SetClassInclude() {
 				m.Include = value.(bool)
 			} else {
 				m.Include = false
+			}
+		}
+	}
+}
+
+func (m *Model) SetClassExclude() {
+	if classDetails, ok := m.Definitions.Classes[m.PkgName]; ok {
+		for key, value := range classDetails.(map[interface{}]interface{}) {
+			if key.(string) == "exclude" {
+				m.Exclude = value.(bool)
+			} else {
+				m.Exclude = false
 			}
 		}
 	}
@@ -1525,6 +1544,15 @@ func GetTestConfigVariableName(className string, midString string, parentClassNa
 	return ""
 }
 
+func resourcesExcluded(excludeResources []interface{}, containedClassName string) bool {
+	for _, item := range excludeResources {
+		if s, ok := item.(string); ok && s == containedClassName {
+			return true
+		}
+	}
+	return false
+}
+
 // Determine if possible dn formats in terraform documentation should be overwritten by dn formats from the classes.yaml file
 func GetOverwriteExampleClasses(classPkgName string, definitions Definitions) []interface{} {
 	overwriteExampleClasses := []interface{}{}
@@ -1633,7 +1661,8 @@ func setDocumentationData(m *Model, definitions Definitions) {
 	// Add child class references to documentation when resource name is known
 	for _, child := range m.Contains {
 		match, _ := regexp.MatchString("[Rs][A-Z][^\r\n\t\f\v]", child) // match all Rs classes
-		if !match {
+		// fmt.Println(child, checkExistenceOfChild(m, child))
+		if !match && !resourcesExcluded(excludeResources, child) {
 			resourceName := GetResourceName(child, definitions)
 			if !slices.Contains(excludeChildResourceNamesFromDocs, resourceName) { // exclude anotation children since they will be included into the resource when possible
 				m.DocumentationChildren = append(m.DocumentationChildren, fmt.Sprintf("[%s_%s](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/%s)", providerName, resourceName, resourceName))
