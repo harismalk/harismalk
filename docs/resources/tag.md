@@ -63,6 +63,7 @@ All examples for the Tag resource can be found in the [examples](https://github.
 
 * `parent_dn` - (string) The distinguished name (DN) of the parent object, possible resources:
   - Too many parent DNs to display, see model documentation for all possible parents of [tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview).
+  - [aci_communication_policy](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/communication_policy) ([commPol](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/commPol/overview))
   - [aci_application_epg](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/application_epg) ([fvAEPg](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fvAEPg/overview))
   - [aci_vrf](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/vrf) ([fvCtx](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fvCtx/overview))
   - [aci_endpoint_tag_ip](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/endpoint_tag_ip) ([fvEpIpTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fvEpIpTag/overview))
@@ -81,13 +82,8 @@ All examples for the Tag resource can be found in the [examples](https://github.
   - [aci_external_management_network_instance_profile](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/external_management_network_instance_profile) ([mgmtInstP](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/mgmtInstP/overview))
   - [aci_relation_to_consumed_out_of_band_contract](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/relation_to_consumed_out_of_band_contract) ([mgmtRsOoBCons](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/mgmtRsOoBCons/overview))
   - [aci_external_management_network_subnet](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/external_management_network_subnet) ([mgmtSubnet](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/mgmtSubnet/overview))
-<<<<<<< HEAD
   - [aci_l3out_node_sid_profile](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/l3out_node_sid_profile) ([mplsNodeSidP](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/mplsNodeSidP/overview))
   - [aci_netflow_exporter_policy](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/netflow_exporter_policy) ([netflowExporterPol](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/netflowExporterPol/overview))
-=======
-  - [aci_pim_route_map_entry](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/pim_route_map_entry) ([pimRouteMapEntry](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/pimRouteMapEntry/overview))
-  - Too many classes to display, see model documentation for all possible classes of [tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview).
->>>>>>> 1210cc50 ([ignore] Changed full identifier to parent hierarchy)
 * `key` (key) - (string) The key used to uniquely identify this configuration object.
 * `value` (value) - (string) The value of the property.
 

@@ -1600,11 +1600,13 @@ func setDocumentationData(m *Model, definitions Definitions) {
 	resourcesFound := [][]string{}
 	resourcesNotFound := []string{}
 	for _, containedClassName := range m.ContainedBy {
-		resourceName := GetResourceName(containedClassName, definitions)
-		if resourceName != "" {
-			resourcesFound = append(resourcesFound, []string{resourceName, containedClassName})
-		} else {
-			resourcesNotFound = append(resourcesNotFound, containedClassName)
+		if !resourcesExcluded(excludeResources, containedClassName) {
+			resourceName := GetResourceName(containedClassName, definitions)
+			if resourceName != "" {
+				resourcesFound = append(resourcesFound, []string{resourceName, containedClassName})
+			} else {
+				resourcesNotFound = append(resourcesNotFound, containedClassName)
+			}
 		}
 	}
 
