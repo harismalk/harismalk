@@ -59,29 +59,55 @@ resource "aci_netflow_monitor_policy" "full_example_tenant" {
   owner_tag   = "owner_tag"
   relation_to_netflow_exporters = [
     {
-      annotation                   = "annotation_1"
+      annotation                   = "annotation_0"
       netflow_exporter_policy_name = aci_netflow_exporter_policy.example.name
+      annotations = [
+        {
+          key   = "key_0"
+          value = "value_0"
+        }
+      ]
+      tags = [
+        {
+          key   = "key_0"
+          value = "value_0"
+        }
+      ]
     }
   ]
   relation_to_netflow_record = [
     {
-      annotation                 = "annotation_1"
+      annotation                 = "annotation_0"
       netflow_record_policy_name = aci_netflow_record_policy.example.name
+      annotations = [
+        {
+          key   = "key_0"
+          value = "value_0"
+        }
+      ]
+      tags = [
+        {
+          key   = "key_0"
+          value = "value_0"
+        }
+      ]
     }
   ]
   annotations = [
     {
       key   = "key_0"
-      value = "value_1"
+      value = "value_0"
     }
   ]
   tags = [
     {
       key   = "key_0"
-      value = "value_1"
+      value = "value_0"
     }
   ]
 }
+
+
 
 ```
 
@@ -113,36 +139,60 @@ All examples for the Netflow Monitor Policy resource can be found in the [exampl
 * `owner_tag` (ownerTag) - (string) A tag for enabling clients to add their own data. For example, to indicate who created this object.
 
 * `relation_to_netflow_exporters` - (list) A list of Relation To Netflow Exporters (ACI object [netflowRsMonitorToExporter](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/netflowRsMonitorToExporter/overview)) pointing to Netflow Exporter Policy (ACI Object [netflowExporterPol](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/netflowExporterPol/overview)) which can be configured using the [aci_netflow_exporter_policy](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/netflow_exporter_policy) resource.
-  
+   
   #### Required ####
   
   * `netflow_exporter_policy_name` (tnNetflowExporterPolName) - (string) Name. This attribute can be referenced from a [resource](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/netflow_exporter_policy) with `aci_netflow_exporter_policy.example.name` or from a [datasource](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/data-sources/netflow_exporter_policy) with `data.aci_netflow_exporter_policy.example.name`.
-
   #### Optional ####
     
   * `annotation` (annotation) - (string) The annotation of the Relation To Netflow Exporter object.
       - Default: `orchestrator:terraform`
 
+  * `annotations` - (list) A list of Annotations (ACI object [tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview)). Annotations can also be configured using a separate [aci_annotation](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/annotation) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
+   
+    #### Required ####
+  
+    * `key` (key) - (string) The key used to uniquely identify this configuration object.
+    * `value` (value) - (string) The value of the property.
+
+  * `tags` - (list) A list of Tags (ACI object [tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview)). Tags can also be configured using a separate [aci_tag](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/tag) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
+   
+    #### Required ####
+  
+    * `key` (key) - (string) The key used to uniquely identify this configuration object.
+    * `value` (value) - (string) The value of the property.
+
 * `relation_to_netflow_record` - (list) A list of Relation To Netflow Record (ACI object [netflowRsMonitorToRecord](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/netflowRsMonitorToRecord/overview)) pointing to Netflow Record Policy (ACI Object [netflowRecordPol](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/netflowRecordPol/overview)) which can be configured using the [aci_netflow_record_policy](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/netflow_record_policy) resource.
   
-  #### Required ####
-  
-
   #### Optional ####
     
   * `annotation` (annotation) - (string) The annotation of the Relation To Netflow Record object.
       - Default: `orchestrator:terraform`
   * `netflow_record_policy_name` (tnNetflowRecordPolName) - (string) Name.
 
-* `annotations` - (list) A list of Annotations (ACI object [tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview)). Annotations can also be configured using a separate [aci_annotation](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/annotation) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
+  * `annotations` - (list) A list of Annotations (ACI object [tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview)). Annotations can also be configured using a separate [aci_annotation](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/annotation) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
+   
+    #### Required ####
   
+    * `key` (key) - (string) The key used to uniquely identify this configuration object.
+    * `value` (value) - (string) The value of the property.
+
+  * `tags` - (list) A list of Tags (ACI object [tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview)). Tags can also be configured using a separate [aci_tag](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/tag) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
+   
+    #### Required ####
+  
+    * `key` (key) - (string) The key used to uniquely identify this configuration object.
+    * `value` (value) - (string) The value of the property.
+
+* `annotations` - (list) A list of Annotations (ACI object [tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview)). Annotations can also be configured using a separate [aci_annotation](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/annotation) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
+   
   #### Required ####
   
   * `key` (key) - (string) The key used to uniquely identify this configuration object.
   * `value` (value) - (string) The value of the property.
 
 * `tags` - (list) A list of Tags (ACI object [tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview)). Tags can also be configured using a separate [aci_tag](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/tag) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
-  
+   
   #### Required ####
   
   * `key` (key) - (string) The key used to uniquely identify this configuration object.
@@ -165,3 +215,5 @@ import {
   to = aci_netflow_monitor_policy.example_tenant
 }
 ```
+
+

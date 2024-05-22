@@ -758,15 +758,18 @@ resource "aci_{{$.resourceName}}" "test" {
     	{{- range $key, $value := $.resource_required}}
   {{$key}} = "{{$value}}"
   		{{- end}}
-  		{{- range $key, $value := $.children}}
-  {{$key}} = [ {{$child := index $value 1 }}
-	{
-	  		{{- range $child_key, $child_value := $child}}
-	  {{$child_key}} = "{{$child_value}}"
-			{{- end}}
-	},
+ {{- range $key, $value := $.children}}
+  {{$key}} = [
+    {{- if gt (len $value) 1}}
+      {{$child := index $value 1}}
+      {
+        {{- range $child_key, $child_value := $child}}
+        {{$child_key}} = "{{$child_value}}"
+        {{- end}}
+      },
+    {{- end}}
   ]
-		{{- end}}
+{{- end}}
 }
 `
 

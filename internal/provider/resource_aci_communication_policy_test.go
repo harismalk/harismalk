@@ -120,28 +120,6 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_rate", "throttle_rate_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "disabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.access_control_allow_credential", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.access_control_allow_origins", "access_control_allow_origins_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.admin_st", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.annotation", "annotation_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.cli_only_mode", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.client_cert_auth_state", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.description", "description_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.dh_param", "2048"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.global_throttle_rate", "global_throttle_rate_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.global_throttle_st", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.global_throttle_unit", "global_throttle_unit_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.max_request_status_count", "max_request_status_count_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.name", "name_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.name_alias", "name_alias_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.node_exporter", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.port", "port_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.referer", "referer_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.server_header", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.ssl_protocols", "TLSv1.1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.throttle_rate", "throttle_rate_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.throttle_st", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.visore_access", "enabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.value", "value_1"),
@@ -187,29 +165,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_rate", "throttle_rate_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "disabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.access_control_allow_credential", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.access_control_allow_origins", "access_control_allow_origins_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.admin_st", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.annotation", "annotation_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.cli_only_mode", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.client_cert_auth_state", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.description", "description_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.dh_param", "2048"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.global_throttle_rate", "global_throttle_rate_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.global_throttle_st", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.global_throttle_unit", "global_throttle_unit_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.max_request_status_count", "max_request_status_count_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.name", "name_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.name_alias", "name_alias_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.node_exporter", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.port", "port_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.referer", "referer_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.server_header", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.ssl_protocols", "TLSv1.1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.throttle_rate", "throttle_rate_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.throttle_st", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.1.visore_access", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "2"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.1.key", "key_1"),
@@ -230,28 +186,28 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.#", "1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_credential", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.dh_param", "2048"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_rate", "global_throttle_rate_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_st", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_unit", "global_throttle_unit_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.max_request_status_count", "max_request_status_count_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name", "name_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name_alias", "name_alias_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.node_exporter", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.port", "port_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.referer", "referer_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.server_header", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.ssl_protocols", "TLSv1.1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_rate", "throttle_rate_2"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "enabled"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "enabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_credential", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.dh_param", "1024"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_rate", "global_throttle_rate_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_st", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_unit", "global_throttle_unit_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.max_request_status_count", "max_request_status_count_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name", "name_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name_alias", "name_alias_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.node_exporter", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.port", "port_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.referer", "referer_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.server_header", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.ssl_protocols", "TLSv1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_rate", "throttle_rate_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.value", "value_2"),
@@ -269,7 +225,29 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "owner_tag", ""),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "strict_security_on_apic_oob_subnet", "false"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.#", "0"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "0"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_credential", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.dh_param", "1024"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_rate", "global_throttle_rate_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_st", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_unit", "global_throttle_unit_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.max_request_status_count", "max_request_status_count_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name", "name_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name_alias", "name_alias_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.node_exporter", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.port", "port_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.referer", "referer_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.server_header", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.ssl_protocols", "TLSv1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_rate", "throttle_rate_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.#", "0"),
 				),
 			},
@@ -327,6 +305,7 @@ resource "aci_communication_policy" "test" {
 	  annotation = "annotation_1"
 	  cli_only_mode = "disabled"
 	  client_cert_auth_state = "disabled"
+	  deletable_child = "false"
 	  description = "description_1"
 	  dh_param = "1024"
 	  global_throttle_rate = "global_throttle_rate_1"
@@ -343,30 +322,6 @@ resource "aci_communication_policy" "test" {
 	  throttle_rate = "throttle_rate_1"
 	  throttle_st = "disabled"
 	  visore_access = "disabled"
-	},
-	{
-	  access_control_allow_credential = "enabled"
-	  access_control_allow_origins = "access_control_allow_origins_2"
-	  admin_st = "enabled"
-	  annotation = "annotation_2"
-	  cli_only_mode = "enabled"
-	  client_cert_auth_state = "enabled"
-	  description = "description_2"
-	  dh_param = "2048"
-	  global_throttle_rate = "global_throttle_rate_2"
-	  global_throttle_st = "enabled"
-	  global_throttle_unit = "global_throttle_unit_2"
-	  max_request_status_count = "max_request_status_count_2"
-	  name = "name_2"
-	  name_alias = "name_alias_2"
-	  node_exporter = "enabled"
-	  port = "port_2"
-	  referer = "referer_2"
-	  server_header = "enabled"
-	  ssl_protocols = "TLSv1.1"
-	  throttle_rate = "throttle_rate_2"
-	  throttle_st = "enabled"
-	  visore_access = "enabled"
 	},
   ]
   tags = [
@@ -391,43 +346,21 @@ resource "aci_communication_policy" "test" {
 const testConfigCommPolChildrenRemoveOne = `
 resource "aci_communication_policy" "test" {
   name = "test_name"
-  annotations = [ 
-	{
-	  key = "key_1"
-	  value = "value_2"
-	},
+  annotations = [
+      
+      {
+        key = "key_1"
+        value = "value_2"
+      },
   ]
-  http_ssl_configuration = [ 
-	{
-	  access_control_allow_credential = "enabled"
-	  access_control_allow_origins = "access_control_allow_origins_2"
-	  admin_st = "enabled"
-	  annotation = "annotation_2"
-	  cli_only_mode = "enabled"
-	  client_cert_auth_state = "enabled"
-	  description = "description_2"
-	  dh_param = "2048"
-	  global_throttle_rate = "global_throttle_rate_2"
-	  global_throttle_st = "enabled"
-	  global_throttle_unit = "global_throttle_unit_2"
-	  max_request_status_count = "max_request_status_count_2"
-	  name = "name_2"
-	  name_alias = "name_alias_2"
-	  node_exporter = "enabled"
-	  port = "port_2"
-	  referer = "referer_2"
-	  server_header = "enabled"
-	  ssl_protocols = "TLSv1.1"
-	  throttle_rate = "throttle_rate_2"
-	  throttle_st = "enabled"
-	  visore_access = "enabled"
-	},
+  http_ssl_configuration = [
   ]
-  tags = [ 
-	{
-	  key = "key_1"
-	  value = "value_2"
-	},
+  tags = [
+      
+      {
+        key = "key_1"
+        value = "value_2"
+      },
   ]
 }
 `
