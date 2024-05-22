@@ -57,16 +57,18 @@ resource "aci_vrf_fallback_route_group_member" "full_example_vrf_fallback_route_
   annotations = [
     {
       key   = "key_0"
-      value = "value_1"
+      value = "value_0"
     }
   ]
   tags = [
     {
       key   = "key_0"
-      value = "value_1"
+      value = "value_0"
     }
   ]
 }
+
+
 
 ```
 

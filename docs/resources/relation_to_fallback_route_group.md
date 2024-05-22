@@ -53,16 +53,18 @@ resource "aci_relation_to_fallback_route_group" "full_example_l3_outside" {
   annotations = [
     {
       key   = "key_0"
-      value = "value_1"
+      value = "value_0"
     }
   ]
   tags = [
     {
       key   = "key_0"
-      value = "value_1"
+      value = "value_0"
     }
   ]
 }
+
+
 
 ```
 
