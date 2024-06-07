@@ -53,6 +53,57 @@ children:
       visore_access: "disabled"
       deletable_child: false
       
+      tp:
+        - annotation: "annotation_1"
+          target_dn: "target_dn_1"
+          deletable_child: true
+          annotations:
+            - key: "key_0"
+              value: "value_1"
+      
+            - key: "key_1"
+              value: "value_2"
+      
+          tags:
+            - key: "key_0"
+              value: "value_1"
+      
+            - key: "key_1"
+              value: "value_2"
+      
+      key_ring:
+        - annotation: "annotation_1"
+          tn_pki_key_ring_name: "tn_pki_key_ring_name_1"
+          deletable_child: false
+      
+          annotations:
+            - key: "key_0"
+              value: "value_1"
+      
+            - key: "key_1"
+              value: "value_2"
+      
+          tags:
+            - key: "key_0"
+              value: "value_1"
+      
+            - key: "key_1"
+              value: "value_2"
+      
+      annotations:
+        - key: "key_0"
+          value: "value_1"
+      
+        - key: "key_1"
+          value: "value_2"
+      
+      tags:
+        - key: "key_0"
+          value: "value_1"
+      
+        - key: "key_1"
+          value: "value_2"
+      
   annotations:
     - key: "key_0"
       value: "value_1"
@@ -67,3 +118,6 @@ children:
     - key: "key_1"
       value: "value_2"
       
+
+
+

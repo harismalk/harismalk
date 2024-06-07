@@ -33,10 +33,38 @@ children:
     - annotation: "annotation_2"
       netflow_exporter_policy_name: "netflow_exporter_policy_name_1"
       
+      annotations:
+        - key: "key_0"
+          value: "value_1"
+      
+        - key: "key_1"
+          value: "value_2"
+      
+      tags:
+        - key: "key_0"
+          value: "value_1"
+      
+        - key: "key_1"
+          value: "value_2"
+      
   relation_to_netflow_record:
     - annotation: "annotation_1"
       netflow_record_policy_name: "netflow_record_policy_name_1"
       deletable_child: false
+      
+      annotations:
+        - key: "key_0"
+          value: "value_1"
+      
+        - key: "key_1"
+          value: "value_2"
+      
+      tags:
+        - key: "key_0"
+          value: "value_1"
+      
+        - key: "key_1"
+          value: "value_2"
       
   annotations:
     - key: "key_0"
@@ -57,3 +85,6 @@ parents:
     parent_dependency: ""
     parent_dn: "aci_tenant.test.id"
     class_in_parent: false
+
+
+

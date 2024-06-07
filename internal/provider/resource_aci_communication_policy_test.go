@@ -102,6 +102,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotations", "[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_1"),
@@ -109,6 +110,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_rate", "global_throttle_rate_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_unit", "global_throttle_unit_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.key_ring", "[map[annotation:annotation_1 annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] deletable_child:false tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tn_pki_key_ring_name:tn_pki_key_ring_name_1]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.max_request_status_count", "max_request_status_count_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name", "name_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name_alias", "name_alias_1"),
@@ -117,8 +119,10 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.referer", "referer_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.server_header", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.ssl_protocols", "TLSv1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.tags", "[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_rate", "throttle_rate_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.tp", "[map[annotation:annotation_1 annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] deletable_child:true tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] target_dn:target_dn_1]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "key_0"),
@@ -147,6 +151,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotations", "[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_1"),
@@ -154,6 +159,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_rate", "global_throttle_rate_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_unit", "global_throttle_unit_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.key_ring", "[map[annotation:annotation_1 annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] deletable_child:false tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tn_pki_key_ring_name:tn_pki_key_ring_name_1]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.max_request_status_count", "max_request_status_count_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name", "name_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name_alias", "name_alias_1"),
@@ -162,8 +168,10 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.referer", "referer_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.server_header", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.ssl_protocols", "TLSv1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.tags", "[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_rate", "throttle_rate_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.tp", "[map[annotation:annotation_1 annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] deletable_child:true tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] target_dn:target_dn_1]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "key_0"),
@@ -190,6 +198,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotations", "[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_1"),
@@ -197,6 +206,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_rate", "global_throttle_rate_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_unit", "global_throttle_unit_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.key_ring", "[map[annotation:annotation_1 annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] deletable_child:false tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tn_pki_key_ring_name:tn_pki_key_ring_name_1]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.max_request_status_count", "max_request_status_count_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name", "name_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name_alias", "name_alias_1"),
@@ -205,8 +215,10 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.referer", "referer_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.server_header", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.ssl_protocols", "TLSv1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.tags", "[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_rate", "throttle_rate_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.tp", "[map[annotation:annotation_1 annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] deletable_child:true tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] target_dn:target_dn_1]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "key_1"),
@@ -229,6 +241,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotations", "[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_1"),
@@ -236,6 +249,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_rate", "global_throttle_rate_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.global_throttle_unit", "global_throttle_unit_1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.key_ring", "[map[annotation:annotation_1 annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] deletable_child:false tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tn_pki_key_ring_name:tn_pki_key_ring_name_1]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.max_request_status_count", "max_request_status_count_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name", "name_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.name_alias", "name_alias_1"),
@@ -244,8 +258,10 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.referer", "referer_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.server_header", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.ssl_protocols", "TLSv1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.tags", "[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_rate", "throttle_rate_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "disabled"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.tp", "[map[annotation:annotation_1 annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] deletable_child:true tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] target_dn:target_dn_1]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.#", "0"),
@@ -303,6 +319,7 @@ resource "aci_communication_policy" "test" {
 	  access_control_allow_origins = "access_control_allow_origins_1"
 	  admin_st = "disabled"
 	  annotation = "annotation_1"
+	  annotations = "[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]"
 	  cli_only_mode = "disabled"
 	  client_cert_auth_state = "disabled"
 	  deletable_child = "false"
@@ -311,6 +328,7 @@ resource "aci_communication_policy" "test" {
 	  global_throttle_rate = "global_throttle_rate_1"
 	  global_throttle_st = "disabled"
 	  global_throttle_unit = "global_throttle_unit_1"
+	  key_ring = "[map[annotation:annotation_1 annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] deletable_child:false tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tn_pki_key_ring_name:tn_pki_key_ring_name_1]]"
 	  max_request_status_count = "max_request_status_count_1"
 	  name = "name_1"
 	  name_alias = "name_alias_1"
@@ -319,8 +337,10 @@ resource "aci_communication_policy" "test" {
 	  referer = "referer_1"
 	  server_header = "disabled"
 	  ssl_protocols = "TLSv1"
+	  tags = "[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]"
 	  throttle_rate = "throttle_rate_1"
 	  throttle_st = "disabled"
+	  tp = "[map[annotation:annotation_1 annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] deletable_child:true tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] target_dn:target_dn_1]]"
 	  visore_access = "disabled"
 	},
   ]

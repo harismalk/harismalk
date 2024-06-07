@@ -624,7 +624,7 @@ func main() {
 			renderTemplate("testvars.yaml.tmpl", fmt.Sprintf("%s.yaml", model.PkgName), testVarsPath, model)
 			testVarsMap, err := getTestVars(model)
 			if err != nil {
-				panic(err)
+				panic(model.PkgName)
 			}
 			model.TestVars = testVarsMap
 			renderTemplate("resource.go.tmpl", fmt.Sprintf("resource_%s_%s.go", providerName, model.ResourceName), providerPath, model)
