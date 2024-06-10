@@ -116,8 +116,15 @@ targets:
   {{- $enteredPropertiesZone2 := false }}
     {{ $indent }}- {{ range .Properties}}{{- if $enteredPropertiesZone2 }}{{ $indent }}{{- else}}{{- $enteredPropertiesZone2 = true }}{{- end}}{{overwriteProperty .PkgName .SnakeCaseName $.Definitions}}: {{$length := len .ValidValues}}{{if ge $length 2}}"{{ index .ValidValues 1 }}"{{else if not .IsNaming}}"{{overwriteProperty .PkgName .SnakeCaseName $.Definitions}}_2"{{- else}}"{{lookupChildTestValue .PkgName $.ResourceName .SnakeCaseName $.TestVars 1 $.Definitions}}"{{- end}}
       {{ end}}{{- end}}
+   {{- $enteredGrandChildZone := false }}
+   {{- range .Children}}
+      {{- if not $enteredGrandChildZone }}
+        {{- $enteredGrandChildZone = true }}
+      {{ $indent }}children:
+      {{- end }}
+   {{- end }}
       {{- range $key, $value := .Children}}
-      {{- $newCtx := addToTemplateProperties . "Indent" (print $indent "    ") -}}
+      {{- $newCtx := addToTemplateProperties . "Indent" (print $indent "      ") -}}
       {{- template "nestedChildren" $newCtx }}
       {{- end}}
       {{- end}}

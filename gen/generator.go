@@ -105,6 +105,7 @@ var templateFuncs = template.FuncMap{
 	"lowerFirstCharacter":          LowerFirstCharacter,
 	"isListEmpty":                  func(stringList []string) bool { return len(stringList) == 0 },
 	"addToTemplateProperties":      AddToTemplateProperties,
+	"addToChild":                   AddToChildInTestTemplate,
 }
 
 // Global variables used for unique resource name setting based on label from meta data
@@ -252,7 +253,7 @@ func DictForTemplates(values ...interface{}) (map[string]interface{}, error) {
 	return dict, nil
 }
 
-// AddToTemplate creates a copy of the context with the new fields provided in the form of key value pairs
+// AddToTemplateProperties creates a copy of the model and updates it with the new fields provided in the form of key value pairs
 func AddToTemplateProperties(model Model, values ...interface{}) (*Model, error) {
 	// Create a copy of the model
 	newModel := model
@@ -265,14 +266,37 @@ func AddToTemplateProperties(model Model, values ...interface{}) (*Model, error)
 		newModel.TemplateProperties = make(map[string]interface{})
 	}
 
-	for k, v := range newModel.TemplateProperties {
-		newModel.TemplateProperties[k] = v
-	}
 	for k, v := range updates {
 		newModel.TemplateProperties[k] = v
 	}
 
 	return &newModel, nil
+}
+
+// AddToChildInTestTemplate is used within the test templates for applying indentation in the test config
+func AddToChildInTestTemplate(child map[interface{}]interface{}, values ...interface{}) (map[interface{}]interface{}, error) {
+
+	newChild := make(map[interface{}]interface{})
+	childValue := make(map[interface{}]interface{})
+	for k, v := range child {
+		childValue[k] = v
+	}
+	newChild["childValue"] = childValue
+
+	updates, err := DictForTemplates(values...)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, ok := newChild["TemplateProperties"]; !ok {
+		newChild["TemplateProperties"] = make(map[string]interface{})
+	}
+
+	for k, v := range updates {
+		newChild["TemplateProperties"].(map[string]interface{})[k] = v
+	}
+
+	return newChild, nil
 }
 
 // Renders the templates and writes a file to the output directory
@@ -624,7 +648,7 @@ func main() {
 			renderTemplate("testvars.yaml.tmpl", fmt.Sprintf("%s.yaml", model.PkgName), testVarsPath, model)
 			testVarsMap, err := getTestVars(model)
 			if err != nil {
-				panic(model.PkgName)
+				panic(err)
 			}
 			model.TestVars = testVarsMap
 			renderTemplate("resource.go.tmpl", fmt.Sprintf("resource_%s_%s.go", providerName, model.ResourceName), providerPath, model)

@@ -736,8 +736,13 @@ resource "aci_{{$.resourceName}}" "test" {
 			{{- range $child := $value}}
 	{
 				{{- range $child_key, $child_value := $child}}
+					{{- if eq $child_key "children"}}
+						{{- $newCtx := addToChild $child_value "Indent" "    " -}}
+  						{{- template "nestedChildren" $newCtx }}
+					{{- else if ne $child_key "deletable_child"}}
 	  {{$child_key}} = "{{$child_value}}"
-				{{- end}}
+				    {{- end}}
+			   {{- end}}
 	},
 			{{- end}}
   ]
@@ -785,4 +790,26 @@ resource "aci_{{$.resourceName}}" "test" {
 `
 
 	{{- end}}
+{{- end}}
+
+
+{{/* A sub template for including nested children. */}}
+{{- define "nestedChildren" -}}
+  {{- $indent := .TemplateProperties.Indent -}}
+  {{- range $key, $value := .childValue}}
+  {{$indent}}{{$key}} = [
+				{{- range $child := $value}}
+	{{$indent}}{
+					{{- range $child_key, $child_value := $child}}
+						{{- if eq $child_key "children"}}
+							{{- $newCtx := addToChild $child_value "Indent" (print $indent "    ") -}}
+  							{{- template "nestedChildren" $newCtx }}
+						{{- else if ne $child_key "deletable_child"}}
+	  {{$indent}}{{$child_key}} = "{{$child_value}}"
+	  					{{- end}}
+					{{- end}}
+	{{$indent}}},
+				{{- end}}
+  {{$indent}}]
+{{- end}}
 {{- end}}
