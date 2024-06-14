@@ -13,6 +13,7 @@ import (
 
 	"github.com/ciscoecosystem/aci-go-client/v2/client"
 	"github.com/ciscoecosystem/aci-go-client/v2/container"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -54,11 +55,63 @@ type FvFBRGroupResourceModel struct {
 
 // FvFBRMemberFvFBRGroupResourceModel describes the resource data model for the children without relation ships.
 type FvFBRMemberFvFBRGroupResourceModel struct {
-	Annotation types.String `tfsdk:"annotation"`
-	Descr      types.String `tfsdk:"description"`
-	Name       types.String `tfsdk:"name"`
-	NameAlias  types.String `tfsdk:"name_alias"`
-	RnhAddr    types.String `tfsdk:"fallback_member"`
+	Annotation    types.String `tfsdk:"annotation"`
+	Descr         types.String `tfsdk:"description"`
+	Name          types.String `tfsdk:"name"`
+	NameAlias     types.String `tfsdk:"name_alias"`
+	RnhAddr       types.String `tfsdk:"fallback_member"`
+	TagAnnotation types.Set    `tfsdk:"annotations"`
+	TagTag        types.Set    `tfsdk:"tags"`
+}
+
+func FvFBRMemberFvFBRGroupResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"annotation":      types.StringType,
+		"description":     types.StringType,
+		"name":            types.StringType,
+		"name_alias":      types.StringType,
+		"fallback_member": types.StringType,
+		"annotations":     types.SetType{ElemType: TagAnnotationFvFBRMemberFvFBRGroupResourceModelElementType()},
+		"tags":            types.SetType{ElemType: TagTagFvFBRMemberFvFBRGroupResourceModelElementType()},
+	}
+}
+
+func FvFBRMemberFvFBRGroupResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, FvFBRMemberFvFBRGroupResourceModelAttributeTypes())
+}
+
+// TagAnnotationFvFBRMemberFvFBRGroupResourceModel describes the resource data model for the children without relation ships.
+type TagAnnotationFvFBRMemberFvFBRGroupResourceModel struct {
+	Key   types.String `tfsdk:"key"`
+	Value types.String `tfsdk:"value"`
+}
+
+func TagAnnotationFvFBRMemberFvFBRGroupResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagAnnotationFvFBRMemberFvFBRGroupResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationFvFBRMemberFvFBRGroupResourceModelAttributeTypes())
+}
+
+// TagTagFvFBRMemberFvFBRGroupResourceModel describes the resource data model for the children without relation ships.
+type TagTagFvFBRMemberFvFBRGroupResourceModel struct {
+	Key   types.String `tfsdk:"key"`
+	Value types.String `tfsdk:"value"`
+}
+
+func TagTagFvFBRMemberFvFBRGroupResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagTagFvFBRMemberFvFBRGroupResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagFvFBRMemberFvFBRGroupResourceModelAttributeTypes())
 }
 
 // TagAnnotationFvFBRGroupResourceModel describes the resource data model for the children without relation ships.
@@ -67,10 +120,32 @@ type TagAnnotationFvFBRGroupResourceModel struct {
 	Value types.String `tfsdk:"value"`
 }
 
+func TagAnnotationFvFBRGroupResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagAnnotationFvFBRGroupResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationFvFBRGroupResourceModelAttributeTypes())
+}
+
 // TagTagFvFBRGroupResourceModel describes the resource data model for the children without relation ships.
 type TagTagFvFBRGroupResourceModel struct {
 	Key   types.String `tfsdk:"key"`
 	Value types.String `tfsdk:"value"`
+}
+
+func TagTagFvFBRGroupResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagTagFvFBRGroupResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagFvFBRGroupResourceModelAttributeTypes())
 }
 
 type FvFBRGroupIdentifier struct {
@@ -110,6 +185,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				Default:             stringdefault.StaticString(globalAnnotation),
 				MarkdownDescription: `The annotation of the VRF Fallback Route Group object.`,
@@ -119,6 +195,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The description of the VRF Fallback Route Group object.`,
 			},
@@ -126,6 +203,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 					stringplanmodifier.RequiresReplace(),
 				},
 				MarkdownDescription: `The name of the VRF Fallback Route Group object.`,
@@ -135,6 +213,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The name alias of the VRF Fallback Route Group object.`,
 			},
@@ -152,6 +231,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The annotation of the VRF Fallback Route Group Member object.`,
 						},
@@ -160,6 +240,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The description of the VRF Fallback Route Group Member object.`,
 						},
@@ -168,6 +249,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The name of the VRF Fallback Route Group Member object.`,
 						},
@@ -176,6 +258,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The name alias of the VRF Fallback Route Group Member object.`,
 						},
@@ -183,8 +266,65 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The address of the VRF Fallback Route Group Member object.`,
+						},
+						"annotations": schema.SetNestedAttribute{
+							MarkdownDescription: ``,
+							Optional:            true,
+							Computed:            true,
+							PlanModifiers: []planmodifier.Set{
+								setplanmodifier.UseStateForUnknown(),
+							},
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"key": schema.StringAttribute{
+										Required: true,
+										PlanModifiers: []planmodifier.String{
+											stringplanmodifier.UseStateForUnknown(),
+											SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+										},
+										MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+									},
+									"value": schema.StringAttribute{
+										Required: true,
+										PlanModifiers: []planmodifier.String{
+											stringplanmodifier.UseStateForUnknown(),
+											SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+										},
+										MarkdownDescription: `The value of the property.`,
+									},
+								},
+							},
+						},
+						"tags": schema.SetNestedAttribute{
+							MarkdownDescription: ``,
+							Optional:            true,
+							Computed:            true,
+							PlanModifiers: []planmodifier.Set{
+								setplanmodifier.UseStateForUnknown(),
+							},
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"key": schema.StringAttribute{
+										Required: true,
+										PlanModifiers: []planmodifier.String{
+											stringplanmodifier.UseStateForUnknown(),
+											SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+										},
+										MarkdownDescription: `The key used to uniquely identify this configuration object.`,
+									},
+									"value": schema.StringAttribute{
+										Required: true,
+										PlanModifiers: []planmodifier.String{
+											stringplanmodifier.UseStateForUnknown(),
+											SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
+										},
+										MarkdownDescription: `The value of the property.`,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -202,6 +342,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
@@ -209,6 +350,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -228,6 +370,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
@@ -235,6 +378,7 @@ func (r *FvFBRGroupResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -420,7 +564,7 @@ func (r *FvFBRGroupResource) ImportState(ctx context.Context, req resource.Impor
 }
 
 func getAndSetFvFBRGroupAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *FvFBRGroupResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=children&rsp-subtree-class=%s", data.Id.ValueString(), "fvFBRGroup,fvFBRMember,tagAnnotation,tagTag"), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "fvFBRGroup,fvFBRMember,tagAnnotation,tagTag,tagAnnotation,tagTag"), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -447,8 +591,27 @@ func getAndSetFvFBRGroupAttributes(ctx context.Context, diags *diag.Diagnostics,
 					data.NameAlias = basetypes.NewStringValue(attributeValue.(string))
 				}
 			}
+			if data.Annotation.IsUnknown() {
+				data.Annotation = types.StringNull()
+			}
+			if data.Descr.IsUnknown() {
+				data.Descr = types.StringNull()
+			}
+			if data.Name.IsUnknown() {
+				data.Name = types.StringNull()
+			}
+			if data.NameAlias.IsUnknown() {
+				data.NameAlias = types.StringNull()
+			}
+			FvFBRMemberFvFBRGroup := FvFBRMemberFvFBRGroupResourceModel{}
 			FvFBRMemberFvFBRGroupList := make([]FvFBRMemberFvFBRGroupResourceModel, 0)
+			TagAnnotationFvFBRMemberFvFBRGroup := TagAnnotationFvFBRMemberFvFBRGroupResourceModel{}
+			TagAnnotationFvFBRMemberFvFBRGroupList := make([]TagAnnotationFvFBRMemberFvFBRGroupResourceModel, 0)
+			TagTagFvFBRMemberFvFBRGroup := TagTagFvFBRMemberFvFBRGroupResourceModel{}
+			TagTagFvFBRMemberFvFBRGroupList := make([]TagTagFvFBRMemberFvFBRGroupResourceModel, 0)
+			TagAnnotationFvFBRGroup := TagAnnotationFvFBRGroupResourceModel{}
 			TagAnnotationFvFBRGroupList := make([]TagAnnotationFvFBRGroupResourceModel, 0)
+			TagTagFvFBRGroup := TagTagFvFBRGroupResourceModel{}
 			TagTagFvFBRGroupList := make([]TagTagFvFBRGroupResourceModel, 0)
 			_, ok := classReadInfo[0].(map[string]interface{})["children"]
 			if ok {
@@ -457,7 +620,6 @@ func getAndSetFvFBRGroupAttributes(ctx context.Context, diags *diag.Diagnostics,
 					for childClassName, childClassDetails := range child.(map[string]interface{}) {
 						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
 						if childClassName == "fvFBRMember" {
-							FvFBRMemberFvFBRGroup := FvFBRMemberFvFBRGroupResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "annotation" {
 									FvFBRMemberFvFBRGroup.Annotation = basetypes.NewStringValue(childAttributeValue.(string))
@@ -474,11 +636,46 @@ func getAndSetFvFBRGroupAttributes(ctx context.Context, diags *diag.Diagnostics,
 								if childAttributeName == "rnhAddr" {
 									FvFBRMemberFvFBRGroup.RnhAddr = basetypes.NewStringValue(childAttributeValue.(string))
 								}
+
 							}
+							childrenOfFvFBRMemberFvFBRGroup, childrenOfFvFBRMemberFvFBRGroupExist := childClassDetails.(map[string]interface{})["children"]
+							if childrenOfFvFBRMemberFvFBRGroupExist {
+								for _, childFvFBRMemberFvFBRGroup := range childrenOfFvFBRMemberFvFBRGroup.([]interface{}) {
+									for childClassNameFvFBRMemberFvFBRGroup, childClassDetailsFvFBRMemberFvFBRGroup := range childFvFBRMemberFvFBRGroup.(map[string]interface{}) {
+										if childClassNameFvFBRMemberFvFBRGroup == "tagAnnotation" {
+											tagAnnotationchildAttributeValue := childClassDetailsFvFBRMemberFvFBRGroup.(map[string]interface{})["attributes"].(map[string]interface{})
+											for childAttributeName, childAttributeValue := range tagAnnotationchildAttributeValue {
+												if childAttributeName == "key" {
+													TagAnnotationFvFBRMemberFvFBRGroup.Key = basetypes.NewStringValue(childAttributeValue.(string))
+												}
+												if childAttributeName == "value" {
+													TagAnnotationFvFBRMemberFvFBRGroup.Value = basetypes.NewStringValue(childAttributeValue.(string))
+												}
+											}
+											TagAnnotationFvFBRMemberFvFBRGroupList = append(TagAnnotationFvFBRMemberFvFBRGroupList, TagAnnotationFvFBRMemberFvFBRGroup)
+										}
+										if childClassNameFvFBRMemberFvFBRGroup == "tagTag" {
+											tagTagchildAttributeValue := childClassDetailsFvFBRMemberFvFBRGroup.(map[string]interface{})["attributes"].(map[string]interface{})
+											for childAttributeName, childAttributeValue := range tagTagchildAttributeValue {
+												if childAttributeName == "key" {
+													TagTagFvFBRMemberFvFBRGroup.Key = basetypes.NewStringValue(childAttributeValue.(string))
+												}
+												if childAttributeName == "value" {
+													TagTagFvFBRMemberFvFBRGroup.Value = basetypes.NewStringValue(childAttributeValue.(string))
+												}
+											}
+											TagTagFvFBRMemberFvFBRGroupList = append(TagTagFvFBRMemberFvFBRGroupList, TagTagFvFBRMemberFvFBRGroup)
+										}
+									}
+								}
+							}
+							TagAnnotationFvFBRMemberFvFBRGroupSet, _ := types.SetValueFrom(ctx, TagAnnotationFvFBRMemberFvFBRGroupResourceModelElementType(), TagAnnotationFvFBRMemberFvFBRGroupList)
+							FvFBRMemberFvFBRGroup.TagAnnotation = TagAnnotationFvFBRMemberFvFBRGroupSet
+							TagTagFvFBRMemberFvFBRGroupSet, _ := types.SetValueFrom(ctx, TagTagFvFBRMemberFvFBRGroupResourceModelElementType(), TagTagFvFBRMemberFvFBRGroupList)
+							FvFBRMemberFvFBRGroup.TagTag = TagTagFvFBRMemberFvFBRGroupSet
 							FvFBRMemberFvFBRGroupList = append(FvFBRMemberFvFBRGroupList, FvFBRMemberFvFBRGroup)
 						}
 						if childClassName == "tagAnnotation" {
-							TagAnnotationFvFBRGroup := TagAnnotationFvFBRGroupResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagAnnotationFvFBRGroup.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -486,11 +683,11 @@ func getAndSetFvFBRGroupAttributes(ctx context.Context, diags *diag.Diagnostics,
 								if childAttributeName == "value" {
 									TagAnnotationFvFBRGroup.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
+
 							}
 							TagAnnotationFvFBRGroupList = append(TagAnnotationFvFBRGroupList, TagAnnotationFvFBRGroup)
 						}
 						if childClassName == "tagTag" {
-							TagTagFvFBRGroup := TagTagFvFBRGroupResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagTagFvFBRGroup.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -498,6 +695,7 @@ func getAndSetFvFBRGroupAttributes(ctx context.Context, diags *diag.Diagnostics,
 								if childAttributeName == "value" {
 									TagTagFvFBRGroup.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
+
 							}
 							TagTagFvFBRGroupList = append(TagTagFvFBRGroupList, TagTagFvFBRGroup)
 						}
@@ -552,36 +750,111 @@ func setFvFBRGroupId(ctx context.Context, data *FvFBRGroupResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", data.ParentDn.ValueString(), rn))
 }
 
-func getFvFBRGroupFvFBRMemberChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvFBRGroupResourceModel, fvFBRMemberPlan, fvFBRMemberState []FvFBRMemberFvFBRGroupResourceModel) []map[string]interface{} {
-
+func getFvFBRGroupFvFBRMemberChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvFBRGroupResourceModel, fvFBRMemberFvFBRGroupPlan, fvFBRMemberFvFBRGroupState []FvFBRMemberFvFBRGroupResourceModel) []map[string]interface{} {
 	childPayloads := []map[string]interface{}{}
-	if !data.FvFBRMember.IsUnknown() {
+	FvFBRMemberFvFBRGroupChildren := make([]map[string]interface{}, 0)
+	if !data.FvFBRMember.IsNull() && !data.FvFBRMember.IsUnknown() {
 		fvFBRMemberIdentifiers := []FvFBRMemberIdentifier{}
-		for _, fvFBRMember := range fvFBRMemberPlan {
-			childMap := map[string]map[string]interface{}{"attributes": {}}
-			if !fvFBRMember.Annotation.IsUnknown() {
-				childMap["attributes"]["annotation"] = fvFBRMember.Annotation.ValueString()
+		for _, fvFBRMemberFvFBRGroup := range fvFBRMemberFvFBRGroupPlan {
+			childMap := NewAciObject()
+			if !fvFBRMemberFvFBRGroup.Annotation.IsNull() && !fvFBRMemberFvFBRGroup.Annotation.IsUnknown() {
+				childMap.Attributes["annotation"] = fvFBRMemberFvFBRGroup.Annotation.ValueString()
 			} else {
-				childMap["attributes"]["annotation"] = globalAnnotation
+				childMap.Attributes["annotation"] = globalAnnotation
 			}
-			if !fvFBRMember.Descr.IsUnknown() {
-				childMap["attributes"]["descr"] = fvFBRMember.Descr.ValueString()
+			if !fvFBRMemberFvFBRGroup.Descr.IsNull() && !fvFBRMemberFvFBRGroup.Descr.IsUnknown() {
+				childMap.Attributes["descr"] = fvFBRMemberFvFBRGroup.Descr.ValueString()
 			}
-			if !fvFBRMember.Name.IsUnknown() {
-				childMap["attributes"]["name"] = fvFBRMember.Name.ValueString()
+			if !fvFBRMemberFvFBRGroup.Name.IsNull() && !fvFBRMemberFvFBRGroup.Name.IsUnknown() {
+				childMap.Attributes["name"] = fvFBRMemberFvFBRGroup.Name.ValueString()
 			}
-			if !fvFBRMember.NameAlias.IsUnknown() {
-				childMap["attributes"]["nameAlias"] = fvFBRMember.NameAlias.ValueString()
+			if !fvFBRMemberFvFBRGroup.NameAlias.IsNull() && !fvFBRMemberFvFBRGroup.NameAlias.IsUnknown() {
+				childMap.Attributes["nameAlias"] = fvFBRMemberFvFBRGroup.NameAlias.ValueString()
 			}
-			if !fvFBRMember.RnhAddr.IsUnknown() {
-				childMap["attributes"]["rnhAddr"] = fvFBRMember.RnhAddr.ValueString()
+			if !fvFBRMemberFvFBRGroup.RnhAddr.IsNull() && !fvFBRMemberFvFBRGroup.RnhAddr.IsUnknown() {
+				childMap.Attributes["rnhAddr"] = fvFBRMemberFvFBRGroup.RnhAddr.ValueString()
 			}
+
+			var tagAnnotationFvFBRMemberFvFBRGroupPlan, tagAnnotationFvFBRMemberFvFBRGroupState []TagAnnotationFvFBRMemberFvFBRGroupResourceModel
+			fvFBRMemberFvFBRGroup.TagAnnotation.ElementsAs(ctx, &tagAnnotationFvFBRMemberFvFBRGroupPlan, false)
+			for _, tagAnnotationFvFBRMemberFvFBRGroupstate := range fvFBRMemberFvFBRGroupState {
+				tagAnnotationFvFBRMemberFvFBRGroupstate.TagAnnotation.ElementsAs(ctx, &tagAnnotationFvFBRMemberFvFBRGroupState, false)
+			}
+			if !fvFBRMemberFvFBRGroup.TagAnnotation.IsNull() && !fvFBRMemberFvFBRGroup.TagAnnotation.IsUnknown() {
+				tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
+				for _, tagAnnotationFvFBRMemberFvFBRGroup := range tagAnnotationFvFBRMemberFvFBRGroupPlan {
+					tagAnnotationFvFBRMemberFvFBRGroupChildMap := NewAciObject()
+					if !tagAnnotationFvFBRMemberFvFBRGroup.Key.IsNull() && !tagAnnotationFvFBRMemberFvFBRGroup.Key.IsUnknown() {
+						tagAnnotationFvFBRMemberFvFBRGroupChildMap.Attributes["key"] = tagAnnotationFvFBRMemberFvFBRGroup.Key.ValueString()
+					}
+					if !tagAnnotationFvFBRMemberFvFBRGroup.Value.IsNull() && !tagAnnotationFvFBRMemberFvFBRGroup.Value.IsUnknown() {
+						tagAnnotationFvFBRMemberFvFBRGroupChildMap.Attributes["value"] = tagAnnotationFvFBRMemberFvFBRGroup.Value.ValueString()
+					}
+					FvFBRMemberFvFBRGroupChildren = append(FvFBRMemberFvFBRGroupChildren, map[string]interface{}{"tagAnnotation": tagAnnotationFvFBRMemberFvFBRGroupChildMap})
+					tagAnnotationIdentifier := TagAnnotationIdentifier{}
+					tagAnnotationIdentifier.Key = tagAnnotationFvFBRMemberFvFBRGroup.Key
+					tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
+				}
+				for _, tagAnnotationFvFBRMemberFvFBRGroup := range tagAnnotationFvFBRMemberFvFBRGroupState {
+					delete := true
+					for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
+						if tagAnnotationIdentifier.Key == tagAnnotationFvFBRMemberFvFBRGroup.Key {
+							delete = false
+							break
+						}
+					}
+					if delete {
+						tagAnnotationFvFBRMemberFvFBRGroupChildMapForDelete := NewAciObject()
+						tagAnnotationFvFBRMemberFvFBRGroupChildMapForDelete.Attributes["status"] = "deleted"
+						tagAnnotationFvFBRMemberFvFBRGroupChildMapForDelete.Attributes["key"] = tagAnnotationFvFBRMemberFvFBRGroup.Key.ValueString()
+						FvFBRMemberFvFBRGroupChildren = append(FvFBRMemberFvFBRGroupChildren, map[string]interface{}{"tagAnnotation": tagAnnotationFvFBRMemberFvFBRGroupChildMapForDelete})
+					}
+				}
+			}
+
+			var tagTagFvFBRMemberFvFBRGroupPlan, tagTagFvFBRMemberFvFBRGroupState []TagTagFvFBRMemberFvFBRGroupResourceModel
+			fvFBRMemberFvFBRGroup.TagTag.ElementsAs(ctx, &tagTagFvFBRMemberFvFBRGroupPlan, false)
+			for _, tagTagFvFBRMemberFvFBRGroupstate := range fvFBRMemberFvFBRGroupState {
+				tagTagFvFBRMemberFvFBRGroupstate.TagTag.ElementsAs(ctx, &tagTagFvFBRMemberFvFBRGroupState, false)
+			}
+			if !fvFBRMemberFvFBRGroup.TagTag.IsNull() && !fvFBRMemberFvFBRGroup.TagTag.IsUnknown() {
+				tagTagIdentifiers := []TagTagIdentifier{}
+				for _, tagTagFvFBRMemberFvFBRGroup := range tagTagFvFBRMemberFvFBRGroupPlan {
+					tagTagFvFBRMemberFvFBRGroupChildMap := NewAciObject()
+					if !tagTagFvFBRMemberFvFBRGroup.Key.IsNull() && !tagTagFvFBRMemberFvFBRGroup.Key.IsUnknown() {
+						tagTagFvFBRMemberFvFBRGroupChildMap.Attributes["key"] = tagTagFvFBRMemberFvFBRGroup.Key.ValueString()
+					}
+					if !tagTagFvFBRMemberFvFBRGroup.Value.IsNull() && !tagTagFvFBRMemberFvFBRGroup.Value.IsUnknown() {
+						tagTagFvFBRMemberFvFBRGroupChildMap.Attributes["value"] = tagTagFvFBRMemberFvFBRGroup.Value.ValueString()
+					}
+					FvFBRMemberFvFBRGroupChildren = append(FvFBRMemberFvFBRGroupChildren, map[string]interface{}{"tagTag": tagTagFvFBRMemberFvFBRGroupChildMap})
+					tagTagIdentifier := TagTagIdentifier{}
+					tagTagIdentifier.Key = tagTagFvFBRMemberFvFBRGroup.Key
+					tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
+				}
+				for _, tagTagFvFBRMemberFvFBRGroup := range tagTagFvFBRMemberFvFBRGroupState {
+					delete := true
+					for _, tagTagIdentifier := range tagTagIdentifiers {
+						if tagTagIdentifier.Key == tagTagFvFBRMemberFvFBRGroup.Key {
+							delete = false
+							break
+						}
+					}
+					if delete {
+						tagTagFvFBRMemberFvFBRGroupChildMapForDelete := NewAciObject()
+						tagTagFvFBRMemberFvFBRGroupChildMapForDelete.Attributes["status"] = "deleted"
+						tagTagFvFBRMemberFvFBRGroupChildMapForDelete.Attributes["key"] = tagTagFvFBRMemberFvFBRGroup.Key.ValueString()
+						FvFBRMemberFvFBRGroupChildren = append(FvFBRMemberFvFBRGroupChildren, map[string]interface{}{"tagTag": tagTagFvFBRMemberFvFBRGroupChildMapForDelete})
+					}
+				}
+			}
+			childMap.Children = FvFBRMemberFvFBRGroupChildren
 			childPayloads = append(childPayloads, map[string]interface{}{"fvFBRMember": childMap})
 			fvFBRMemberIdentifier := FvFBRMemberIdentifier{}
-			fvFBRMemberIdentifier.RnhAddr = fvFBRMember.RnhAddr
+			fvFBRMemberIdentifier.RnhAddr = fvFBRMemberFvFBRGroup.RnhAddr
 			fvFBRMemberIdentifiers = append(fvFBRMemberIdentifiers, fvFBRMemberIdentifier)
 		}
-		for _, fvFBRMember := range fvFBRMemberState {
+		for _, fvFBRMember := range fvFBRMemberFvFBRGroupState {
 			delete := true
 			for _, fvFBRMemberIdentifier := range fvFBRMemberIdentifiers {
 				if fvFBRMemberIdentifier.RnhAddr == fvFBRMember.RnhAddr {
@@ -590,10 +863,10 @@ func getFvFBRGroupFvFBRMemberChildPayloads(ctx context.Context, diags *diag.Diag
 				}
 			}
 			if delete {
-				childMap := map[string]map[string]interface{}{"attributes": {}}
-				childMap["attributes"]["status"] = "deleted"
-				childMap["attributes"]["rnhAddr"] = fvFBRMember.RnhAddr.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"fvFBRMember": childMap})
+				fvFBRMemberChildMapForDelete := NewAciObject()
+				fvFBRMemberChildMapForDelete.Attributes["status"] = "deleted"
+				fvFBRMemberChildMapForDelete.Attributes["rnhAddr"] = fvFBRMember.RnhAddr.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"fvFBRMember": fvFBRMemberChildMapForDelete})
 			}
 		}
 	} else {
@@ -602,25 +875,25 @@ func getFvFBRGroupFvFBRMemberChildPayloads(ctx context.Context, diags *diag.Diag
 
 	return childPayloads
 }
-func getFvFBRGroupTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvFBRGroupResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationFvFBRGroupResourceModel) []map[string]interface{} {
 
+func getFvFBRGroupTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvFBRGroupResourceModel, tagAnnotationFvFBRGroupPlan, tagAnnotationFvFBRGroupState []TagAnnotationFvFBRGroupResourceModel) []map[string]interface{} {
 	childPayloads := []map[string]interface{}{}
-	if !data.TagAnnotation.IsUnknown() {
+	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
-		for _, tagAnnotation := range tagAnnotationPlan {
-			childMap := map[string]map[string]interface{}{"attributes": {}}
-			if !tagAnnotation.Key.IsUnknown() {
-				childMap["attributes"]["key"] = tagAnnotation.Key.ValueString()
+		for _, tagAnnotationFvFBRGroup := range tagAnnotationFvFBRGroupPlan {
+			childMap := NewAciObject()
+			if !tagAnnotationFvFBRGroup.Key.IsNull() && !tagAnnotationFvFBRGroup.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagAnnotationFvFBRGroup.Key.ValueString()
 			}
-			if !tagAnnotation.Value.IsUnknown() {
-				childMap["attributes"]["value"] = tagAnnotation.Value.ValueString()
+			if !tagAnnotationFvFBRGroup.Value.IsNull() && !tagAnnotationFvFBRGroup.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagAnnotationFvFBRGroup.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
 			tagAnnotationIdentifier := TagAnnotationIdentifier{}
-			tagAnnotationIdentifier.Key = tagAnnotation.Key
+			tagAnnotationIdentifier.Key = tagAnnotationFvFBRGroup.Key
 			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
 		}
-		for _, tagAnnotation := range tagAnnotationState {
+		for _, tagAnnotation := range tagAnnotationFvFBRGroupState {
 			delete := true
 			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
 				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
@@ -629,10 +902,10 @@ func getFvFBRGroupTagAnnotationChildPayloads(ctx context.Context, diags *diag.Di
 				}
 			}
 			if delete {
-				childMap := map[string]map[string]interface{}{"attributes": {}}
-				childMap["attributes"]["status"] = "deleted"
-				childMap["attributes"]["key"] = tagAnnotation.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
+				tagAnnotationChildMapForDelete := NewAciObject()
+				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
+				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
 			}
 		}
 	} else {
@@ -641,25 +914,25 @@ func getFvFBRGroupTagAnnotationChildPayloads(ctx context.Context, diags *diag.Di
 
 	return childPayloads
 }
-func getFvFBRGroupTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvFBRGroupResourceModel, tagTagPlan, tagTagState []TagTagFvFBRGroupResourceModel) []map[string]interface{} {
 
+func getFvFBRGroupTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvFBRGroupResourceModel, tagTagFvFBRGroupPlan, tagTagFvFBRGroupState []TagTagFvFBRGroupResourceModel) []map[string]interface{} {
 	childPayloads := []map[string]interface{}{}
-	if !data.TagTag.IsUnknown() {
+	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
-		for _, tagTag := range tagTagPlan {
-			childMap := map[string]map[string]interface{}{"attributes": {}}
-			if !tagTag.Key.IsUnknown() {
-				childMap["attributes"]["key"] = tagTag.Key.ValueString()
+		for _, tagTagFvFBRGroup := range tagTagFvFBRGroupPlan {
+			childMap := NewAciObject()
+			if !tagTagFvFBRGroup.Key.IsNull() && !tagTagFvFBRGroup.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagTagFvFBRGroup.Key.ValueString()
 			}
-			if !tagTag.Value.IsUnknown() {
-				childMap["attributes"]["value"] = tagTag.Value.ValueString()
+			if !tagTagFvFBRGroup.Value.IsNull() && !tagTagFvFBRGroup.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagTagFvFBRGroup.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
 			tagTagIdentifier := TagTagIdentifier{}
-			tagTagIdentifier.Key = tagTag.Key
+			tagTagIdentifier.Key = tagTagFvFBRGroup.Key
 			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
 		}
-		for _, tagTag := range tagTagState {
+		for _, tagTag := range tagTagFvFBRGroupState {
 			delete := true
 			for _, tagTagIdentifier := range tagTagIdentifiers {
 				if tagTagIdentifier.Key == tagTag.Key {
@@ -668,10 +941,10 @@ func getFvFBRGroupTagTagChildPayloads(ctx context.Context, diags *diag.Diagnosti
 				}
 			}
 			if delete {
-				childMap := map[string]map[string]interface{}{"attributes": {}}
-				childMap["attributes"]["status"] = "deleted"
-				childMap["attributes"]["key"] = tagTag.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
+				tagTagChildMapForDelete := NewAciObject()
+				tagTagChildMapForDelete.Attributes["status"] = "deleted"
+				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
 			}
 		}
 	} else {

@@ -95,8 +95,10 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.annotation", "annotation_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.netflow_exporter_policy_name", "netflow_exporter_policy_name_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.annotation", "annotation_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.netflow_exporter_policy_name", "netflow_exporter_policy_name_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.netflow_record_policy_name", "netflow_record_policy_name_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.value", "value_1"),
@@ -123,8 +125,10 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.annotation", "annotation_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.netflow_exporter_policy_name", "netflow_exporter_policy_name_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.annotation", "annotation_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.netflow_exporter_policy_name", "netflow_exporter_policy_name_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.netflow_record_policy_name", "netflow_record_policy_name_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.value", "value_1"),
@@ -145,9 +149,11 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.annotation", "annotation_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.netflow_exporter_policy_name", "netflow_exporter_policy_name_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.annotation", "annotation_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.netflow_exporter_policy_name", "netflow_exporter_policy_name_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.#", "2"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.netflow_record_policy_name", "netflow_record_policy_name_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.#", "1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.key", "key_0"),
@@ -166,9 +172,11 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.#", "1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.annotation", "annotation_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.netflow_exporter_policy_name", "netflow_exporter_policy_name_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.#", "1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.netflow_record_policy_name", "netflow_record_policy_name_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.#", "1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.key", "key_1"),
@@ -184,6 +192,7 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.#", "0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.#", "0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.annotation", "annotation_1"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.netflow_record_policy_name", "netflow_record_policy_name_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.#", "1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.#", "0"),
@@ -244,12 +253,14 @@ resource "aci_netflow_monitor_policy" "test" {
 	},
 	{
 	  annotation = "annotation_2"
+	  children = "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"
 	  netflow_exporter_policy_name = "netflow_exporter_policy_name_1"
 	},
   ]
   relation_to_netflow_record = [
 	{
 	  annotation = "annotation_1"
+	  children = "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"
 	  netflow_record_policy_name = "netflow_record_policy_name_1"
 	},
   ]
@@ -286,6 +297,7 @@ resource "aci_netflow_monitor_policy" "test" {
   relation_to_netflow_exporters = [ 
 	{
 	  annotation = "annotation_2"
+	  children = "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"
 	  netflow_exporter_policy_name = "netflow_exporter_policy_name_1"
 	},
   ]

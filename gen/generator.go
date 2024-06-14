@@ -102,6 +102,10 @@ var templateFuncs = template.FuncMap{
 	"capitalize":                   Capitalize,
 	"getTestConfigVariableName":    GetTestConfigVariableName,
 	"getDevnetDocForClass":         GetDevnetDocForClass,
+	"lowerFirstCharacter":          LowerFirstCharacter,
+	"isListEmpty":                  func(stringList []string) bool { return len(stringList) == 0 },
+	"addToTemplateProperties":      AddToTemplateProperties,
+	"addToChild":                   AddToChildInTestTemplate,
 }
 
 // Global variables used for unique resource name setting based on label from meta data
@@ -112,6 +116,7 @@ var rnPrefix = map[string]string{}
 var targetRelationalPropertyClasses = map[string]string{}
 var alwaysIncludeChildren = []string{"tag:Annotation", "tag:Tag"}
 var excludeChildResourceNamesFromDocs = []string{"", "annotation", "tag"}
+var excludeResources []interface{}
 
 func GetResourceNameAsDescription(s string, definitions Definitions) string {
 	resourceName := cases.Title(language.English).String(strings.ReplaceAll(s, "_", " "))
@@ -226,6 +231,74 @@ func FromInterfacesToString(identifiedBy []interface{}) string {
 	return fmt.Sprintf("\"%s\"", strings.Join(identifiers, "\", \""))
 }
 
+func LowerFirstCharacter(str string) string {
+	if str == "" {
+		return ""
+	}
+	return strings.ToLower(string(str[0])) + str[1:]
+}
+
+func DictForTemplates(values ...interface{}) (map[string]interface{}, error) {
+	if len(values)%2 != 0 {
+		return nil, fmt.Errorf("invalid number of arguments passed to the dict")
+	}
+	dict := make(map[string]interface{})
+	for i := 0; i < len(values); i += 2 {
+		key, ok := values[i].(string)
+		if !ok {
+			return nil, fmt.Errorf("dict keys must be strings")
+		}
+		dict[key] = values[i+1]
+	}
+	return dict, nil
+}
+
+// AddToTemplateProperties creates a copy of the model and updates it with the new fields provided in the form of key value pairs
+func AddToTemplateProperties(model Model, values ...interface{}) (*Model, error) {
+	// Create a copy of the model
+	newModel := model
+	updates, err := DictForTemplates(values...)
+	if err != nil {
+		return nil, err
+	}
+
+	if newModel.TemplateProperties == nil {
+		newModel.TemplateProperties = make(map[string]interface{})
+	}
+
+	for k, v := range updates {
+		newModel.TemplateProperties[k] = v
+	}
+
+	return &newModel, nil
+}
+
+// AddToChildInTestTemplate is used within the test templates for applying indentation in the test config
+func AddToChildInTestTemplate(child map[interface{}]interface{}, values ...interface{}) (map[interface{}]interface{}, error) {
+
+	newChild := make(map[interface{}]interface{})
+	childValue := make(map[interface{}]interface{})
+	for k, v := range child {
+		childValue[k] = v
+	}
+	newChild["childValue"] = childValue
+
+	updates, err := DictForTemplates(values...)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, ok := newChild["TemplateProperties"]; !ok {
+		newChild["TemplateProperties"] = make(map[string]interface{})
+	}
+
+	for k, v := range updates {
+		newChild["TemplateProperties"].(map[string]interface{})[k] = v
+	}
+
+	return newChild, nil
+}
+
 // Renders the templates and writes a file to the output directory
 func renderTemplate(templateName, outputFileName, outputPath string, outputData interface{}) {
 	templateData, err := os.ReadFile(fmt.Sprintf("%s/%s", templatePath, templateName))
@@ -291,8 +364,12 @@ func getClassModels(definitions Definitions) map[string]Model {
 	for _, pkgName := range pkgNames {
 
 		classModel := Model{PkgName: pkgName}
-		classModel.setClassModel(metaPath, false, definitions, []string{}, pkgNames)
+		classModel.setClassModel(metaPath, false, definitions, []string{}, pkgNames, nil, nil)
 		classModels[pkgName] = classModel
+
+		if len(classModel.IdentifiedBy) == 0 || classModel.Exclude {
+			excludeResources = append(excludeResources, pkgName)
+		}
 	}
 	return classModels
 }
@@ -550,26 +627,16 @@ func main() {
 	for _, model := range classModels {
 
 		// Only render resources and datasources when the class has a unique identifier or is marked as include in the classes definitions YAML file
-		if len(model.IdentifiedBy) > 0 || model.Include {
+		if (len(model.IdentifiedBy) > 0 && !model.Exclude) || model.Include {
 
 			// All classmodels have been read, thus now the model, child and relational resources names can be set
 			// When done before additional files would need to be opened and read which would slow down the generation process
 			model.ResourceName = GetResourceName(model.PkgName, definitions)
 			model.RelationshipResourceName = GetResourceName(model.RelationshipClass, definitions)
-			childMap := make(map[string]Model, 0)
-			for childName, childModel := range model.Children {
-				childModel.ChildResourceName = GetResourceName(childModel.PkgName, definitions)
-				if len(childModel.IdentifiedBy) > 0 {
-					// TODO add logic to determine the naming for plural child resources
-					childModel.ResourceNameDocReference = childModel.ChildResourceName
-					childModel.ResourceName = fmt.Sprintf("%ss", childModel.ChildResourceName)
-				} else {
-					childModel.ResourceName = childModel.ChildResourceName
-				}
-				childModel.RelationshipResourceName = GetResourceName(childModel.RelationshipClass, definitions)
-				childMap[childName] = childModel
-			}
-			model.Children = childMap
+			model.Children = SetChildClassNames(definitions, model.Children)
+			// for key, val := range model.Children {
+			// 	log.Printf("HERE %v %v", key, val.Children)
+			// }
 
 			// Set the documentation specific information for the resource
 			// This is done to ensure references can be made to parent/child resources and output amounts can be restricted
@@ -647,6 +714,9 @@ type Model struct {
 	RelationshipClass         string
 	RelationshipResourceName  string
 	Versions                  string
+	ParentName                string
+	GrandParentName           string
+	ParentHierarchy           string
 	ChildClasses              []string
 	ContainedBy               []string
 	Contains                  []string
@@ -670,6 +740,7 @@ type Model struct {
 	Properties                map[string]Property
 	NamedProperties           map[string]Property
 	Children                  map[string]Model
+	DirectParent              *Model
 	Configuration             map[string]interface{}
 	TestVars                  map[string]interface{}
 	Definitions               Definitions
@@ -689,6 +760,8 @@ type Model struct {
 	HasNamedProperties        bool
 	HasChildNamedProperties   bool
 	Include                   bool
+	Exclude                   bool
+	TemplateProperties        map[string]interface{}
 }
 
 // A Property represents a ACI class property
@@ -722,7 +795,7 @@ type Definitions struct {
 }
 
 // Reads the class details from the meta file and sets all details to the Model
-func (m *Model) setClassModel(metaPath string, child bool, definitions Definitions, parents, pkgNames []string) {
+func (m *Model) setClassModel(metaPath string, isChildIteration bool, definitions Definitions, parents, pkgNames, mainParentChildren, parentHierarchyList []string) {
 	fileContent, err := os.ReadFile(fmt.Sprintf("%s/%s.json", metaPath, m.PkgName))
 	if err != nil {
 		log.Fatal("Error when opening file: ", err)
@@ -739,19 +812,23 @@ func (m *Model) setClassModel(metaPath string, child bool, definitions Definitio
 	m.Configuration = GetClassConfiguration(m.PkgName, definitions)
 
 	for _, classDetails := range classInfo {
-		m.SetClassLabel(classDetails, child)
+		m.SetClassLabel(classDetails)
 		m.SetClassName(classDetails)
 		m.SetClassRnFormat(classDetails)
 		m.SetClassDnFormats(classDetails)
 		m.SetClassIdentifiers(classDetails)
 		m.SetClassInclude()
+		m.SetClassExclude()
 		m.SetClassAllowDelete(classDetails)
 		m.SetClassContainedByAndParent(classDetails, parents)
 		m.SetClassContains(classDetails)
 		m.SetClassComment(classDetails)
 		m.SetClassVersions(classDetails)
 		m.SetClassProperties(classDetails)
-		m.SetClassChildren(classDetails, pkgNames)
+		m.SetClassChildren(classDetails, pkgNames, mainParentChildren)
+		if len(parents) != 0 {
+			m.SetParentName(parents)
+		}
 		m.SetResourceNotesAndWarnigns(m.PkgName, definitions)
 		m.SetResourceNameAsDescription(m.PkgName, definitions)
 	}
@@ -762,38 +839,46 @@ func (m *Model) setClassModel(metaPath string, child bool, definitions Definitio
 			- Incorrect: Parent -> Child -> Grandchild
 		// TODO add grandchild logic
 	*/
-	if !child {
-		if len(m.ChildClasses) > 0 {
-			m.HasChild = true
-			m.Children = make(map[string]Model)
-			for _, child := range m.ChildClasses {
-				childModel := Model{PkgName: child}
-				childModel.setClassModel(metaPath, true, definitions, []string{m.PkgName}, pkgNames)
-				m.Children[child] = childModel
-				if childModel.HasValidValues {
-					m.HasValidValues = true
-				}
-				if len(childModel.IdentifiedBy) == 0 {
-					m.HasChildWithoutIdentifier = true
-				}
-				if childModel.AllowDelete {
-					m.AllowChildDelete = true
-				}
-				if childModel.HasBitmask {
-					m.HasBitmask = true
-				}
-				if childModel.HasNamedProperties {
-					m.HasNamedProperties = true
-					m.HasChildNamedProperties = true
-				}
+	m.ParentHierarchy = fmt.Sprintf("%s", strings.Join(reverseList(parentHierarchyList), ""))
+
+	if len(parentHierarchyList) == 0 {
+		parentHierarchyList = []string{m.ResourceClassName}
+	} else {
+		parentHierarchyList = append(parentHierarchyList, m.ResourceClassName)
+	}
+
+	if len(m.ChildClasses) > 0 {
+		mainParentChildren := append(mainParentChildren, m.ChildClasses...)
+		m.HasChild = true
+		m.Children = make(map[string]Model)
+		for _, child := range m.ChildClasses {
+			childModel := Model{PkgName: child}
+			childModel.setDirectParent(m)
+			childModel.setClassModel(metaPath, true, definitions, []string{m.PkgName}, pkgNames, mainParentChildren, parentHierarchyList)
+			m.Children[child] = childModel
+			if childModel.HasValidValues {
+				m.HasValidValues = true
 			}
-		} else {
-			m.HasChild = false
+			if len(childModel.IdentifiedBy) == 0 {
+				m.HasChildWithoutIdentifier = true
+			}
+			if childModel.AllowDelete {
+				m.AllowChildDelete = true
+			}
+			if childModel.HasBitmask {
+				m.HasBitmask = true
+			}
+			if childModel.HasNamedProperties {
+				m.HasNamedProperties = true
+				m.HasChildNamedProperties = true
+			}
 		}
+	} else {
+		m.HasChild = false
 	}
 }
 
-func (m *Model) SetClassLabel(classDetails interface{}, child bool) {
+func (m *Model) SetClassLabel(classDetails interface{}) {
 	m.Label = cleanLabel(classDetails.(map[string]interface{})["label"].(string))
 	if slices.Contains(labels, m.Label) || m.Label == "" {
 		if !slices.Contains(duplicateLabels, m.Label) {
@@ -877,7 +962,7 @@ func (m *Model) SetClassIdentifiers(classDetails interface{}) {
 	m.IdentifiedBy = uniqueInterfaceSlice(classDetails.(map[string]interface{})["identifiedBy"].([]interface{}))
 }
 
-func (m *Model) SetClassChildren(classDetails interface{}, pkgNames []string) {
+func (m *Model) SetClassChildren(classDetails interface{}, pkgNames, mainParentChildren []string) {
 	childClasses := []string{}
 	rnMap := classDetails.(map[string]interface{})["rnMap"].(map[string]interface{})
 	for rn, className := range rnMap {
@@ -903,6 +988,25 @@ func (m *Model) SetClassChildren(classDetails interface{}, pkgNames []string) {
 	m.ChildClasses = uniqueStringSlice(childClasses)
 }
 
+func SetChildClassNames(definitions Definitions, children map[string]Model) map[string]Model {
+	childMap := make(map[string]Model, 0)
+	for childName, childModel := range children {
+		childModel.ChildResourceName = GetResourceName(childModel.PkgName, definitions)
+		if len(childModel.IdentifiedBy) > 0 {
+			// TODO add logic to determine the naming for plural child resources
+			childModel.ResourceNameDocReference = childModel.ChildResourceName
+			childModel.ResourceName = fmt.Sprintf("%ss", childModel.ChildResourceName)
+		} else {
+			childModel.ResourceName = childModel.ChildResourceName
+		}
+		childModel.RelationshipResourceName = GetResourceName(childModel.RelationshipClass, definitions)
+		childModel.Children = SetChildClassNames(definitions, childModel.Children)
+
+		childMap[childName] = childModel
+	}
+	return childMap
+}
+
 func (m *Model) SetClassInclude() {
 	if classDetails, ok := m.Definitions.Classes[m.PkgName]; ok {
 		for key, value := range classDetails.(map[interface{}]interface{}) {
@@ -915,12 +1019,50 @@ func (m *Model) SetClassInclude() {
 	}
 }
 
+func (m *Model) SetClassExclude() {
+	if classDetails, ok := m.Definitions.Classes[m.PkgName]; ok {
+		for key, value := range classDetails.(map[interface{}]interface{}) {
+			if key.(string) == "exclude" {
+				m.Exclude = value.(bool)
+			} else {
+				m.Exclude = false
+			}
+		}
+	}
+}
+
 func (m *Model) SetClassAllowDelete(classDetails interface{}) {
 	if classDetails.(map[string]interface{})["isCreatableDeletable"].(string) == "never" || !AllowClassDelete(m.PkgName, m.Definitions) {
 		m.AllowDelete = false
 	} else {
 		m.AllowDelete = true
 	}
+}
+
+func (m *Model) SetParentName(classPkgName []string) {
+	m.ParentName = classPkgName[0]
+}
+
+func (m *Model) SetGrandParentName(parentList []string, parent string) {
+	for i, value := range parentList {
+		if value == parent {
+			if i > 0 {
+				m.GrandParentName = parentList[i-1]
+			}
+		}
+	}
+}
+
+func (m *Model) setDirectParent(parentModel *Model) {
+	m.DirectParent = parentModel
+}
+
+func reverseList(items []string) []string {
+	reversedList := make([]string, len(items))
+	for i, item := range items {
+		reversedList[len(items)-1-i] = item
+	}
+	return reversedList
 }
 
 // Determine if a class is allowed to be deleted as defined in the classes.yaml file
@@ -1426,6 +1568,15 @@ func GetTestConfigVariableName(className string, midString string, parentClassNa
 	return ""
 }
 
+func resourcesExcluded(excludeResources []interface{}, containedClassName string) bool {
+	for _, item := range excludeResources {
+		if s, ok := item.(string); ok && s == containedClassName {
+			return true
+		}
+	}
+	return false
+}
+
 // Determine if possible dn formats in terraform documentation should be overwritten by dn formats from the classes.yaml file
 func GetOverwriteExampleClasses(classPkgName string, definitions Definitions) []interface{} {
 	overwriteExampleClasses := []interface{}{}
@@ -1473,11 +1624,13 @@ func setDocumentationData(m *Model, definitions Definitions) {
 	resourcesFound := [][]string{}
 	resourcesNotFound := []string{}
 	for _, containedClassName := range m.ContainedBy {
-		resourceName := GetResourceName(containedClassName, definitions)
-		if resourceName != "" {
-			resourcesFound = append(resourcesFound, []string{resourceName, containedClassName})
-		} else {
-			resourcesNotFound = append(resourcesNotFound, containedClassName)
+		if !resourcesExcluded(excludeResources, containedClassName) {
+			resourceName := GetResourceName(containedClassName, definitions)
+			if resourceName != "" {
+				resourcesFound = append(resourcesFound, []string{resourceName, containedClassName})
+			} else {
+				resourcesNotFound = append(resourcesNotFound, containedClassName)
+			}
 		}
 	}
 
@@ -1501,7 +1654,7 @@ func setDocumentationData(m *Model, definitions Definitions) {
 	if len(resourcesNotFound) != 0 && len(resourcesFound) < docsParentDnAmount {
 		if len(resourcesNotFound) > docsParentDnAmount-len(resourcesFound) {
 			// TODO catch default classes and add to documentation
-			resourcesNotFound = resourcesNotFound[0:(docsParentDnAmount - len(resourcesFound))]
+			//resourcesNotFound = resourcesNotFound[0:(docsParentDnAmount - len(resourcesFound))]
 			m.DocumentationParentDns = append(m.DocumentationParentDns, fmt.Sprintf("Too many classes to display, see model documentation for all possible classes of %s.", GetDevnetDocForClass(m.PkgName)))
 		} else {
 			var resourceDetails string
@@ -1534,7 +1687,8 @@ func setDocumentationData(m *Model, definitions Definitions) {
 	// Add child class references to documentation when resource name is known
 	for _, child := range m.Contains {
 		match, _ := regexp.MatchString("[Rs][A-Z][^\r\n\t\f\v]", child) // match all Rs classes
-		if !match {
+		// fmt.Println(child, checkExistenceOfChild(m, child))
+		if !match && !resourcesExcluded(excludeResources, child) {
 			resourceName := GetResourceName(child, definitions)
 			if !slices.Contains(excludeChildResourceNamesFromDocs, resourceName) { // exclude anotation children since they will be included into the resource when possible
 				m.DocumentationChildren = append(m.DocumentationChildren, fmt.Sprintf("[%s_%s](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/%s)", providerName, resourceName, resourceName))

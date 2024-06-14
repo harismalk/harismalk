@@ -13,6 +13,7 @@ import (
 
 	"github.com/ciscoecosystem/aci-go-client/v2/client"
 	"github.com/ciscoecosystem/aci-go-client/v2/container"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -59,10 +60,32 @@ type TagAnnotationFvEpIpTagResourceModel struct {
 	Value types.String `tfsdk:"value"`
 }
 
+func TagAnnotationFvEpIpTagResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagAnnotationFvEpIpTagResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationFvEpIpTagResourceModelAttributeTypes())
+}
+
 // TagTagFvEpIpTagResourceModel describes the resource data model for the children without relation ships.
 type TagTagFvEpIpTagResourceModel struct {
 	Key   types.String `tfsdk:"key"`
 	Value types.String `tfsdk:"value"`
+}
+
+func TagTagFvEpIpTagResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagTagFvEpIpTagResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagFvEpIpTagResourceModelAttributeTypes())
 }
 
 type FvEpIpTagIdentifier struct {
@@ -103,6 +126,7 @@ func (r *FvEpIpTagResource) Schema(ctx context.Context, req resource.SchemaReque
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				Default:             stringdefault.StaticString(globalAnnotation),
 				MarkdownDescription: `The annotation of the Endpoint Tag Ip object.`,
@@ -111,6 +135,7 @@ func (r *FvEpIpTagResource) Schema(ctx context.Context, req resource.SchemaReque
 				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 					stringplanmodifier.RequiresReplace(),
 				},
 				MarkdownDescription: `The VRF name of the Endpoint Tag Ip object.`,
@@ -120,6 +145,7 @@ func (r *FvEpIpTagResource) Schema(ctx context.Context, req resource.SchemaReque
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The identifier of the Endpoint Tag Ip object.`,
 			},
@@ -127,6 +153,7 @@ func (r *FvEpIpTagResource) Schema(ctx context.Context, req resource.SchemaReque
 				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 					stringplanmodifier.RequiresReplace(),
 				},
 				MarkdownDescription: `The IP address of the Endpoint Tag Ip object.`,
@@ -136,6 +163,7 @@ func (r *FvEpIpTagResource) Schema(ctx context.Context, req resource.SchemaReque
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The name of the Endpoint Tag Ip object.`,
 			},
@@ -144,6 +172,7 @@ func (r *FvEpIpTagResource) Schema(ctx context.Context, req resource.SchemaReque
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The name alias of the Endpoint Tag Ip object.`,
 			},
@@ -160,6 +189,7 @@ func (r *FvEpIpTagResource) Schema(ctx context.Context, req resource.SchemaReque
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
@@ -167,6 +197,7 @@ func (r *FvEpIpTagResource) Schema(ctx context.Context, req resource.SchemaReque
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -186,6 +217,7 @@ func (r *FvEpIpTagResource) Schema(ctx context.Context, req resource.SchemaReque
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
@@ -193,6 +225,7 @@ func (r *FvEpIpTagResource) Schema(ctx context.Context, req resource.SchemaReque
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -372,7 +405,7 @@ func (r *FvEpIpTagResource) ImportState(ctx context.Context, req resource.Import
 }
 
 func getAndSetFvEpIpTagAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *FvEpIpTagResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=children&rsp-subtree-class=%s", data.Id.ValueString(), "fvEpIpTag,tagAnnotation,tagTag"), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "fvEpIpTag,tagAnnotation,tagTag"), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -405,7 +438,27 @@ func getAndSetFvEpIpTagAttributes(ctx context.Context, diags *diag.Diagnostics, 
 					data.NameAlias = basetypes.NewStringValue(attributeValue.(string))
 				}
 			}
+			if data.Annotation.IsUnknown() {
+				data.Annotation = types.StringNull()
+			}
+			if data.CtxName.IsUnknown() {
+				data.CtxName = types.StringNull()
+			}
+			if data.Id.IsUnknown() {
+				data.Id = types.StringNull()
+			}
+			if data.Ip.IsUnknown() {
+				data.Ip = types.StringNull()
+			}
+			if data.Name.IsUnknown() {
+				data.Name = types.StringNull()
+			}
+			if data.NameAlias.IsUnknown() {
+				data.NameAlias = types.StringNull()
+			}
+			TagAnnotationFvEpIpTag := TagAnnotationFvEpIpTagResourceModel{}
 			TagAnnotationFvEpIpTagList := make([]TagAnnotationFvEpIpTagResourceModel, 0)
+			TagTagFvEpIpTag := TagTagFvEpIpTagResourceModel{}
 			TagTagFvEpIpTagList := make([]TagTagFvEpIpTagResourceModel, 0)
 			_, ok := classReadInfo[0].(map[string]interface{})["children"]
 			if ok {
@@ -414,7 +467,6 @@ func getAndSetFvEpIpTagAttributes(ctx context.Context, diags *diag.Diagnostics, 
 					for childClassName, childClassDetails := range child.(map[string]interface{}) {
 						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
 						if childClassName == "tagAnnotation" {
-							TagAnnotationFvEpIpTag := TagAnnotationFvEpIpTagResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagAnnotationFvEpIpTag.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -422,11 +474,11 @@ func getAndSetFvEpIpTagAttributes(ctx context.Context, diags *diag.Diagnostics, 
 								if childAttributeName == "value" {
 									TagAnnotationFvEpIpTag.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
+
 							}
 							TagAnnotationFvEpIpTagList = append(TagAnnotationFvEpIpTagList, TagAnnotationFvEpIpTag)
 						}
 						if childClassName == "tagTag" {
-							TagTagFvEpIpTag := TagTagFvEpIpTagResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagTagFvEpIpTag.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -434,6 +486,7 @@ func getAndSetFvEpIpTagAttributes(ctx context.Context, diags *diag.Diagnostics, 
 								if childAttributeName == "value" {
 									TagTagFvEpIpTag.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
+
 							}
 							TagTagFvEpIpTagList = append(TagTagFvEpIpTagList, TagTagFvEpIpTag)
 						}
@@ -488,25 +541,24 @@ func setFvEpIpTagId(ctx context.Context, data *FvEpIpTagResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", data.ParentDn.ValueString(), rn))
 }
 
-func getFvEpIpTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpIpTagResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationFvEpIpTagResourceModel) []map[string]interface{} {
-
+func getFvEpIpTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpIpTagResourceModel, tagAnnotationFvEpIpTagPlan, tagAnnotationFvEpIpTagState []TagAnnotationFvEpIpTagResourceModel) []map[string]interface{} {
 	childPayloads := []map[string]interface{}{}
-	if !data.TagAnnotation.IsUnknown() {
+	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
-		for _, tagAnnotation := range tagAnnotationPlan {
-			childMap := map[string]map[string]interface{}{"attributes": {}}
-			if !tagAnnotation.Key.IsUnknown() {
-				childMap["attributes"]["key"] = tagAnnotation.Key.ValueString()
+		for _, tagAnnotationFvEpIpTag := range tagAnnotationFvEpIpTagPlan {
+			childMap := NewAciObject()
+			if !tagAnnotationFvEpIpTag.Key.IsNull() && !tagAnnotationFvEpIpTag.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagAnnotationFvEpIpTag.Key.ValueString()
 			}
-			if !tagAnnotation.Value.IsUnknown() {
-				childMap["attributes"]["value"] = tagAnnotation.Value.ValueString()
+			if !tagAnnotationFvEpIpTag.Value.IsNull() && !tagAnnotationFvEpIpTag.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagAnnotationFvEpIpTag.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
 			tagAnnotationIdentifier := TagAnnotationIdentifier{}
-			tagAnnotationIdentifier.Key = tagAnnotation.Key
+			tagAnnotationIdentifier.Key = tagAnnotationFvEpIpTag.Key
 			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
 		}
-		for _, tagAnnotation := range tagAnnotationState {
+		for _, tagAnnotation := range tagAnnotationFvEpIpTagState {
 			delete := true
 			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
 				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
@@ -515,10 +567,10 @@ func getFvEpIpTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Dia
 				}
 			}
 			if delete {
-				childMap := map[string]map[string]interface{}{"attributes": {}}
-				childMap["attributes"]["status"] = "deleted"
-				childMap["attributes"]["key"] = tagAnnotation.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
+				tagAnnotationChildMapForDelete := NewAciObject()
+				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
+				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
 			}
 		}
 	} else {
@@ -527,25 +579,25 @@ func getFvEpIpTagTagAnnotationChildPayloads(ctx context.Context, diags *diag.Dia
 
 	return childPayloads
 }
-func getFvEpIpTagTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpIpTagResourceModel, tagTagPlan, tagTagState []TagTagFvEpIpTagResourceModel) []map[string]interface{} {
 
+func getFvEpIpTagTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *FvEpIpTagResourceModel, tagTagFvEpIpTagPlan, tagTagFvEpIpTagState []TagTagFvEpIpTagResourceModel) []map[string]interface{} {
 	childPayloads := []map[string]interface{}{}
-	if !data.TagTag.IsUnknown() {
+	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
-		for _, tagTag := range tagTagPlan {
-			childMap := map[string]map[string]interface{}{"attributes": {}}
-			if !tagTag.Key.IsUnknown() {
-				childMap["attributes"]["key"] = tagTag.Key.ValueString()
+		for _, tagTagFvEpIpTag := range tagTagFvEpIpTagPlan {
+			childMap := NewAciObject()
+			if !tagTagFvEpIpTag.Key.IsNull() && !tagTagFvEpIpTag.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagTagFvEpIpTag.Key.ValueString()
 			}
-			if !tagTag.Value.IsUnknown() {
-				childMap["attributes"]["value"] = tagTag.Value.ValueString()
+			if !tagTagFvEpIpTag.Value.IsNull() && !tagTagFvEpIpTag.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagTagFvEpIpTag.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
 			tagTagIdentifier := TagTagIdentifier{}
-			tagTagIdentifier.Key = tagTag.Key
+			tagTagIdentifier.Key = tagTagFvEpIpTag.Key
 			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
 		}
-		for _, tagTag := range tagTagState {
+		for _, tagTag := range tagTagFvEpIpTagState {
 			delete := true
 			for _, tagTagIdentifier := range tagTagIdentifiers {
 				if tagTagIdentifier.Key == tagTag.Key {
@@ -554,10 +606,10 @@ func getFvEpIpTagTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostic
 				}
 			}
 			if delete {
-				childMap := map[string]map[string]interface{}{"attributes": {}}
-				childMap["attributes"]["status"] = "deleted"
-				childMap["attributes"]["key"] = tagTag.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
+				tagTagChildMapForDelete := NewAciObject()
+				tagTagChildMapForDelete.Attributes["status"] = "deleted"
+				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
 			}
 		}
 	} else {

@@ -260,17 +260,19 @@ resource "aci_out_of_band_contract" "test" {
 const testConfigVzOOBBrCPChildrenRemoveOne = `
 resource "aci_out_of_band_contract" "test" {
   name = "test_name"
-  annotations = [ 
-	{
-	  key = "key_1"
-	  value = "value_2"
-	},
+  annotations = [
+      
+      {
+        key = "key_1"
+        value = "value_2"
+      },
   ]
-  tags = [ 
-	{
-	  key = "key_1"
-	  value = "value_2"
-	},
+  tags = [
+      
+      {
+        key = "key_1"
+        value = "value_2"
+      },
   ]
 }
 `

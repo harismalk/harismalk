@@ -60,16 +60,18 @@ resource "aci_pim_route_map_entry" "full_example_pim_route_map_policy" {
   annotations = [
     {
       key   = "key_0"
-      value = "value_1"
+      value = "value_0"
     }
   ]
   tags = [
     {
       key   = "key_0"
-      value = "value_1"
+      value = "value_0"
     }
   ]
 }
+
+
 
 ```
 
@@ -102,14 +104,14 @@ All examples for the Pim Route Map Entry resource can be found in the [examples]
 * `source_ip` (src) - (string) The source ip of the Pim Route Map Entry object.
 
 * `annotations` - (list) A list of Annotations (ACI object [tagAnnotation](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagAnnotation/overview)). Annotations can also be configured using a separate [aci_annotation](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/annotation) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
-  
+   
   #### Required ####
   
   * `key` (key) - (string) The key used to uniquely identify this configuration object.
   * `value` (value) - (string) The value of the property.
 
 * `tags` - (list) A list of Tags (ACI object [tagTag](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/tagTag/overview)). Tags can also be configured using a separate [aci_tag](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/tag) resource. This attribute is supported in ACI versions: 3.2(1l) and later.
-  
+   
   #### Required ####
   
   * `key` (key) - (string) The key used to uniquely identify this configuration object.
@@ -132,3 +134,5 @@ import {
   to = aci_pim_route_map_entry.example_pim_route_map_policy
 }
 ```
+
+

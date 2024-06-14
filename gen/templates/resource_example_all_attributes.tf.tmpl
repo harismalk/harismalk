@@ -10,14 +10,8 @@ resource "aci_{{$.ResourceName}}" "full_example_{{getResourceName $key $.Definit
     {{- else}}
   {{overwriteProperty .PkgName .SnakeCaseName $.Definitions}} = "{{lookupTestValue .PkgName .SnakeCaseName $.TestVars $.Definitions}}"
   {{- end}}{{- end}}
-  {{- range $key, $value := $.Children}}{{$ChildResourceName := .ResourceName}}
-  {{$ChildResourceName}} = [
-    { {{- range .Properties}}{{- if ne .NamedPropertyClass ""}}
-      {{overwriteProperty .PkgName .SnakeCaseName $.Definitions}} = aci_{{getResourceName .NamedPropertyClass $.Definitions}}.example.name
-        {{- else}}
-      {{overwriteProperty .PkgName .SnakeCaseName $.Definitions}} = "{{lookupChildTestValue .PkgName $ChildResourceName .SnakeCaseName $.TestVars 0 $.Definitions}}"{{- end}}{{ end}}
-    }
-  ]
+  {{- range $key, $value := $.Children}}
+  {{- template "childResourcesAndProperties" . }}
   {{- end}}
 }
 {{ end}}
@@ -30,14 +24,23 @@ resource "aci_{{$.ResourceName}}" "full_example" {
     {{- else}}
   {{overwriteProperty .PkgName .SnakeCaseName $.Definitions}} = "{{lookupTestValue .PkgName .SnakeCaseName $.TestVars $.Definitions}}"
   {{- end}}{{- end}}
-  {{- range $key, $value := $.Children}}{{$ChildResourceName := .ResourceName}}
+  {{- range $key, $value := $.Children}}
+  {{- template "childResourcesAndProperties" . }}
+  {{- end}}
+}
+{{ end}}
+
+{{/* A sub template for including nested children in the examples. */}}
+{{- define "childResourcesAndProperties" -}}
+{{- $ChildResourceName := .ResourceName }}
   {{$ChildResourceName}} = [
     { {{- range .Properties}}{{- if ne .NamedPropertyClass ""}}
       {{overwriteProperty .PkgName .SnakeCaseName $.Definitions}} = aci_{{getResourceName .NamedPropertyClass $.Definitions}}.example.name
         {{- else}}
       {{overwriteProperty .PkgName .SnakeCaseName $.Definitions}} = "{{lookupChildTestValue .PkgName $ChildResourceName .SnakeCaseName $.TestVars 0 $.Definitions}}"{{- end}}{{ end}}
+      {{- range $key, $value := $.Children}}
+  {{- template "childResourcesAndProperties" . }}
+  {{- end}}
     }
   ]
-  {{- end}}
-}
-{{ end}}
+{{- end}}

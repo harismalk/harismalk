@@ -218,3 +218,21 @@ mplsNodeSidP:
     - "uni/tn-{name}/out-{name}/lnodep-{name}/rsnodeL3OutAtt-[{tDn}]/lbp-[{addr}]/nodesidp-{sidoffset}"
   contained_by:
     - "l3extLoopBackIfP"
+
+commPol:
+  contained_by:
+      - "polUni"
+  rn_prepend: "fabric"
+  # children:
+  #   - tagAnnotation
+  #   - tagTag
+
+# commHttps:
+#   children:
+#     - tagAnnotation
+    # - tagTag
+
+# commRsKeyRing:
+#   children:
+#     - tagAnnotation
+

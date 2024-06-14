@@ -14,6 +14,7 @@ import (
 	"github.com/ciscoecosystem/aci-go-client/v2/client"
 	"github.com/ciscoecosystem/aci-go-client/v2/container"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -62,10 +63,32 @@ type TagAnnotationL3extProvLblResourceModel struct {
 	Value types.String `tfsdk:"value"`
 }
 
+func TagAnnotationL3extProvLblResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagAnnotationL3extProvLblResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagAnnotationL3extProvLblResourceModelAttributeTypes())
+}
+
 // TagTagL3extProvLblResourceModel describes the resource data model for the children without relation ships.
 type TagTagL3extProvLblResourceModel struct {
 	Key   types.String `tfsdk:"key"`
 	Value types.String `tfsdk:"value"`
+}
+
+func TagTagL3extProvLblResourceModelAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"key":   types.StringType,
+		"value": types.StringType,
+	}
+}
+
+func TagTagL3extProvLblResourceModelElementType() attr.TypeWithAttributeTypes {
+	return basetypes.ObjectType.WithAttributeTypes(basetypes.ObjectType{}, TagTagL3extProvLblResourceModelAttributeTypes())
 }
 
 type L3extProvLblIdentifier struct {
@@ -105,6 +128,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				Default:             stringdefault.StaticString(globalAnnotation),
 				MarkdownDescription: `The annotation of the L3out Provider Label object.`,
@@ -114,6 +138,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The description of the L3out Provider Label object.`,
 			},
@@ -121,6 +146,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 					stringplanmodifier.RequiresReplace(),
 				},
 				MarkdownDescription: `The name of the L3out Provider Label object.`,
@@ -130,6 +156,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The name alias of the L3out Provider Label object.`,
 			},
@@ -138,6 +165,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The key for enabling clients to own their data for entity correlation.`,
 			},
@@ -146,6 +174,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `A tag for enabling clients to add their own data. For example, to indicate who created this object.`,
 			},
@@ -154,6 +183,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				Validators: []validator.String{
 					stringvalidator.OneOf("alice-blue", "antique-white", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanched-almond", "blue", "blue-violet", "brown", "burlywood", "cadet-blue", "chartreuse", "chocolate", "coral", "cornflower-blue", "cornsilk", "crimson", "cyan", "dark-blue", "dark-cyan", "dark-goldenrod", "dark-gray", "dark-green", "dark-khaki", "dark-magenta", "dark-olive-green", "dark-orange", "dark-orchid", "dark-red", "dark-salmon", "dark-sea-green", "dark-slate-blue", "dark-slate-gray", "dark-turquoise", "dark-violet", "deep-pink", "deep-sky-blue", "dim-gray", "dodger-blue", "fire-brick", "floral-white", "forest-green", "fuchsia", "gainsboro", "ghost-white", "gold", "goldenrod", "gray", "green", "green-yellow", "honeydew", "hot-pink", "indian-red", "indigo", "ivory", "khaki", "lavender", "lavender-blush", "lawn-green", "lemon-chiffon", "light-blue", "light-coral", "light-cyan", "light-goldenrod-yellow", "light-gray", "light-green", "light-pink", "light-salmon", "light-sea-green", "light-sky-blue", "light-slate-gray", "light-steel-blue", "light-yellow", "lime", "lime-green", "linen", "magenta", "maroon", "medium-aquamarine", "medium-blue", "medium-orchid", "medium-purple", "medium-sea-green", "medium-slate-blue", "medium-spring-green", "medium-turquoise", "medium-violet-red", "midnight-blue", "mint-cream", "misty-rose", "moccasin", "navajo-white", "navy", "old-lace", "olive", "olive-drab", "orange", "orange-red", "orchid", "pale-goldenrod", "pale-green", "pale-turquoise", "pale-violet-red", "papaya-whip", "peachpuff", "peru", "pink", "plum", "powder-blue", "purple", "red", "rosy-brown", "royal-blue", "saddle-brown", "salmon", "sandy-brown", "sea-green", "seashell", "sienna", "silver", "sky-blue", "slate-blue", "slate-gray", "snow", "spring-green", "steel-blue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "white-smoke", "yellow", "yellow-green"),
@@ -173,6 +203,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
@@ -180,6 +211,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -199,6 +231,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
@@ -206,6 +239,7 @@ func (r *L3extProvLblResource) Schema(ctx context.Context, req resource.SchemaRe
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -385,7 +419,7 @@ func (r *L3extProvLblResource) ImportState(ctx context.Context, req resource.Imp
 }
 
 func getAndSetL3extProvLblAttributes(ctx context.Context, diags *diag.Diagnostics, client *client.Client, data *L3extProvLblResourceModel) {
-	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=children&rsp-subtree-class=%s", data.Id.ValueString(), "l3extProvLbl,tagAnnotation,tagTag"), "GET", nil)
+	requestData := DoRestRequest(ctx, diags, client, fmt.Sprintf("api/mo/%s.json?rsp-subtree=full&rsp-subtree-class=%s", data.Id.ValueString(), "l3extProvLbl,tagAnnotation,tagTag"), "GET", nil)
 
 	if diags.HasError() {
 		return
@@ -421,7 +455,30 @@ func getAndSetL3extProvLblAttributes(ctx context.Context, diags *diag.Diagnostic
 					data.Tag = basetypes.NewStringValue(attributeValue.(string))
 				}
 			}
+			if data.Annotation.IsUnknown() {
+				data.Annotation = types.StringNull()
+			}
+			if data.Descr.IsUnknown() {
+				data.Descr = types.StringNull()
+			}
+			if data.Name.IsUnknown() {
+				data.Name = types.StringNull()
+			}
+			if data.NameAlias.IsUnknown() {
+				data.NameAlias = types.StringNull()
+			}
+			if data.OwnerKey.IsUnknown() {
+				data.OwnerKey = types.StringNull()
+			}
+			if data.OwnerTag.IsUnknown() {
+				data.OwnerTag = types.StringNull()
+			}
+			if data.Tag.IsUnknown() {
+				data.Tag = types.StringNull()
+			}
+			TagAnnotationL3extProvLbl := TagAnnotationL3extProvLblResourceModel{}
 			TagAnnotationL3extProvLblList := make([]TagAnnotationL3extProvLblResourceModel, 0)
+			TagTagL3extProvLbl := TagTagL3extProvLblResourceModel{}
 			TagTagL3extProvLblList := make([]TagTagL3extProvLblResourceModel, 0)
 			_, ok := classReadInfo[0].(map[string]interface{})["children"]
 			if ok {
@@ -430,7 +487,6 @@ func getAndSetL3extProvLblAttributes(ctx context.Context, diags *diag.Diagnostic
 					for childClassName, childClassDetails := range child.(map[string]interface{}) {
 						childAttributes := childClassDetails.(map[string]interface{})["attributes"].(map[string]interface{})
 						if childClassName == "tagAnnotation" {
-							TagAnnotationL3extProvLbl := TagAnnotationL3extProvLblResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagAnnotationL3extProvLbl.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -438,11 +494,11 @@ func getAndSetL3extProvLblAttributes(ctx context.Context, diags *diag.Diagnostic
 								if childAttributeName == "value" {
 									TagAnnotationL3extProvLbl.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
+
 							}
 							TagAnnotationL3extProvLblList = append(TagAnnotationL3extProvLblList, TagAnnotationL3extProvLbl)
 						}
 						if childClassName == "tagTag" {
-							TagTagL3extProvLbl := TagTagL3extProvLblResourceModel{}
 							for childAttributeName, childAttributeValue := range childAttributes {
 								if childAttributeName == "key" {
 									TagTagL3extProvLbl.Key = basetypes.NewStringValue(childAttributeValue.(string))
@@ -450,6 +506,7 @@ func getAndSetL3extProvLblAttributes(ctx context.Context, diags *diag.Diagnostic
 								if childAttributeName == "value" {
 									TagTagL3extProvLbl.Value = basetypes.NewStringValue(childAttributeValue.(string))
 								}
+
 							}
 							TagTagL3extProvLblList = append(TagTagL3extProvLblList, TagTagL3extProvLbl)
 						}
@@ -502,25 +559,24 @@ func setL3extProvLblId(ctx context.Context, data *L3extProvLblResourceModel) {
 	data.Id = types.StringValue(fmt.Sprintf("%s/%s", data.ParentDn.ValueString(), rn))
 }
 
-func getL3extProvLblTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *L3extProvLblResourceModel, tagAnnotationPlan, tagAnnotationState []TagAnnotationL3extProvLblResourceModel) []map[string]interface{} {
-
+func getL3extProvLblTagAnnotationChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *L3extProvLblResourceModel, tagAnnotationL3extProvLblPlan, tagAnnotationL3extProvLblState []TagAnnotationL3extProvLblResourceModel) []map[string]interface{} {
 	childPayloads := []map[string]interface{}{}
-	if !data.TagAnnotation.IsUnknown() {
+	if !data.TagAnnotation.IsNull() && !data.TagAnnotation.IsUnknown() {
 		tagAnnotationIdentifiers := []TagAnnotationIdentifier{}
-		for _, tagAnnotation := range tagAnnotationPlan {
-			childMap := map[string]map[string]interface{}{"attributes": {}}
-			if !tagAnnotation.Key.IsUnknown() {
-				childMap["attributes"]["key"] = tagAnnotation.Key.ValueString()
+		for _, tagAnnotationL3extProvLbl := range tagAnnotationL3extProvLblPlan {
+			childMap := NewAciObject()
+			if !tagAnnotationL3extProvLbl.Key.IsNull() && !tagAnnotationL3extProvLbl.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagAnnotationL3extProvLbl.Key.ValueString()
 			}
-			if !tagAnnotation.Value.IsUnknown() {
-				childMap["attributes"]["value"] = tagAnnotation.Value.ValueString()
+			if !tagAnnotationL3extProvLbl.Value.IsNull() && !tagAnnotationL3extProvLbl.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagAnnotationL3extProvLbl.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
 			tagAnnotationIdentifier := TagAnnotationIdentifier{}
-			tagAnnotationIdentifier.Key = tagAnnotation.Key
+			tagAnnotationIdentifier.Key = tagAnnotationL3extProvLbl.Key
 			tagAnnotationIdentifiers = append(tagAnnotationIdentifiers, tagAnnotationIdentifier)
 		}
-		for _, tagAnnotation := range tagAnnotationState {
+		for _, tagAnnotation := range tagAnnotationL3extProvLblState {
 			delete := true
 			for _, tagAnnotationIdentifier := range tagAnnotationIdentifiers {
 				if tagAnnotationIdentifier.Key == tagAnnotation.Key {
@@ -529,10 +585,10 @@ func getL3extProvLblTagAnnotationChildPayloads(ctx context.Context, diags *diag.
 				}
 			}
 			if delete {
-				childMap := map[string]map[string]interface{}{"attributes": {}}
-				childMap["attributes"]["status"] = "deleted"
-				childMap["attributes"]["key"] = tagAnnotation.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": childMap})
+				tagAnnotationChildMapForDelete := NewAciObject()
+				tagAnnotationChildMapForDelete.Attributes["status"] = "deleted"
+				tagAnnotationChildMapForDelete.Attributes["key"] = tagAnnotation.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagAnnotation": tagAnnotationChildMapForDelete})
 			}
 		}
 	} else {
@@ -541,25 +597,25 @@ func getL3extProvLblTagAnnotationChildPayloads(ctx context.Context, diags *diag.
 
 	return childPayloads
 }
-func getL3extProvLblTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *L3extProvLblResourceModel, tagTagPlan, tagTagState []TagTagL3extProvLblResourceModel) []map[string]interface{} {
 
+func getL3extProvLblTagTagChildPayloads(ctx context.Context, diags *diag.Diagnostics, data *L3extProvLblResourceModel, tagTagL3extProvLblPlan, tagTagL3extProvLblState []TagTagL3extProvLblResourceModel) []map[string]interface{} {
 	childPayloads := []map[string]interface{}{}
-	if !data.TagTag.IsUnknown() {
+	if !data.TagTag.IsNull() && !data.TagTag.IsUnknown() {
 		tagTagIdentifiers := []TagTagIdentifier{}
-		for _, tagTag := range tagTagPlan {
-			childMap := map[string]map[string]interface{}{"attributes": {}}
-			if !tagTag.Key.IsUnknown() {
-				childMap["attributes"]["key"] = tagTag.Key.ValueString()
+		for _, tagTagL3extProvLbl := range tagTagL3extProvLblPlan {
+			childMap := NewAciObject()
+			if !tagTagL3extProvLbl.Key.IsNull() && !tagTagL3extProvLbl.Key.IsUnknown() {
+				childMap.Attributes["key"] = tagTagL3extProvLbl.Key.ValueString()
 			}
-			if !tagTag.Value.IsUnknown() {
-				childMap["attributes"]["value"] = tagTag.Value.ValueString()
+			if !tagTagL3extProvLbl.Value.IsNull() && !tagTagL3extProvLbl.Value.IsUnknown() {
+				childMap.Attributes["value"] = tagTagL3extProvLbl.Value.ValueString()
 			}
 			childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
 			tagTagIdentifier := TagTagIdentifier{}
-			tagTagIdentifier.Key = tagTag.Key
+			tagTagIdentifier.Key = tagTagL3extProvLbl.Key
 			tagTagIdentifiers = append(tagTagIdentifiers, tagTagIdentifier)
 		}
-		for _, tagTag := range tagTagState {
+		for _, tagTag := range tagTagL3extProvLblState {
 			delete := true
 			for _, tagTagIdentifier := range tagTagIdentifiers {
 				if tagTagIdentifier.Key == tagTag.Key {
@@ -568,10 +624,10 @@ func getL3extProvLblTagTagChildPayloads(ctx context.Context, diags *diag.Diagnos
 				}
 			}
 			if delete {
-				childMap := map[string]map[string]interface{}{"attributes": {}}
-				childMap["attributes"]["status"] = "deleted"
-				childMap["attributes"]["key"] = tagTag.Key.ValueString()
-				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": childMap})
+				tagTagChildMapForDelete := NewAciObject()
+				tagTagChildMapForDelete.Attributes["status"] = "deleted"
+				tagTagChildMapForDelete.Attributes["key"] = tagTag.Key.ValueString()
+				childPayloads = append(childPayloads, map[string]interface{}{"tagTag": tagTagChildMapForDelete})
 			}
 		}
 	} else {
