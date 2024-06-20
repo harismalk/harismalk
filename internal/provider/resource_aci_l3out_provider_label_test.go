@@ -148,9 +148,11 @@ func TestAccResourceL3extProvLblWithL3extOut(t *testing.T) {
 				Config:             testConfigL3extProvLblChildrenRemoveOneDependencyWithL3extOut,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_l3out_provider_label.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_l3out_provider_label.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_l3out_provider_label.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_l3out_provider_label.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_l3out_provider_label.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_l3out_provider_label.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_l3out_provider_label.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_l3out_provider_label.test", "tags.#", "1"),
@@ -239,17 +241,17 @@ const testConfigL3extProvLblChildrenRemoveOneDependencyWithL3extOut = testConfig
 resource "aci_l3out_provider_label" "test" {
   parent_dn = aci_l3_outside.test.id
   name = "prov_label"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -258,7 +260,9 @@ const testConfigL3extProvLblChildrenRemoveAllDependencyWithL3extOut = testConfig
 resource "aci_l3out_provider_label" "test" {
   parent_dn = aci_l3_outside.test.id
   name = "prov_label"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

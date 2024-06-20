@@ -613,7 +613,10 @@ resource "aci_{{$.resourceName}}" "test" {
 				{{- range $child := $value}}
 	{
 					{{- range $child_key, $child_value := $child}}
-						{{- if ne $child_key "deletable_child"}}
+						{{- if eq $child_key "children"}}
+							{{- $newCtx := addToChild $child_value "Indent" "    " -}}
+  							{{- template "nestedChildren" $newCtx }}
+						{{- else if ne $child_key "deletable_child"}}
 	  {{$child_key}} = "{{$child_value}}"
 	  					{{- end}}
 					{{- end}}
@@ -648,21 +651,23 @@ resource "aci_{{$.resourceName}}" "test" {
   			{{- end }}
   		{{- end}}
   		{{- range $key, $value := $.children}}
-			{{- if eq (len $value) 1}}
-				{{- $child := index $value 0}}
-				{{- if $child.deletable_child}}
-  {{$key}} = []
-				{{- end}}
-			{{- else}}
-  {{$key}} = [ {{$child := index $value 1 }}
-	{
-	  		{{- range $child_key, $child_value := $child}}
+  {{$key}} = [
+	  {{- range $index, $child := $value}}
+	  	{{- if or (ne $index 0) (and (eq $index 0) (not $child.deletable_child)) }}
+      {
+        {{- range $child_key, $child_value := $child}}
+        	{{- if eq $child_key "children"}}
+				{{- $newCtx := addToChild $child_value "Indent" "    " -}}
+  				{{- template "nestedChildrenRemoveOne" $newCtx }}
+			{{- else if ne $child_key "deletable_child"}}
 	  {{$child_key}} = "{{$child_value}}"
 			{{- end}}
-	},
+        {{- end}}
+      },
+    	{{- end}}
+	{{- end}}
   ]
-			{{- end}}
-		{{- end}}
+{{- end}}
 }
 `
 
@@ -677,15 +682,23 @@ resource "aci_{{$.resourceName}}" "test" {
   			{{- end }}
   		{{- end}}
   		{{- range $key, $value := $.children}}
-			{{- if eq (len $value) 1}}
-				{{- $child := index $value 0}}
-				{{- if $child.deletable_child}}
-  {{$key}} = []
-				{{- end}}
-			{{- else}}
-  {{$key}} = []
+  {{$key}} = [
+  	{{- range $index, $child := $value}}
+	  	{{- if not $child.deletable_child }}
+      {
+        {{- range $child_key, $child_value := $child}}
+        	{{- if eq $child_key "children"}}
+				{{- $newCtx := addToChild $child_value "Indent" "    " -}}
+  				{{- template "nestedChildrenRemoveAll" $newCtx }}
+			{{- else if ne $child_key "deletable_child"}}
+	  {{$child_key}} = "{{$child_value}}"
 			{{- end}}
-		{{- end}}
+        {{- end}}
+      },
+    	{{- end}}
+	{{- end}}
+  ]
+	{{- end}}
 }
 `
 		{{- end}}
@@ -765,14 +778,20 @@ resource "aci_{{$.resourceName}}" "test" {
   		{{- end}}
  {{- range $key, $value := $.children}}
   {{$key}} = [
-    {{- if gt (len $value) 1}}
-      {{$child := index $value 1}}
+	  {{- range $index, $child := $value}}
+	  	{{- if or (ne $index 0) (and (eq $index 0) (not $child.deletable_child)) }}
       {
         {{- range $child_key, $child_value := $child}}
-        {{$child_key}} = "{{$child_value}}"
+        	{{- if eq $child_key "children"}}
+				{{- $newCtx := addToChild $child_value "Indent" "    " -}}
+  				{{- template "nestedChildrenRemoveOne" $newCtx }}
+			{{- else if ne $child_key "deletable_child"}}
+	  {{$child_key}} = "{{$child_value}}"
+			{{- end}}
         {{- end}}
       },
-    {{- end}}
+    	{{- end}}
+	{{- end}}
   ]
 {{- end}}
 }
@@ -784,8 +803,23 @@ resource "aci_{{$.resourceName}}" "test" {
   {{$key}} = "{{$value}}"
   		{{- end}}
   		{{- range $key, $value := $.children}}
-  {{$key}} = []
-		{{- end}}
+  {{$key}} = [
+  	{{- range $index, $child := $value}}
+	  	{{- if not $child.deletable_child }}
+      {
+        {{- range $child_key, $child_value := $child}}
+        	{{- if eq $child_key "children"}}
+				{{- $newCtx := addToChild $child_value "Indent" "    " -}}
+  				{{- template "nestedChildrenRemoveAll" $newCtx }}
+			{{- else if ne $child_key "deletable_child"}}
+	  {{$child_key}} = "{{$child_value}}"
+			{{- end}}
+        {{- end}}
+      },
+    	{{- end}}
+	{{- end}}
+  ]
+   {{- end}}
 }
 `
 
@@ -809,6 +843,52 @@ resource "aci_{{$.resourceName}}" "test" {
 	  					{{- end}}
 					{{- end}}
 	{{$indent}}},
+				{{- end}}
+  {{$indent}}]
+{{- end}}
+{{- end}}
+
+{{/* A sub template for including nested children by removing only one child that is deletable. */}}
+{{- define "nestedChildrenRemoveOne" -}}
+  {{- $indent := .TemplateProperties.Indent -}}
+  {{- range $key, $value := .childValue}}
+  {{$indent}}{{$key}} = [
+				{{- range $index, $child := $value}}
+					{{- if or (ne $index 0) (and (eq $index 0) (not $child.deletable_child)) }}
+	{{$indent}}{
+					{{- range $child_key, $child_value := $child}}
+						{{- if eq $child_key "children"}}
+							{{- $newCtx := addToChild $child_value "Indent" (print $indent "    ") -}}
+  							{{- template "nestedChildrenRemoveOne" $newCtx }}
+						{{- else if ne $child_key "deletable_child"}}
+	  {{$indent}}{{$child_key}} = "{{$child_value}}"
+	  					{{- end}}
+					{{- end}}
+	{{$indent}}},
+					{{- end}}
+				{{- end}}
+  {{$indent}}]
+{{- end}}
+{{- end}}
+
+{{/* A sub template for including nested children by removing all deletable children. */}}
+{{- define "nestedChildrenRemoveAll" -}}
+  {{- $indent := .TemplateProperties.Indent -}}
+  {{- range $key, $value := .childValue}}
+  {{$indent}}{{$key}} = [
+				{{- range $index, $child := $value}}
+					{{- if not $child.deletable_child }}
+	{{$indent}}{
+					{{- range $child_key, $child_value := $child}}
+						{{- if eq $child_key "children"}}
+							{{- $newCtx := addToChild $child_value "Indent" (print $indent "    ") -}}
+  							{{- template "nestedChildrenRemoveAll" $newCtx }}
+						{{- else if ne $child_key "deletable_child"}}
+	  {{$indent}}{{$child_key}} = "{{$child_value}}"
+	  					{{- end}}
+					{{- end}}
+	{{$indent}}},
+					{{- end}}
 				{{- end}}
   {{$indent}}]
 {{- end}}

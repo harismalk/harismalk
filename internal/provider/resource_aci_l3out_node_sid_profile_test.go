@@ -142,9 +142,11 @@ func TestAccResourceMplsNodeSidPWithL3extLoopBackIfP(t *testing.T) {
 				Config:             testConfigMplsNodeSidPChildrenRemoveOneDependencyWithL3extLoopBackIfP,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_l3out_node_sid_profile.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_l3out_node_sid_profile.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_l3out_node_sid_profile.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_l3out_node_sid_profile.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_l3out_node_sid_profile.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_l3out_node_sid_profile.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_l3out_node_sid_profile.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_l3out_node_sid_profile.test", "tags.#", "1"),
@@ -231,17 +233,17 @@ const testConfigMplsNodeSidPChildrenRemoveOneDependencyWithL3extLoopBackIfP = te
 resource "aci_l3out_node_sid_profile" "test" {
   parent_dn = aci_l3out_loopback_interface_profile.test.id
   segment_id = "1"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -250,7 +252,9 @@ const testConfigMplsNodeSidPChildrenRemoveAllDependencyWithL3extLoopBackIfP = te
 resource "aci_l3out_node_sid_profile" "test" {
   parent_dn = aci_l3out_loopback_interface_profile.test.id
   segment_id = "1"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

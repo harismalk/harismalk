@@ -102,7 +102,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] key_ring:[map[annotation:annotation_1 children:map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]] deletable_child:false tn_pki_key_ring_name:tn_pki_key_ring_name_1]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tp:[map[annotation:annotation_1 children:map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]] deletable_child:true target_dn:target_dn_1]]]"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] key_ring:[map[annotation:annotation_1 children:map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]] deletable_child:false tn_pki_key_ring_name:tn_pki_key_ring_name_1]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tp:[map[annotation:annotation_1 children:map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]] deletable_child:true target_dn:target_dn_1]]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_1"),
@@ -148,7 +148,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] key_ring:[map[annotation:annotation_1 children:map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]] deletable_child:false tn_pki_key_ring_name:tn_pki_key_ring_name_1]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tp:[map[annotation:annotation_1 children:map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]] deletable_child:true target_dn:target_dn_1]]]"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] key_ring:[map[annotation:annotation_1 children:map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]] deletable_child:false tn_pki_key_ring_name:tn_pki_key_ring_name_1]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tp:[map[annotation:annotation_1 children:map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]] deletable_child:true target_dn:target_dn_1]]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_1"),
@@ -185,6 +185,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "owner_key", ""),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "owner_tag", ""),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "strict_security_on_apic_oob_subnet", "false"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "annotations.#", "1"),
@@ -192,7 +193,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] key_ring:[map[annotation:annotation_1 children:map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]] deletable_child:false tn_pki_key_ring_name:tn_pki_key_ring_name_1]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tp:[map[annotation:annotation_1 children:map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]] deletable_child:true target_dn:target_dn_1]]]"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] key_ring:[map[annotation:annotation_1 children:map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]] deletable_child:false tn_pki_key_ring_name:tn_pki_key_ring_name_1]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tp:[map[annotation:annotation_1 children:map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]] deletable_child:true target_dn:target_dn_1]]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_1"),
@@ -212,6 +213,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.throttle_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.visore_access", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.#", "1"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "tags.#", "1"),
@@ -232,7 +234,7 @@ func TestAccResourceCommPol(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.access_control_allow_origins", "access_control_allow_origins_1"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.admin_st", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.annotation", "annotation_1"),
-					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] key_ring:[map[annotation:annotation_1 children:map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]] deletable_child:false tn_pki_key_ring_name:tn_pki_key_ring_name_1]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tp:[map[annotation:annotation_1 children:map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]] deletable_child:true target_dn:target_dn_1]]]"),
+					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] key_ring:[map[annotation:annotation_1 children:map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]] deletable_child:false tn_pki_key_ring_name:tn_pki_key_ring_name_1]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tp:[map[annotation:annotation_1 children:map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]] deletable_child:true target_dn:target_dn_1]]]"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.cli_only_mode", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.client_cert_auth_state", "disabled"),
 					resource.TestCheckResourceAttr("aci_communication_policy.test", "http_ssl_configuration.0.description", "description_1"),
@@ -422,19 +424,73 @@ const testConfigCommPolChildrenRemoveOne = `
 resource "aci_communication_policy" "test" {
   name = "test_name"
   annotations = [
-      
       {
-        key = "key_1"
-        value = "value_2"
+	  key = "key_1"
+	  value = "value_2"
       },
   ]
   http_ssl_configuration = [
+      {
+	  access_control_allow_credential = "disabled"
+	  access_control_allow_origins = "access_control_allow_origins_1"
+	  admin_st = "disabled"
+	  annotation = "annotation_1"
+      annotations = [
+	    {
+	      key = "key_1"
+	      value = "value_2"
+	    },
+      ]
+      key_ring = [
+	    {
+	      annotation = "annotation_1"
+          annotations = [
+	        {
+	          key = "key_1"
+	          value = "value_2"
+	        },
+          ]
+          tags = [
+	        {
+	          key = "key_1"
+	          value = "value_2"
+	        },
+          ]
+	      tn_pki_key_ring_name = "tn_pki_key_ring_name_1"
+	    },
+      ]
+      tags = [
+	    {
+	      key = "key_1"
+	      value = "value_2"
+	    },
+      ]
+      tp = [
+      ]
+	  cli_only_mode = "disabled"
+	  client_cert_auth_state = "disabled"
+	  description = "description_1"
+	  dh_param = "1024"
+	  global_throttle_rate = "global_throttle_rate_1"
+	  global_throttle_st = "disabled"
+	  global_throttle_unit = "global_throttle_unit_1"
+	  max_request_status_count = "max_request_status_count_1"
+	  name = "name_1"
+	  name_alias = "name_alias_1"
+	  node_exporter = "disabled"
+	  port = "port_1"
+	  referer = "referer_1"
+	  server_header = "disabled"
+	  ssl_protocols = "TLSv1"
+	  throttle_rate = "throttle_rate_1"
+	  throttle_st = "disabled"
+	  visore_access = "disabled"
+      },
   ]
   tags = [
-      
       {
-        key = "key_1"
-        value = "value_2"
+	  key = "key_1"
+	  value = "value_2"
       },
   ]
 }
@@ -443,8 +499,51 @@ resource "aci_communication_policy" "test" {
 const testConfigCommPolChildrenRemoveAll = `
 resource "aci_communication_policy" "test" {
   name = "test_name"
-  annotations = []
-  http_ssl_configuration = []
-  tags = []
+  annotations = [
+  ]
+  http_ssl_configuration = [
+      {
+	  access_control_allow_credential = "disabled"
+	  access_control_allow_origins = "access_control_allow_origins_1"
+	  admin_st = "disabled"
+	  annotation = "annotation_1"
+      annotations = [
+      ]
+      key_ring = [
+	    {
+	      annotation = "annotation_1"
+          annotations = [
+          ]
+          tags = [
+          ]
+	      tn_pki_key_ring_name = "tn_pki_key_ring_name_1"
+	    },
+      ]
+      tags = [
+      ]
+      tp = [
+      ]
+	  cli_only_mode = "disabled"
+	  client_cert_auth_state = "disabled"
+	  description = "description_1"
+	  dh_param = "1024"
+	  global_throttle_rate = "global_throttle_rate_1"
+	  global_throttle_st = "disabled"
+	  global_throttle_unit = "global_throttle_unit_1"
+	  max_request_status_count = "max_request_status_count_1"
+	  name = "name_1"
+	  name_alias = "name_alias_1"
+	  node_exporter = "disabled"
+	  port = "port_1"
+	  referer = "referer_1"
+	  server_header = "disabled"
+	  ssl_protocols = "TLSv1"
+	  throttle_rate = "throttle_rate_1"
+	  throttle_st = "disabled"
+	  visore_access = "disabled"
+      },
+  ]
+  tags = [
+  ]
 }
 `

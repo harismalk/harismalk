@@ -142,9 +142,11 @@ func TestAccResourcePimRouteMapPolWithFvTenant(t *testing.T) {
 				Config:             testConfigPimRouteMapPolChildrenRemoveOneDependencyWithFvTenant,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_pim_route_map_policy.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_policy.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_policy.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_policy.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_pim_route_map_policy.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_policy.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_policy.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_policy.test", "tags.#", "1"),
@@ -231,17 +233,17 @@ const testConfigPimRouteMapPolChildrenRemoveOneDependencyWithFvTenant = testConf
 resource "aci_pim_route_map_policy" "test" {
   parent_dn = aci_tenant.test.id
   name = "test_name"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -250,7 +252,9 @@ const testConfigPimRouteMapPolChildrenRemoveAllDependencyWithFvTenant = testConf
 resource "aci_pim_route_map_policy" "test" {
   parent_dn = aci_tenant.test.id
   name = "test_name"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

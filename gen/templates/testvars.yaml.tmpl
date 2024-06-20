@@ -113,9 +113,20 @@ targets:
   {{- $enteredPropertiesZone1 := false }}
     {{ $indent }}- {{ range .Properties}}{{- if $enteredPropertiesZone1 }}{{ $indent }}{{- else}}{{- $enteredPropertiesZone1 = true }}{{- end}}{{overwriteProperty .PkgName .SnakeCaseName $.Definitions}}: {{$length := len .ValidValues}}{{if ne $length 0}}"{{ index .ValidValues 0 }}"{{else if not .IsNaming}}"{{overwriteProperty .PkgName .SnakeCaseName $.Definitions}}_1"{{- else}}"{{lookupChildTestValue .PkgName $.ResourceName .SnakeCaseName $.TestVars 0 $.Definitions}}"{{- end}}
       {{ end}}
+      {{- if $child_deletable -}}
+    {{ $indent }}deletable_child: true
+      {{- else -}}
+    {{ $indent }}deletable_child: false
+      {{ end}}
   {{- $enteredPropertiesZone2 := false }}
     {{ $indent }}- {{ range .Properties}}{{- if $enteredPropertiesZone2 }}{{ $indent }}{{- else}}{{- $enteredPropertiesZone2 = true }}{{- end}}{{overwriteProperty .PkgName .SnakeCaseName $.Definitions}}: {{$length := len .ValidValues}}{{if ge $length 2}}"{{ index .ValidValues 1 }}"{{else if not .IsNaming}}"{{overwriteProperty .PkgName .SnakeCaseName $.Definitions}}_2"{{- else}}"{{lookupChildTestValue .PkgName $.ResourceName .SnakeCaseName $.TestVars 1 $.Definitions}}"{{- end}}
-      {{ end}}{{- end}}
+      {{ end}}
+      {{- if $child_deletable -}}
+    {{ $indent }}deletable_child: true
+      {{- else -}}
+    {{ $indent }}deletable_child: false
+      {{ end}}
+      {{- end}}
    {{- $enteredGrandChildZone := false }}
    {{- range .Children}}
       {{- if not $enteredGrandChildZone }}

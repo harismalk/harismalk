@@ -124,9 +124,11 @@ func TestAccResourceMgmtRsOoBConsWithMgmtInstP(t *testing.T) {
 				Config:             testConfigMgmtRsOoBConsChildrenRemoveOneDependencyWithMgmtInstP,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_relation_to_consumed_out_of_band_contract.test", "tags.#", "1"),
@@ -207,17 +209,17 @@ const testConfigMgmtRsOoBConsChildrenRemoveOneDependencyWithMgmtInstP = testConf
 resource "aci_relation_to_consumed_out_of_band_contract" "test" {
   parent_dn = aci_external_management_network_instance_profile.test.id
   out_of_band_contract_name = "test_tn_vz_oob_br_cp_name"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -226,7 +228,9 @@ const testConfigMgmtRsOoBConsChildrenRemoveAllDependencyWithMgmtInstP = testConf
 resource "aci_relation_to_consumed_out_of_band_contract" "test" {
   parent_dn = aci_external_management_network_instance_profile.test.id
   out_of_band_contract_name = "test_tn_vz_oob_br_cp_name"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

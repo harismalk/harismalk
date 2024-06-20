@@ -136,9 +136,11 @@ func TestAccResourceMgmtSubnetWithMgmtInstP(t *testing.T) {
 				Config:             testConfigMgmtSubnetChildrenRemoveOneDependencyWithMgmtInstP,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_external_management_network_subnet.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_external_management_network_subnet.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_external_management_network_subnet.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_external_management_network_subnet.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_external_management_network_subnet.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_external_management_network_subnet.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_external_management_network_subnet.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_external_management_network_subnet.test", "tags.#", "1"),
@@ -223,17 +225,17 @@ const testConfigMgmtSubnetChildrenRemoveOneDependencyWithMgmtInstP = testConfigM
 resource "aci_external_management_network_subnet" "test" {
   parent_dn = aci_external_management_network_instance_profile.test.id
   ip = "1.1.1.0/24"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -242,7 +244,9 @@ const testConfigMgmtSubnetChildrenRemoveAllDependencyWithMgmtInstP = testConfigM
 resource "aci_external_management_network_subnet" "test" {
   parent_dn = aci_external_management_network_instance_profile.test.id
   ip = "1.1.1.0/24"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

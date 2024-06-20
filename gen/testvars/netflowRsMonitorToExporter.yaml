@@ -21,17 +21,17 @@ children:
   annotations:
     - key: "key_0"
       value: "value_1"
-      
+      deletable_child: true
     - key: "key_1"
       value: "value_2"
-      
+      deletable_child: true
   tags:
     - key: "key_0"
       value: "value_1"
-      
+      deletable_child: true
     - key: "key_1"
       value: "value_2"
-      
+      deletable_child: true
 parents:
   - class_name: "netflowMonitorPol"
     parent_dependency: "fvTenant"

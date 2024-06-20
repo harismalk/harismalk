@@ -143,9 +143,11 @@ func TestAccResourceFvEpMacTagWithFvTenant(t *testing.T) {
 				Config:             testConfigFvEpMacTagChildrenRemoveOneDependencyWithFvTenant,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_endpoint_tag_mac.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_endpoint_tag_mac.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_endpoint_tag_mac.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_endpoint_tag_mac.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_endpoint_tag_mac.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_endpoint_tag_mac.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_endpoint_tag_mac.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_endpoint_tag_mac.test", "tags.#", "1"),
@@ -236,17 +238,17 @@ resource "aci_endpoint_tag_mac" "test" {
   parent_dn = aci_tenant.test.id
   bd_name = "test_bd_name"
   mac = "00:00:00:00:00:01"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -256,7 +258,9 @@ resource "aci_endpoint_tag_mac" "test" {
   parent_dn = aci_tenant.test.id
   bd_name = "test_bd_name"
   mac = "00:00:00:00:00:01"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

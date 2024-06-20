@@ -136,9 +136,11 @@ func TestAccResourceFvFBRMemberWithFvFBRGroup(t *testing.T) {
 				Config:             testConfigFvFBRMemberChildrenRemoveOneDependencyWithFvFBRGroup,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group_member.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group_member.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group_member.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group_member.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group_member.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group_member.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group_member.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group_member.test", "tags.#", "1"),
@@ -223,17 +225,17 @@ const testConfigFvFBRMemberChildrenRemoveOneDependencyWithFvFBRGroup = testConfi
 resource "aci_vrf_fallback_route_group_member" "test" {
   parent_dn = aci_vrf_fallback_route_group.test.id
   fallback_member = "2.2.2.3"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -242,7 +244,9 @@ const testConfigFvFBRMemberChildrenRemoveAllDependencyWithFvFBRGroup = testConfi
 resource "aci_vrf_fallback_route_group_member" "test" {
   parent_dn = aci_vrf_fallback_route_group.test.id
   fallback_member = "2.2.2.3"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

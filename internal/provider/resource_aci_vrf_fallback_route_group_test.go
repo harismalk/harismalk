@@ -92,7 +92,7 @@ func TestAccResourceFvFBRGroupWithFvCtx(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.name", "name_1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.name_alias", "name_alias_1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.annotation", "annotation_2"),
-					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
+					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.description", "description_2"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.fallback_member", "2.2.2.3"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.name", "name_2"),
@@ -123,7 +123,7 @@ func TestAccResourceFvFBRGroupWithFvCtx(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.name", "name_1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.name_alias", "name_alias_1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.annotation", "annotation_2"),
-					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
+					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.description", "description_2"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.fallback_member", "2.2.2.3"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.name", "name_2"),
@@ -151,7 +151,7 @@ func TestAccResourceFvFBRGroupWithFvCtx(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.name", "name_1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.name_alias", "name_alias_1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.annotation", "annotation_2"),
-					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
+					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.description", "description_2"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.fallback_member", "2.2.2.3"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.1.name", "name_2"),
@@ -164,14 +164,17 @@ func TestAccResourceFvFBRGroupWithFvCtx(t *testing.T) {
 				Config:             testConfigFvFBRGroupChildrenRemoveOneDependencyWithFvCtx,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "tags.#", "1"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.annotation", "annotation_2"),
-					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
+					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]]"),
+					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.description", "description_2"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.fallback_member", "2.2.2.3"),
 					resource.TestCheckResourceAttr("aci_vrf_fallback_route_group.test", "vrf_fallback_route_group_members.0.name", "name_2"),
@@ -253,7 +256,26 @@ resource "aci_vrf_fallback_route_group" "test" {
 	},
 	{
 	  annotation = "annotation_2"
-	  children = "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"
+      annotations = [
+	    {
+	      key = "key_0"
+	      value = "value_1"
+	    },
+	    {
+	      key = "key_1"
+	      value = "value_2"
+	    },
+      ]
+      tags = [
+	    {
+	      key = "key_0"
+	      value = "value_1"
+	    },
+	    {
+	      key = "key_1"
+	      value = "value_2"
+	    },
+      ]
 	  description = "description_2"
 	  fallback_member = "2.2.2.3"
 	  name = "name_2"
@@ -274,27 +296,38 @@ const testConfigFvFBRGroupChildrenRemoveOneDependencyWithFvCtx = testConfigFvCtx
 resource "aci_vrf_fallback_route_group" "test" {
   parent_dn = aci_vrf.test.id
   name = "fallback_route_group"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  vrf_fallback_route_group_members = [ 
-	{
+  vrf_fallback_route_group_members = [
+      {
 	  annotation = "annotation_2"
-	  children = "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"
+      annotations = [
+	    {
+	      key = "key_1"
+	      value = "value_2"
+	    },
+      ]
+      tags = [
+	    {
+	      key = "key_1"
+	      value = "value_2"
+	    },
+      ]
 	  description = "description_2"
 	  fallback_member = "2.2.2.3"
 	  name = "name_2"
 	  name_alias = "name_alias_2"
-	},
+      },
   ]
 }
 `
@@ -303,8 +336,11 @@ const testConfigFvFBRGroupChildrenRemoveAllDependencyWithFvCtx = testConfigFvCtx
 resource "aci_vrf_fallback_route_group" "test" {
   parent_dn = aci_vrf.test.id
   name = "fallback_route_group"
-  annotations = []
-  tags = []
-  vrf_fallback_route_group_members = []
+  annotations = [
+  ]
+  tags = [
+  ]
+  vrf_fallback_route_group_members = [
+  ]
 }
 `

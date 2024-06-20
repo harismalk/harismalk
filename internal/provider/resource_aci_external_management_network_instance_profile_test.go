@@ -90,7 +90,7 @@ func TestAccResourceMgmtInstP(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.0.out_of_band_contract_name", "out_of_band_contract_name_0"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.0.priority", "level1"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.1.annotation", "annotation_2"),
-					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.1.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
+					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.1.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.1.out_of_band_contract_name", "out_of_band_contract_name_1"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.1.priority", "level2"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.#", "2"),
@@ -118,7 +118,7 @@ func TestAccResourceMgmtInstP(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.0.out_of_band_contract_name", "out_of_band_contract_name_0"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.0.priority", "level1"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.1.annotation", "annotation_2"),
-					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.1.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
+					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.1.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]]"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.1.out_of_band_contract_name", "out_of_band_contract_name_1"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.1.priority", "level2"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.#", "2"),
@@ -137,14 +137,17 @@ func TestAccResourceMgmtInstP(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "description", ""),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "name_alias", ""),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "priority", "unspecified"),
+					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "annotations.#", "1"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.0.annotation", "annotation_2"),
-					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.0.children", "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"),
+					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.0.children", "map[annotations:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]] tags:[map[deletable_child:true key:key_0 value:value_1] map[deletable_child:true key:key_1 value:value_2]]]"),
+					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.0.out_of_band_contract_name", "out_of_band_contract_name_1"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.0.priority", "level2"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "relation_to_consumed_out_of_band_contracts.#", "1"),
+					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_external_management_network_instance_profile.test", "tags.#", "1"),
@@ -260,26 +263,34 @@ const testConfigMgmtInstPChildrenRemoveOne = `
 resource "aci_external_management_network_instance_profile" "test" {
   name = "test_name"
   annotations = [
-      
       {
-        key = "key_1"
-        value = "value_2"
+	  key = "key_1"
+	  value = "value_2"
       },
   ]
   relation_to_consumed_out_of_band_contracts = [
-      
       {
-        annotation = "annotation_2"
-        children = "map[annotations:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]] tags:[map[key:key_0 value:value_1] map[key:key_1 value:value_2]]]"
-        out_of_band_contract_name = "out_of_band_contract_name_1"
-        priority = "level2"
+	  annotation = "annotation_2"
+      annotations = [
+	    {
+	      key = "key_1"
+	      value = "value_2"
+	    },
+      ]
+      tags = [
+	    {
+	      key = "key_1"
+	      value = "value_2"
+	    },
+      ]
+	  out_of_band_contract_name = "out_of_band_contract_name_1"
+	  priority = "level2"
       },
   ]
   tags = [
-      
       {
-        key = "key_1"
-        value = "value_2"
+	  key = "key_1"
+	  value = "value_2"
       },
   ]
 }
@@ -288,8 +299,11 @@ resource "aci_external_management_network_instance_profile" "test" {
 const testConfigMgmtInstPChildrenRemoveAll = `
 resource "aci_external_management_network_instance_profile" "test" {
   name = "test_name"
-  annotations = []
-  relation_to_consumed_out_of_band_contracts = []
-  tags = []
+  annotations = [
+  ]
+  relation_to_consumed_out_of_band_contracts = [
+  ]
+  tags = [
+  ]
 }
 `

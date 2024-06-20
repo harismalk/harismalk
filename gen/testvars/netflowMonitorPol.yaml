@@ -29,25 +29,25 @@ children:
   relation_to_netflow_exporters:
     - annotation: "annotation_1"
       netflow_exporter_policy_name: "netflow_exporter_policy_name_0"
-      
+      deletable_child: true
     - annotation: "annotation_2"
       netflow_exporter_policy_name: "netflow_exporter_policy_name_1"
-      
+      deletable_child: true
       children:
         annotations:
           - key: "key_0"
             value: "value_1"
-      
+            deletable_child: true
           - key: "key_1"
             value: "value_2"
-      
+            deletable_child: true
         tags:
           - key: "key_0"
             value: "value_1"
-      
+            deletable_child: true
           - key: "key_1"
             value: "value_2"
-      
+            deletable_child: true
   relation_to_netflow_record:
     - annotation: "annotation_1"
       netflow_record_policy_name: "netflow_record_policy_name_1"
@@ -57,31 +57,31 @@ children:
         annotations:
           - key: "key_0"
             value: "value_1"
-      
+            deletable_child: true
           - key: "key_1"
             value: "value_2"
-      
+            deletable_child: true
         tags:
           - key: "key_0"
             value: "value_1"
-      
+            deletable_child: true
           - key: "key_1"
             value: "value_2"
-      
+            deletable_child: true
   annotations:
     - key: "key_0"
       value: "value_1"
-      
+      deletable_child: true
     - key: "key_1"
       value: "value_2"
-      
+      deletable_child: true
   tags:
     - key: "key_0"
       value: "value_1"
-      
+      deletable_child: true
     - key: "key_1"
       value: "value_2"
-      
+      deletable_child: true
 parents:
   - class_name: "fvTenant"
     parent_dependency: ""

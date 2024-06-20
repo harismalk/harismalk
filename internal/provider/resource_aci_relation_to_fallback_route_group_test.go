@@ -118,9 +118,11 @@ func TestAccResourceL3extRsOutToFBRGroupWithL3extOut(t *testing.T) {
 				Config:             testConfigL3extRsOutToFBRGroupChildrenRemoveOneDependencyWithL3extOut,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_relation_to_fallback_route_group.test", "tags.#", "1"),
@@ -206,17 +208,17 @@ const testConfigL3extRsOutToFBRGroupChildrenRemoveOneDependencyWithL3extOut = te
 resource "aci_relation_to_fallback_route_group" "test" {
   parent_dn = aci_l3_outside.test.id
   target_dn = aci_vrf_fallback_route_group.test.id
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -225,7 +227,9 @@ const testConfigL3extRsOutToFBRGroupChildrenRemoveAllDependencyWithL3extOut = te
 resource "aci_relation_to_fallback_route_group" "test" {
   parent_dn = aci_l3_outside.test.id
   target_dn = aci_vrf_fallback_route_group.test.id
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

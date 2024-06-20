@@ -160,9 +160,11 @@ func TestAccResourcePimRouteMapEntryWithPimRouteMapPol(t *testing.T) {
 				Config:             testConfigPimRouteMapEntryChildrenRemoveOneDependencyWithPimRouteMapPol,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_pim_route_map_entry.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_entry.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_entry.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_entry.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_pim_route_map_entry.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_entry.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_entry.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_pim_route_map_entry.test", "tags.#", "1"),
@@ -255,17 +257,17 @@ const testConfigPimRouteMapEntryChildrenRemoveOneDependencyWithPimRouteMapPol = 
 resource "aci_pim_route_map_entry" "test" {
   parent_dn = aci_pim_route_map_policy.test.id
   order = "1"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -274,7 +276,9 @@ const testConfigPimRouteMapEntryChildrenRemoveAllDependencyWithPimRouteMapPol = 
 resource "aci_pim_route_map_entry" "test" {
   parent_dn = aci_pim_route_map_policy.test.id
   order = "1"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

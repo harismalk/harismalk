@@ -125,9 +125,11 @@ func TestAccResourceL3extRsRedistributePolWithL3extOut(t *testing.T) {
 				Config:             testConfigL3extRsRedistributePolChildrenRemoveOneDependencyWithL3extOut,
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_l3out_redistribute_policy.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_l3out_redistribute_policy.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_l3out_redistribute_policy.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_l3out_redistribute_policy.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_l3out_redistribute_policy.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_l3out_redistribute_policy.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_l3out_redistribute_policy.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_l3out_redistribute_policy.test", "tags.#", "1"),
@@ -212,17 +214,17 @@ resource "aci_l3out_redistribute_policy" "test" {
   parent_dn = aci_l3_outside.test.id
   route_control_profile_name = "test_tn_rtctrl_profile_name"
   source = "direct"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -232,7 +234,9 @@ resource "aci_l3out_redistribute_policy" "test" {
   parent_dn = aci_l3_outside.test.id
   route_control_profile_name = "test_tn_rtctrl_profile_name"
   source = "direct"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

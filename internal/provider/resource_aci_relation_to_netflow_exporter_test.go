@@ -118,9 +118,11 @@ func TestAccResourceNetflowRsMonitorToExporterWithNetflowMonitorPol(t *testing.T
 				Config:             testConfigNetflowRsMonitorToExporterChildrenRemoveOneDependencyWithNetflowMonitorPol,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("aci_relation_to_netflow_exporter.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_relation_to_netflow_exporter.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_netflow_exporter.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_relation_to_netflow_exporter.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_relation_to_netflow_exporter.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_relation_to_netflow_exporter.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_netflow_exporter.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_relation_to_netflow_exporter.test", "tags.#", "1"),
@@ -199,17 +201,17 @@ const testConfigNetflowRsMonitorToExporterChildrenRemoveOneDependencyWithNetflow
 resource "aci_relation_to_netflow_exporter" "test" {
   parent_dn = aci_netflow_monitor_policy.test.id
   netflow_exporter_policy_name = "test_tn_netflow_exporter_pol_name"
-  annotations = [ 
-	{
+  annotations = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
-  tags = [ 
-	{
+  tags = [
+      {
 	  key = "key_1"
 	  value = "value_2"
-	},
+      },
   ]
 }
 `
@@ -218,7 +220,9 @@ const testConfigNetflowRsMonitorToExporterChildrenRemoveAllDependencyWithNetflow
 resource "aci_relation_to_netflow_exporter" "test" {
   parent_dn = aci_netflow_monitor_policy.test.id
   netflow_exporter_policy_name = "test_tn_netflow_exporter_pol_name"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `

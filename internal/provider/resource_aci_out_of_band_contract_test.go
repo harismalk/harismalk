@@ -161,9 +161,11 @@ func TestAccResourceVzOOBBrCP(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "priority", "unspecified"),
 					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "scope", "context"),
 					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "target_dscp", "unspecified"),
+					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "annotations.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "annotations.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "annotations.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "tags.0.deletable_child", "true"),
 					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "tags.0.key", "key_1"),
 					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "tags.0.value", "value_2"),
 					resource.TestCheckResourceAttr("aci_out_of_band_contract.test", "tags.#", "1"),
@@ -261,17 +263,15 @@ const testConfigVzOOBBrCPChildrenRemoveOne = `
 resource "aci_out_of_band_contract" "test" {
   name = "test_name"
   annotations = [
-      
       {
-        key = "key_1"
-        value = "value_2"
+	  key = "key_1"
+	  value = "value_2"
       },
   ]
   tags = [
-      
       {
-        key = "key_1"
-        value = "value_2"
+	  key = "key_1"
+	  value = "value_2"
       },
   ]
 }
@@ -280,7 +280,9 @@ resource "aci_out_of_band_contract" "test" {
 const testConfigVzOOBBrCPChildrenRemoveAll = `
 resource "aci_out_of_band_contract" "test" {
   name = "test_name"
-  annotations = []
-  tags = []
+  annotations = [
+  ]
+  tags = [
+  ]
 }
 `
