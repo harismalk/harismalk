@@ -387,3 +387,6 @@ vzBrCP:
 
 vzTaboo:
   resource_name: "taboo_contract"
+
+infraHPathS:
+  resource_name: "host_path_selector"
