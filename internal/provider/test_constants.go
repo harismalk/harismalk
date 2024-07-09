@@ -20,6 +20,13 @@ resource "aci_l3_outside" "test" {
 }
 `
 
+const testConfigFvApMinDependencyWithFvTenant = testConfigFvTenantMin + `
+resource "aci_application_profile" "test" {
+  tenant_dn = aci_tenant.test.id
+  name      = "test_ap"
+}
+`
+
 const testConfigFvAEPgMinDependencyWithFvAp = testConfigFvApMinDependencyWithFvTenant + `
 resource "aci_application_epg" "test" {
   application_profile_dn = aci_application_profile.test.id
@@ -38,8 +45,6 @@ resource "aci_application_epg" "test" {
   name                   = "test_epg"
 }
 `
-
-const testConfigFvApMinDependencyWithFvTenant = testConfigFvAEPgMin
 
 const testConfigL3extOutMinDependencyWithFvTenant = testConfigFvTenantMin + `
 resource "aci_vrf" "test" {
