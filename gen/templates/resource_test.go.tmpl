@@ -407,7 +407,10 @@ func TestAccResource{{.resourceClassName}}(t *testing.T) {
 		{{- range $key, $value := $.children}}
 			{{- range $child_index, $child := $value}}
 				{{- range $child_key, $child_value := $child}}
-					{{- if ne $child_key "deletable_child"}}
+					{{- if eq $child_key "children"}}
+						{{- $newCtx := addToChild $child_value "ResourceName" (print "aci_" $.resourceName ".test") "InheritedKey" (print $key "." $child_index) -}}
+						{{- template "testNestedChildren" $newCtx }}
+					{{- else if ne $child_key "deletable_child"}}
 					resource.TestCheckResourceAttr("aci_{{$.resourceName}}.test", "{{$key}}.{{$child_index}}.{{$child_key}}", "{{$child_value}}"),
 					{{- end}}
 				{{- end}}
@@ -827,7 +830,7 @@ resource "aci_{{$.resourceName}}" "test" {
 {{- end}}
 
 
-{{/* A sub template for including nested children. */}}
+{{/* A sub template for including nested children in the test config. */}}
 {{- define "nestedChildren" -}}
   {{- $indent := .TemplateProperties.Indent -}}
   {{- range $key, $value := .childValue}}
@@ -848,7 +851,7 @@ resource "aci_{{$.resourceName}}" "test" {
 {{- end}}
 {{- end}}
 
-{{/* A sub template for including nested children by removing only one child that is deletable. */}}
+{{/* A sub template for including nested children by removing only one child that is deletable in the test config. */}}
 {{- define "nestedChildrenRemoveOne" -}}
   {{- $indent := .TemplateProperties.Indent -}}
   {{- range $key, $value := .childValue}}
@@ -871,7 +874,7 @@ resource "aci_{{$.resourceName}}" "test" {
 {{- end}}
 {{- end}}
 
-{{/* A sub template for including nested children by removing all deletable children. */}}
+{{/* A sub template for including nested children by removing all deletable children in the test config. */}}
 {{- define "nestedChildrenRemoveAll" -}}
   {{- $indent := .TemplateProperties.Indent -}}
   {{- range $key, $value := .childValue}}
@@ -892,4 +895,22 @@ resource "aci_{{$.resourceName}}" "test" {
 				{{- end}}
   {{$indent}}]
 {{- end}}
+{{- end}}
+
+{{/* A sub template for testing nested children resource attributes */}}
+{{- define "testNestedChildren" -}}
+  {{- $inheritedKey := .TemplateProperties.InheritedKey -}}
+  {{- $resourceName := .TemplateProperties.ResourceName -}}
+  {{- range $key, $value := .childValue}}
+  	{{- range $child_index, $child := $value}}
+		{{- range $child_key, $child_value := $child}}
+			{{- if eq $child_key "children"}}
+				{{- $newCtx := addToChild $child_value "ResourceName" $resourceName "InheritedKey" (print $inheritedKey "." $key "." $child_index) -}}
+				{{- template "testNestedChildren" $newCtx }}
+			{{- else if ne $child_key "deletable_child"}}
+			resource.TestCheckResourceAttr("{{$resourceName}}", "{{$inheritedKey}}.{{$key}}.{{$child_index}}.{{$child_key}}", "{{$child_value}}"),
+			{{- end}}
+		{{- end}}
+	{{- end}}
+  {{- end}}
 {{- end}}
