@@ -22,10 +22,10 @@ func TestAccResourceTagAnnotationWithFvTenant(t *testing.T) {
 				Config:             testConfigTagAnnotationMinDependencyWithFvTenantAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_annotation.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_annotation.test_2", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_annotation.test", "value", "test_value"),
-					resource.TestCheckResourceAttr("aci_annotation.test_2", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test_2", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test_2", "value", "test_value"),
 				),
 			},
 		},
@@ -54,10 +54,10 @@ func TestAccResourceTagAnnotationWithFvTenant(t *testing.T) {
 				Config:             testConfigTagAnnotationMinDependencyWithFvTenantAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_annotation.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_annotation.test_2", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_annotation.test", "value", "test_value"),
-					resource.TestCheckResourceAttr("aci_annotation.test_2", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test_2", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test_2", "value", "test_value"),
 				),
 			},
 		},
@@ -82,7 +82,7 @@ func TestAccResourceTagAnnotationWithFvTenant(t *testing.T) {
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("aci_annotation.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_annotation.test", "value", "value"),
+					resource.TestCheckResourceAttr("aci_annotation.test", "value", "value_1"),
 				),
 			},
 			// Update with minimum config and verify config is unchanged
@@ -127,10 +127,10 @@ func TestAccResourceTagAnnotationWithFvAEPg(t *testing.T) {
 				Config:             testConfigTagAnnotationMinDependencyWithFvAEPgAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_annotation.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_annotation.test_2", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_annotation.test", "value", "test_value"),
-					resource.TestCheckResourceAttr("aci_annotation.test_2", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test_2", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test_2", "value", "test_value"),
 				),
 			},
 		},
@@ -159,10 +159,10 @@ func TestAccResourceTagAnnotationWithFvAEPg(t *testing.T) {
 				Config:             testConfigTagAnnotationMinDependencyWithFvAEPgAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_annotation.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_annotation.test_2", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_annotation.test", "value", "test_value"),
-					resource.TestCheckResourceAttr("aci_annotation.test_2", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test_2", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_annotation.allow_test_2", "value", "test_value"),
 				),
 			},
 		},
@@ -187,7 +187,7 @@ func TestAccResourceTagAnnotationWithFvAEPg(t *testing.T) {
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("aci_annotation.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_annotation.test", "value", "value"),
+					resource.TestCheckResourceAttr("aci_annotation.test", "value", "value_1"),
 				),
 			},
 			// Update with minimum config and verify config is unchanged
@@ -223,16 +223,16 @@ func TestAccResourceTagAnnotationWithFvAEPg(t *testing.T) {
 }
 
 const testConfigTagAnnotationMinDependencyWithFvTenantAllowExisting = testConfigFvTenantMin + `
-resource "aci_annotation" "test" {
+resource "aci_annotation" "allow_test" {
   parent_dn = aci_tenant.test.id
   key = "test_key"
   value = "test_value"
 }
-resource "aci_annotation" "test_2" {
+resource "aci_annotation" "allow_test_2" {
   parent_dn = aci_tenant.test.id
   key = "test_key"
   value = "test_value"
-  depends_on = [aci_annotation.test]
+  depends_on = [aci_annotation.allow_test]
 }
 `
 
@@ -248,7 +248,7 @@ const testConfigTagAnnotationAllDependencyWithFvTenant = testConfigFvTenantMin +
 resource "aci_annotation" "test" {
   parent_dn = aci_tenant.test.id
   key = "test_key"
-  value = "value"
+  value = "value_1"
 }
 `
 
@@ -261,16 +261,16 @@ resource "aci_annotation" "test" {
 `
 
 const testConfigTagAnnotationMinDependencyWithFvAEPgAllowExisting = testConfigFvAEPgMin + `
-resource "aci_annotation" "test" {
+resource "aci_annotation" "allow_test" {
   parent_dn = aci_application_epg.test.id
   key = "test_key"
   value = "test_value"
 }
-resource "aci_annotation" "test_2" {
+resource "aci_annotation" "allow_test_2" {
   parent_dn = aci_application_epg.test.id
   key = "test_key"
   value = "test_value"
-  depends_on = [aci_annotation.test]
+  depends_on = [aci_annotation.allow_test]
 }
 `
 
@@ -286,7 +286,7 @@ const testConfigTagAnnotationAllDependencyWithFvAEPg = testConfigFvAEPgMin + `
 resource "aci_annotation" "test" {
   parent_dn = aci_application_epg.test.id
   key = "test_key"
-  value = "value"
+  value = "value_1"
 }
 `
 

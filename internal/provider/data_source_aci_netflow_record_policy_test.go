@@ -52,6 +52,5 @@ const testConfigNetflowRecordPolNotExistingFvTenant = testConfigNetflowRecordPol
 data "aci_netflow_record_policy" "test_non_existing" {
   parent_dn = aci_tenant.test.id
   name = "netfow_record_non_existing"
-  depends_on = [aci_netflow_record_policy.test]
 }
 `

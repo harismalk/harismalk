@@ -66,7 +66,6 @@ const testConfigTagAnnotationNotExistingFvTenant = testConfigTagAnnotationMinDep
 data "aci_annotation" "test_non_existing" {
   parent_dn = aci_tenant.test.id
   key = "non_existing_key"
-  depends_on = [aci_annotation.test]
 }
 `
 const testConfigTagAnnotationDataSourceDependencyWithFvAEPg = testConfigTagAnnotationMinDependencyWithFvAEPg + `
@@ -81,6 +80,5 @@ const testConfigTagAnnotationNotExistingFvAEPg = testConfigTagAnnotationMinDepen
 data "aci_annotation" "test_non_existing" {
   parent_dn = aci_application_epg.test.id
   key = "non_existing_key"
-  depends_on = [aci_annotation.test]
 }
 `

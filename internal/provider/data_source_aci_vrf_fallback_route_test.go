@@ -48,6 +48,5 @@ const testConfigFvFBRouteNotExistingFvFBRGroup = testConfigFvFBRouteMinDependenc
 data "aci_vrf_fallback_route" "test_non_existing" {
   parent_dn = aci_vrf_fallback_route_group.test.id
   prefix_address = "2.2.2.4/24"
-  depends_on = [aci_vrf_fallback_route.test]
 }
 `

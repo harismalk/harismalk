@@ -23,10 +23,22 @@ global:
     prio: "priority"
     match_t: "match_criteria"
     descr: "description"
-
+    encap: "encapsulation"
+    encap_mode: "encapsulation_mode"
+    primary_encap: "primary_encapsulation"
+    primary_encap_inner: "primary_encapsulation_inner"
+    secondary_encap_inner: "secondary_encapsulation_inner"
+    instr_imedcy: "deployment_immediacy"
+    res_imedcy: "resolution_immediacy"
+    netflow_dir: "netflow_direction"
+    netflow_pref: "enable_netflow"
+    num_ports: "number_of_ports"
+    class_pref: "class_preference"
   resource_name_doc_overwrite:
     Vrf: VRF
     Sid: "SR-MPLS Segment ID"
+    Epg: "EPG"
+    Esg: "ESG"
   ignores:
     - "userdom"
 
@@ -359,6 +371,8 @@ fvESg:
   parents:
     - class_name: "fvAp"
       parent_dependency: "fvTenant"
+  exclude_targets:
+    - "fvAEPg"
   ignores:
     - "floodOnEncap"
     - "prio"
@@ -454,3 +468,196 @@ fvRsSecInherited:
       relation_resource_name: "contract_master"
       properties:
         name: "epg_3"
+
+fvAEPg:
+  read_only_properties:
+    - "pcTag"
+  remove_valid_values:
+    pcTag:
+      - "any"
+  default_values:
+    shutdown: "no"
+    hasMcastSource: "no"
+    isAttrBasedEPg: "no"
+  type_overwrites:
+    fwdCtrl: "string"
+  overwrites:
+    pref_gr_memb: "preferred_group_member"
+    pc_enf_pref: "intra_epg_isolation"
+    shutdown: "admin_state"
+    fwd_ctrl: "forwarding_control"
+    has_mcast_source: "has_multicast_source"
+    is_attr_based_e_pg: "useg_epg"
+  test_values:
+    default:
+      forwarding_control: "none"
+    all:
+      forwarding_control: "proxy-arp"
+  exclude_targets:
+    - "fvESg"
+  parents:
+    - class_name: "fvAp"
+      parent_dependency: "fvTenant"
+
+fvRsAEPgMonPol:
+  documentation:
+    tnMonEPGPolName: "The name of the monitoring policy."
+
+fvRsFcPathAtt:
+  default_values:
+    vsan: "unknown"
+  test_values:
+    default:
+      vsan: "unknown"
+    all:
+      vsan: "vsan-10"
+    datasource_non_existing:
+      target_dn: "topology/pod-2/paths-201/pathep-[eth1/1]"
+  parents:
+    - class_name: "fvAEPg"
+      parent_dependency: "fvAp"
+      parent_dn: "aci_application_epg.test.id"
+      target_classes:
+        - "fabricPathEp"
+  targets:
+    - class_name: "fabricPathEp"
+      target_dn: "topology/pod-1/paths-101/pathep-[eth1/1]"
+      relation_resource_name: "fibre_channel_path"
+      static: true
+    - class_name: "fabricPathEp"
+      target_dn: "topology/pod-1/paths-101/pathep-[eth1/2]"
+      relation_resource_name: "fibre_channel_path"
+      static: true
+
+fvRsNodeAtt:
+  resource_required:
+    - "encapsulation"
+  datasource_required:
+    - "encapsulation"
+  test_values:
+    default:
+      encapsulation: "vlan-101"
+    all:
+      encapsulation: "vlan-100"
+    resource_required:
+      encapsulation: "vlan-101"
+    datasource_required:
+      encapsulation: "vlan-101"
+    datasource_non_existing:
+      target_dn: "topology/pod-2/paths-201/pathep-[eth1/1]"
+  parents:
+    - class_name: "fvAEPg"
+      parent_dependency: "fvAp"
+      parent_dn: "aci_application_epg.test.id"
+      target_classes:
+        - "fabricNode"
+  targets:
+    - class_name: "fabricNode"
+      target_dn: "topology/pod-1/node-101"
+      relation_resource_name: "static_leaf"
+      static: true
+    - class_name: "fabricNode"
+      target_dn: "topology/pod-1/node-102"
+      relation_resource_name: "static_leaf"
+      static: true
+
+fvRsDomAtt:
+  default_values:
+    untagged: "no"
+    vnetOnly: "no"
+    ipamEnabled: "no"
+  ignores:
+    - "apiMode"
+  ignore_properties_in_test:
+    "ipamDhcpOverride": "10.0.0.2"
+    "ipamEnabled": "yes"
+    "ipamGateway": "10.0.0.1"
+  test_values:
+    default:
+      encapsulation: "unknown"
+      primary_encapsulation: "unknown"
+      primary_encapsulation_inner: "unknown"
+      secondary_encapsulation_inner: "unknown"
+      number_of_ports: "0"
+      delimiter: ""
+    all:
+      encapsulation: "vlan-100"
+      primary_encapsulation: "vlan-200"
+      primary_encapsulation_inner: "vlan-300"
+      secondary_encapsulation_inner: "vlan-400"
+      number_of_ports: "1"
+      delimiter: "@"
+  parents:
+    - class_name: "fvAEPg"
+      parent_dependency: "fvAp"
+      parent_dn: "aci_application_epg.test.id"
+      target_classes:
+        - "vmmDomP"
+  targets:
+    - class_name: "vmmDomP"
+      target_dn: "uni/vmmp-VMware/dom-domain_1"
+      relation_resource_name: "domain"
+      static: true
+    - class_name: "vmmDomP"
+      target_dn: "uni/vmmp-VMware/dom-domain_2"
+      relation_resource_name: "domain"
+      static: true
+
+fvRsPathAtt:
+  resource_required:
+    - "encapsulation"
+  datasource_required:
+    - "encapsulation"
+  test_values:
+    default:
+      encapsulation: "vlan-201"
+      primary_encapsulation: "unknown"
+    all:
+      encapsulation: "vlan-202"
+      primary_encapsulation: "vlan-203"
+    resource_required:
+      encapsulation: "vlan-201"
+    datasource_required:
+      encapsulation: "vlan-201"
+    datasource_non_existing:
+      target_dn: "topology/pod-2/paths-201/pathep-[eth1/1]"
+  parents:
+    - class_name: "fvAEPg"
+      parent_dependency: "fvAp"
+      parent_dn: "aci_application_epg.test.id"
+      target_classes:
+        - "fabricPathEp"
+  targets:
+    - class_name: "fabricPathEp"
+      target_dn: "topology/pod-1/paths-101/pathep-[eth1/1]"
+      relation_resource_name: "static_path"
+      static: true
+    - class_name: "fabricPathEp"
+      target_dn: "topology/pod-1/paths-101/pathep-[eth1/2]"
+      relation_resource_name: "static_path"
+      static: true
+
+qosCustomPol:
+  parents:
+    - class_name: "fvTenant"
+      parent_dn: "aci_tenant.test.id"
+
+fhsTrustCtrlPol:
+  default_values:
+    hasDhcpv4Server: "no"
+    hasDhcpv6Server: "no"
+    hasIpv6Router: "no"
+    trustArp: "no"
+    trustNd: "no"
+    trustRa: "no"
+  parents:
+    - class_name: "fvTenant"
+      parent_dn: "aci_tenant.test.id"
+
+qosDppPol:
+  default_values:
+    pir: "0"
+    rate: "0"
+  parents:
+    - class_name: "fvTenant"
+      parent_dn: "aci_tenant.test.id"

@@ -48,6 +48,5 @@ const testConfigFvFBRMemberNotExistingFvFBRGroup = testConfigFvFBRMemberMinDepen
 data "aci_vrf_fallback_route_group_member" "test_non_existing" {
   parent_dn = aci_vrf_fallback_route_group.test.id
   fallback_member = "2.2.2.4"
-  depends_on = [aci_vrf_fallback_route_group_member.test]
 }
 `

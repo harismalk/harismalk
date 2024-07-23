@@ -40,6 +40,9 @@ func TestAccDataSource{{$.resourceClassName}}With{{capitalize .class_name}} (t *
 					resource.TestCheckResourceAttr("data.aci_{{$.resourceName}}.test", "{{$key}}", "{{$value}}"),
 						{{- end}}
 					{{- end}}
+					{{- range $index, $key := $.read_only}}
+					resource.TestCheckResourceAttrSet("data.aci_{{$.resourceName}}.test", "{{$key}}"),
+					{{- end}}
 				),
 			},
 			{
@@ -90,8 +93,8 @@ const testConfig{{$.resourceClassName}}DataSourceDependencyWith{{capitalize .cla
 data "aci_{{$.resourceName}}" "test" {
   parent_dn = {{.parent_dn}}
   {{- range $key, $value := $.datasource_required}}
-		{{- if eq $key "target_dn" }}
-  {{$key}} = {{getTestTargetDn $.targets $.resourceName $value true $target_classes 0}}
+		{{- if eq $key "target_dn" }}{{$attributeValue := getTestTargetDn $.targets $.resourceName $value true $target_classes 0}}
+  {{$key}} = {{if containsString $attributeValue "."}}{{$attributeValue}}{{else}}"{{$attributeValue}}"{{end}}
 		{{- else }}
   {{$key}} = "{{$value}}"
 		{{- end }}
@@ -104,13 +107,12 @@ const testConfig{{$.resourceClassName}}NotExisting{{capitalize .class_name}}  = 
 data "aci_{{$.resourceName}}" "test_non_existing" {
   parent_dn = {{.parent_dn}}
   {{- range $key, $value := $.datasource_non_existing}}
-		{{- if eq $key "target_dn" }}
+		{{- if and (eq $key "target_dn") (not (containsString $value "topology/")) }}
   {{$key}} = "{{getTestTargetDn $.targets $.resourceName $value false $target_classes 0}}_not_existing"
 		{{- else }}
   {{$key}} = "{{$value}}"
 		{{- end }}
   {{- end}}
-  depends_on = [aci_{{$.resourceName}}.test]
 }
 `
 	{{- end}}
@@ -118,8 +120,8 @@ data "aci_{{$.resourceName}}" "test_non_existing" {
 const testConfig{{.resourceClassName}}DataSource = testConfig{{.resourceClassName}}All + `
 data "aci_{{$.resourceName}}" "test" {
   {{- range $key, $value := $.datasource_required}}
-		{{- if eq $key "target_dn" }}
-  {{$key}} = {{getTestTargetDn $.targets $.resourceName $value true nil 0}}
+		{{- if eq $key "target_dn" }}{{$attributeValue := getTestTargetDn $.targets $.resourceName $value true nil 0}}
+  {{$key}} = {{if containsString $attributeValue "."}}{{$attributeValue}}{{else}}"{{$attributeValue}}"{{end}}
 		{{- else }}
   {{$key}} = "{{$value}}"
 		{{- end }}
@@ -131,13 +133,12 @@ data "aci_{{$.resourceName}}" "test" {
 const testConfig{{$.resourceClassName}}NotExisting = testConfig{{.resourceClassName}}All + `
 data "aci_{{$.resourceName}}" "test" {
   {{- range $key, $value := $.datasource_non_existing}}
-		{{- if eq $key "target_dn" }}
+		{{- if and (eq $key "target_dn") (not (containsString $value "topology/")) }}
   {{$key}} = "{{getTestTargetDn $.targets $.resourceName $value false nil 0}}_not_existing"
 		{{- else }}
   {{$key}} = "{{$value}}"
 		{{- end }}
   {{- end}}
-  depends_on = [aci_{{$.resourceName}}.test]
 }
 `
 {{- end}}

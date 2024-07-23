@@ -22,10 +22,10 @@ func TestAccResourceFvRsSecInheritedWithFvAEPg(t *testing.T) {
 				Config:             testConfigFvRsSecInheritedMinDependencyWithFvAEPgAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "target_dn", "uni/tn-test_tenant/ap-test_ap/epg-epg_2"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test_2", "target_dn", "uni/tn-test_tenant/ap-test_ap/epg-epg_2"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotation", "orchestrator:terraform"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test_2", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test", "target_dn", "uni/tn-test_tenant/ap-test_ap/epg-epg_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test_2", "target_dn", "uni/tn-test_tenant/ap-test_ap/epg-epg_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test_2", "annotation", "orchestrator:terraform"),
 				),
 			},
 		},
@@ -54,10 +54,10 @@ func TestAccResourceFvRsSecInheritedWithFvAEPg(t *testing.T) {
 				Config:             testConfigFvRsSecInheritedMinDependencyWithFvAEPgAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "target_dn", "uni/tn-test_tenant/ap-test_ap/epg-epg_2"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test_2", "target_dn", "uni/tn-test_tenant/ap-test_ap/epg-epg_2"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotation", "orchestrator:terraform"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test_2", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test", "target_dn", "uni/tn-test_tenant/ap-test_ap/epg-epg_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test_2", "target_dn", "uni/tn-test_tenant/ap-test_ap/epg-epg_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test_2", "annotation", "orchestrator:terraform"),
 				),
 			},
 		},
@@ -122,11 +122,11 @@ func TestAccResourceFvRsSecInheritedWithFvAEPg(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "test_value"),
 				),
 			},
 			// Import testing with children
@@ -140,11 +140,11 @@ func TestAccResourceFvRsSecInheritedWithFvAEPg(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "test_value"),
 				),
 			},
 			// Update with children removed from config
@@ -155,12 +155,12 @@ func TestAccResourceFvRsSecInheritedWithFvAEPg(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.#", "2"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.#", "2"),
 				),
 			},
@@ -170,10 +170,10 @@ func TestAccResourceFvRsSecInheritedWithFvAEPg(t *testing.T) {
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.#", "1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.#", "1"),
 				),
 			},
@@ -200,10 +200,10 @@ func TestAccResourceFvRsSecInheritedWithFvESg(t *testing.T) {
 				Config:             testConfigFvRsSecInheritedMinDependencyWithFvESgAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "target_dn", "uni/tn-test_tenant/ap-test_ap/esg-esg_0"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test_2", "target_dn", "uni/tn-test_tenant/ap-test_ap/esg-esg_0"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotation", "orchestrator:terraform"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test_2", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test", "target_dn", "uni/tn-test_tenant/ap-test_ap/esg-esg_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test_2", "target_dn", "uni/tn-test_tenant/ap-test_ap/esg-esg_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test_2", "annotation", "orchestrator:terraform"),
 				),
 			},
 		},
@@ -232,10 +232,10 @@ func TestAccResourceFvRsSecInheritedWithFvESg(t *testing.T) {
 				Config:             testConfigFvRsSecInheritedMinDependencyWithFvESgAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "target_dn", "uni/tn-test_tenant/ap-test_ap/esg-esg_0"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test_2", "target_dn", "uni/tn-test_tenant/ap-test_ap/esg-esg_0"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotation", "orchestrator:terraform"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test_2", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test", "target_dn", "uni/tn-test_tenant/ap-test_ap/esg-esg_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test_2", "target_dn", "uni/tn-test_tenant/ap-test_ap/esg-esg_0"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.allow_test_2", "annotation", "orchestrator:terraform"),
 				),
 			},
 		},
@@ -300,11 +300,11 @@ func TestAccResourceFvRsSecInheritedWithFvESg(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "test_value"),
 				),
 			},
 			// Import testing with children
@@ -318,11 +318,11 @@ func TestAccResourceFvRsSecInheritedWithFvESg(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "test_value"),
 				),
 			},
 			// Update with children removed from config
@@ -333,12 +333,12 @@ func TestAccResourceFvRsSecInheritedWithFvESg(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.#", "2"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.#", "2"),
 				),
 			},
@@ -348,10 +348,10 @@ func TestAccResourceFvRsSecInheritedWithFvESg(t *testing.T) {
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.0.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "annotations.#", "1"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.0.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_relation_to_contract_master.test", "tags.#", "1"),
 				),
 			},
@@ -369,47 +369,47 @@ func TestAccResourceFvRsSecInheritedWithFvESg(t *testing.T) {
 }
 
 const testDependencyConfigFvRsSecInherited = `
-resource "aci_endpoint_security_group" "test_0" {
+resource "aci_endpoint_security_group" "test_endpoint_security_group_0" {
   application_profile_dn = aci_application_profile.test.id
   name = "esg_0"
 }
-resource "aci_endpoint_security_group" "test_1" {
+resource "aci_endpoint_security_group" "test_endpoint_security_group_1" {
   application_profile_dn = aci_application_profile.test.id
   name = "esg_1"
 }
-resource "aci_application_epg" "test_2" {
+resource "aci_application_epg" "test_application_epg_0" {
   application_profile_dn = aci_application_profile.test.id
   name = "epg_2"
 }
-resource "aci_application_epg" "test_3" {
+resource "aci_application_epg" "test_application_epg_1" {
   application_profile_dn = aci_application_profile.test.id
   name = "epg_3"
 }
 `
 
 const testConfigFvRsSecInheritedMinDependencyWithFvAEPgAllowExisting = testDependencyConfigFvRsSecInherited + testConfigFvAEPgMinDependencyWithFvAp + `
-resource "aci_relation_to_contract_master" "test" {
+resource "aci_relation_to_contract_master" "allow_test" {
   parent_dn = aci_application_epg.test.id
-  target_dn = aci_application_epg.test_2.id
+  target_dn = aci_application_epg.test_application_epg_0.id
 }
-resource "aci_relation_to_contract_master" "test_2" {
+resource "aci_relation_to_contract_master" "allow_test_2" {
   parent_dn = aci_application_epg.test.id
-  target_dn = aci_application_epg.test_2.id
-  depends_on = [aci_relation_to_contract_master.test]
+  target_dn = aci_application_epg.test_application_epg_0.id
+  depends_on = [aci_relation_to_contract_master.allow_test]
 }
 `
 
 const testConfigFvRsSecInheritedMinDependencyWithFvAEPg = testDependencyConfigFvRsSecInherited + testConfigFvAEPgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_application_epg.test.id
-  target_dn = aci_application_epg.test_2.id
+  target_dn = aci_application_epg.test_application_epg_0.id
 }
 `
 
 const testConfigFvRsSecInheritedAllDependencyWithFvAEPg = testDependencyConfigFvRsSecInherited + testConfigFvAEPgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_application_epg.test.id
-  target_dn = aci_application_epg.test_2.id
+  target_dn = aci_application_epg.test_application_epg_0.id
   annotation = "annotation"
 }
 `
@@ -417,14 +417,14 @@ resource "aci_relation_to_contract_master" "test" {
 const testConfigFvRsSecInheritedResetDependencyWithFvAEPg = testDependencyConfigFvRsSecInherited + testConfigFvAEPgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_application_epg.test.id
-  target_dn = aci_application_epg.test_2.id
+  target_dn = aci_application_epg.test_application_epg_0.id
   annotation = "orchestrator:terraform"
 }
 `
 const testConfigFvRsSecInheritedChildrenDependencyWithFvAEPg = testDependencyConfigFvRsSecInherited + testConfigFvAEPgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_application_epg.test.id
-  target_dn = aci_application_epg.test_2.id
+  target_dn = aci_application_epg.test_application_epg_0.id
   annotations = [
 	{
 	  key = "key_0"
@@ -432,7 +432,7 @@ resource "aci_relation_to_contract_master" "test" {
 	},
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
   tags = [
@@ -442,7 +442,7 @@ resource "aci_relation_to_contract_master" "test" {
 	},
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
 }
@@ -451,24 +451,24 @@ resource "aci_relation_to_contract_master" "test" {
 const testConfigFvRsSecInheritedChildrenRemoveFromConfigDependencyWithFvAEPg = testDependencyConfigFvRsSecInherited + testConfigFvAEPgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_application_epg.test.id
-  target_dn = aci_application_epg.test_2.id
+  target_dn = aci_application_epg.test_application_epg_0.id
 }
 `
 
 const testConfigFvRsSecInheritedChildrenRemoveOneDependencyWithFvAEPg = testDependencyConfigFvRsSecInherited + testConfigFvAEPgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_application_epg.test.id
-  target_dn = aci_application_epg.test_2.id
+  target_dn = aci_application_epg.test_application_epg_0.id
   annotations = [ 
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
   tags = [ 
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
 }
@@ -477,35 +477,35 @@ resource "aci_relation_to_contract_master" "test" {
 const testConfigFvRsSecInheritedChildrenRemoveAllDependencyWithFvAEPg = testDependencyConfigFvRsSecInherited + testConfigFvAEPgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_application_epg.test.id
-  target_dn = aci_application_epg.test_2.id
+  target_dn = aci_application_epg.test_application_epg_0.id
   annotations = []
   tags = []
 }
 `
 
 const testConfigFvRsSecInheritedMinDependencyWithFvESgAllowExisting = testDependencyConfigFvRsSecInherited + testConfigFvESgMinDependencyWithFvAp + `
-resource "aci_relation_to_contract_master" "test" {
+resource "aci_relation_to_contract_master" "allow_test" {
   parent_dn = aci_endpoint_security_group.test.id
-  target_dn = aci_endpoint_security_group.test_0.id
+  target_dn = aci_endpoint_security_group.test_endpoint_security_group_0.id
 }
-resource "aci_relation_to_contract_master" "test_2" {
+resource "aci_relation_to_contract_master" "allow_test_2" {
   parent_dn = aci_endpoint_security_group.test.id
-  target_dn = aci_endpoint_security_group.test_0.id
-  depends_on = [aci_relation_to_contract_master.test]
+  target_dn = aci_endpoint_security_group.test_endpoint_security_group_0.id
+  depends_on = [aci_relation_to_contract_master.allow_test]
 }
 `
 
 const testConfigFvRsSecInheritedMinDependencyWithFvESg = testDependencyConfigFvRsSecInherited + testConfigFvESgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_endpoint_security_group.test.id
-  target_dn = aci_endpoint_security_group.test_0.id
+  target_dn = aci_endpoint_security_group.test_endpoint_security_group_0.id
 }
 `
 
 const testConfigFvRsSecInheritedAllDependencyWithFvESg = testDependencyConfigFvRsSecInherited + testConfigFvESgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_endpoint_security_group.test.id
-  target_dn = aci_endpoint_security_group.test_0.id
+  target_dn = aci_endpoint_security_group.test_endpoint_security_group_0.id
   annotation = "annotation"
 }
 `
@@ -513,14 +513,14 @@ resource "aci_relation_to_contract_master" "test" {
 const testConfigFvRsSecInheritedResetDependencyWithFvESg = testDependencyConfigFvRsSecInherited + testConfigFvESgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_endpoint_security_group.test.id
-  target_dn = aci_endpoint_security_group.test_0.id
+  target_dn = aci_endpoint_security_group.test_endpoint_security_group_0.id
   annotation = "orchestrator:terraform"
 }
 `
 const testConfigFvRsSecInheritedChildrenDependencyWithFvESg = testDependencyConfigFvRsSecInherited + testConfigFvESgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_endpoint_security_group.test.id
-  target_dn = aci_endpoint_security_group.test_0.id
+  target_dn = aci_endpoint_security_group.test_endpoint_security_group_0.id
   annotations = [
 	{
 	  key = "key_0"
@@ -528,7 +528,7 @@ resource "aci_relation_to_contract_master" "test" {
 	},
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
   tags = [
@@ -538,7 +538,7 @@ resource "aci_relation_to_contract_master" "test" {
 	},
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
 }
@@ -547,24 +547,24 @@ resource "aci_relation_to_contract_master" "test" {
 const testConfigFvRsSecInheritedChildrenRemoveFromConfigDependencyWithFvESg = testDependencyConfigFvRsSecInherited + testConfigFvESgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_endpoint_security_group.test.id
-  target_dn = aci_endpoint_security_group.test_0.id
+  target_dn = aci_endpoint_security_group.test_endpoint_security_group_0.id
 }
 `
 
 const testConfigFvRsSecInheritedChildrenRemoveOneDependencyWithFvESg = testDependencyConfigFvRsSecInherited + testConfigFvESgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_endpoint_security_group.test.id
-  target_dn = aci_endpoint_security_group.test_0.id
+  target_dn = aci_endpoint_security_group.test_endpoint_security_group_0.id
   annotations = [ 
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
   tags = [ 
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
 }
@@ -573,7 +573,7 @@ resource "aci_relation_to_contract_master" "test" {
 const testConfigFvRsSecInheritedChildrenRemoveAllDependencyWithFvESg = testDependencyConfigFvRsSecInherited + testConfigFvESgMinDependencyWithFvAp + `
 resource "aci_relation_to_contract_master" "test" {
   parent_dn = aci_endpoint_security_group.test.id
-  target_dn = aci_endpoint_security_group.test_0.id
+  target_dn = aci_endpoint_security_group.test_endpoint_security_group_0.id
   annotations = []
   tags = []
 }
