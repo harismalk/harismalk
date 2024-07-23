@@ -127,6 +127,7 @@ func (r *MplsNodeSidPResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				Default:             stringdefault.StaticString(globalAnnotation),
 				MarkdownDescription: `The annotation of the L3out Node SR-MPLS Segment ID Profile object.`,
@@ -136,6 +137,7 @@ func (r *MplsNodeSidPResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The description of the L3out Node SR-MPLS Segment ID Profile object.`,
 			},
@@ -144,6 +146,7 @@ func (r *MplsNodeSidPResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The loopback address of the L3out Node SR-MPLS Segment ID Profile object.`,
 			},
@@ -152,6 +155,7 @@ func (r *MplsNodeSidPResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The name of the L3out Node SR-MPLS Segment ID Profile object.`,
 			},
@@ -160,6 +164,7 @@ func (r *MplsNodeSidPResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 				},
 				MarkdownDescription: `The name alias of the L3out Node SR-MPLS Segment ID Profile object.`,
 			},
@@ -167,6 +172,7 @@ func (r *MplsNodeSidPResource) Schema(ctx context.Context, req resource.SchemaRe
 				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+					SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 					stringplanmodifier.RequiresReplace(),
 				},
 				MarkdownDescription: `The segment ID of the L3out Node SR-MPLS Segment ID Profile object.`,
@@ -184,6 +190,7 @@ func (r *MplsNodeSidPResource) Schema(ctx context.Context, req resource.SchemaRe
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
@@ -191,6 +198,7 @@ func (r *MplsNodeSidPResource) Schema(ctx context.Context, req resource.SchemaRe
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -210,6 +218,7 @@ func (r *MplsNodeSidPResource) Schema(ctx context.Context, req resource.SchemaRe
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
@@ -217,6 +226,7 @@ func (r *MplsNodeSidPResource) Schema(ctx context.Context, req resource.SchemaRe
 							Required: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+								SetToStringNullWhenStateIsNullPlanIsUnknownDuringUpdate(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -280,7 +290,7 @@ func (r *MplsNodeSidPResource) Create(ctx context.Context, req resource.CreateRe
 		setMplsNodeSidPId(ctx, data)
 	}
 
-	tflog.Debug(ctx, fmt.Sprintf("Create of resource aci_l3out_node_sid_profile with id '%s'", data.Id.ValueString()))
+	setMplsNodeSidPId(ctx, data)
 
 	var tagAnnotationPlan, tagAnnotationState []TagAnnotationMplsNodeSidPResourceModel
 	data.TagAnnotation.ElementsAs(ctx, &tagAnnotationPlan, false)
@@ -295,6 +305,7 @@ func (r *MplsNodeSidPResource) Create(ctx context.Context, req resource.CreateRe
 	}
 
 	DoRestRequest(ctx, &resp.Diagnostics, r.client, fmt.Sprintf("api/mo/%s.json", data.Id.ValueString()), "POST", jsonPayload)
+
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -360,6 +371,12 @@ func (r *MplsNodeSidPResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 
 	DoRestRequest(ctx, &resp.Diagnostics, r.client, fmt.Sprintf("api/mo/%s.json", data.Id.ValueString()), "POST", jsonPayload)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	tflog.Debug(ctx, fmt.Sprintf("Update of resource aci_l3out_node_sid_profile with id '%s'", data.Id.ValueString()))
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -439,6 +456,24 @@ func getAndSetMplsNodeSidPAttributes(ctx context.Context, diags *diag.Diagnostic
 				if attributeName == "sidoffset" {
 					data.Sidoffset = basetypes.NewStringValue(attributeValue.(string))
 				}
+			}
+			if data.Annotation.IsUnknown() {
+				data.Annotation = types.StringNull()
+			}
+			if data.Descr.IsUnknown() {
+				data.Descr = types.StringNull()
+			}
+			if data.LoopbackAddr.IsUnknown() {
+				data.LoopbackAddr = types.StringNull()
+			}
+			if data.Name.IsUnknown() {
+				data.Name = types.StringNull()
+			}
+			if data.NameAlias.IsUnknown() {
+				data.NameAlias = types.StringNull()
+			}
+			if data.Sidoffset.IsUnknown() {
+				data.Sidoffset = types.StringNull()
 			}
 			TagAnnotationMplsNodeSidPList := make([]TagAnnotationMplsNodeSidPResourceModel, 0)
 			TagTagMplsNodeSidPList := make([]TagTagMplsNodeSidPResourceModel, 0)
@@ -640,7 +675,6 @@ func getMplsNodeSidPCreateJsonPayload(ctx context.Context, diags *diag.Diagnosti
 	if !data.Sidoffset.IsNull() && !data.Sidoffset.IsUnknown() {
 		payloadMap["attributes"].(map[string]string)["sidoffset"] = data.Sidoffset.ValueString()
 	}
-
 	payload, err := json.Marshal(map[string]interface{}{"mplsNodeSidP": payloadMap})
 	if err != nil {
 		diags.AddError(
