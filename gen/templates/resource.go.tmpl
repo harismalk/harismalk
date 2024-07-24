@@ -516,38 +516,6 @@ func set{{ .ResourceClassName }}LegacyAttributes(ctx context.Context, diags *dia
 	{{- end }}
 }
 {{- end }}
-{{- if .HasReadOnlyProperties }}
-
-func ignoreReadOnlyChange{{.ResourceClassName}}(ctx context.Context, planData, stateData *{{.ResourceClassName}}ResourceModel) bool {
-	{{- range .Properties}}
-		{{- if not .ReadOnly}}
-	if !planData.{{ .Name }}.IsUnknown() && planData.{{ .Name }} != stateData.{{ .Name }} {
-		return false
-	}
-		{{- end}}
-	{{- end}}
-
-	{{- range .Children}}
-	if !planData.{{.ResourceClassName}}.IsUnknown() {
-		var plan{{.ResourceClassName}}, state{{.ResourceClassName}} []{{.ResourceClassName}}{{$.ResourceClassName}}ResourceModel
-		planData.{{.ResourceClassName}}.ElementsAs(ctx, &plan{{.ResourceClassName}}, false)
-		stateData.{{.ResourceClassName}}.ElementsAs(ctx, &state{{.ResourceClassName}}, false)
-		if len(plan{{.ResourceClassName}}) != len(state{{.ResourceClassName}}) {
-			return false
-		}
-		for index, plan{{.ResourceClassName}}Value := range plan{{.ResourceClassName}} {
-			{{- range .Properties}}
-			if plan{{.ResourceClassName}}Value.{{ .Name }} != state{{.ResourceClassName}}[index].{{ .Name }} {
-				return false
-			}
-			{{- end}}
-		}
-	}
-	{{- end}}
-
-	return true
-}
-{{- end }}
 
 func (r *{{.ResourceClassName}}Resource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
     if !req.Plan.Raw.IsNull() {
@@ -824,11 +792,6 @@ func (r *{{.ResourceClassName}}Resource) ModifyPlan(ctx context.Context, req res
 		}
 		{{ end }}
 		{{ end }}
-		{{- if .HasReadOnlyProperties}}
-		if stateData != nil && ignoreReadOnlyChange{{.ResourceClassName}}(ctx, planData, stateData) {
-			planData.PcTag = stateData.PcTag
-		}
-		{{- end }}
 		resp.Diagnostics.Append(resp.Plan.Set(ctx, &planData)...)
 	}
 }
@@ -1039,12 +1002,10 @@ func (r *{{.ResourceClassName}}Resource) Schema(ctx context.Context, req resourc
 						},
 						{{- else}}
 						"{{overwriteProperty .PkgName .SnakeCaseName $.Definitions}}": schema.StringAttribute{
-							{{- if or .IsNaming .IsRequired}}
+							{{- if and (or .IsNaming .IsRequired) (not $.HasReadOnlyProperties)}}
 							Required:            true,
 							{{- else }}
-							{{- if not .ReadOnly }}
 							Optional:            true,
-							{{- end }}
 							Computed:            true,
 							{{- end}}
 							{{- if not .ReadOnly }}
@@ -1052,9 +1013,14 @@ func (r *{{.ResourceClassName}}Resource) Schema(ctx context.Context, req resourc
 								stringplanmodifier.UseStateForUnknown(),
 							},
 							{{- end}}
-							{{- if .ValidValues}}
+							{{- if or .ValidValues $.HasReadOnlyProperties}}
 							Validators: []validator.String{
+								{{- if .ValidValues}}
 								stringvalidator.OneOf({{- validatorString .ValidValues}}),
+								{{- end}}
+								{{- if or .IsNaming .IsRequired}}
+								MakeStringRequired(),
+								{{- end}}
 							},
 							{{- end}}
 							MarkdownDescription: `{{.Comment}}`,

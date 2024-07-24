@@ -1430,445 +1430,6 @@ func setFvAEPgLegacyAttributes(ctx context.Context, diags *diag.Diagnostics, dat
 	}
 }
 
-func ignoreReadOnlyChangeFvAEPg(ctx context.Context, planData, stateData *FvAEPgResourceModel) bool {
-	if !planData.Annotation.IsUnknown() && planData.Annotation != stateData.Annotation {
-		return false
-	}
-	if !planData.Descr.IsUnknown() && planData.Descr != stateData.Descr {
-		return false
-	}
-	if !planData.ExceptionTag.IsUnknown() && planData.ExceptionTag != stateData.ExceptionTag {
-		return false
-	}
-	if !planData.FloodOnEncap.IsUnknown() && planData.FloodOnEncap != stateData.FloodOnEncap {
-		return false
-	}
-	if !planData.FwdCtrl.IsUnknown() && planData.FwdCtrl != stateData.FwdCtrl {
-		return false
-	}
-	if !planData.HasMcastSource.IsUnknown() && planData.HasMcastSource != stateData.HasMcastSource {
-		return false
-	}
-	if !planData.IsAttrBasedEPg.IsUnknown() && planData.IsAttrBasedEPg != stateData.IsAttrBasedEPg {
-		return false
-	}
-	if !planData.MatchT.IsUnknown() && planData.MatchT != stateData.MatchT {
-		return false
-	}
-	if !planData.Name.IsUnknown() && planData.Name != stateData.Name {
-		return false
-	}
-	if !planData.NameAlias.IsUnknown() && planData.NameAlias != stateData.NameAlias {
-		return false
-	}
-	if !planData.PcEnfPref.IsUnknown() && planData.PcEnfPref != stateData.PcEnfPref {
-		return false
-	}
-	if !planData.PrefGrMemb.IsUnknown() && planData.PrefGrMemb != stateData.PrefGrMemb {
-		return false
-	}
-	if !planData.Prio.IsUnknown() && planData.Prio != stateData.Prio {
-		return false
-	}
-	if !planData.Shutdown.IsUnknown() && planData.Shutdown != stateData.Shutdown {
-		return false
-	}
-	if !planData.FvRsAEPgMonPol.IsUnknown() {
-		var planFvRsAEPgMonPol, stateFvRsAEPgMonPol []FvRsAEPgMonPolFvAEPgResourceModel
-		planData.FvRsAEPgMonPol.ElementsAs(ctx, &planFvRsAEPgMonPol, false)
-		stateData.FvRsAEPgMonPol.ElementsAs(ctx, &stateFvRsAEPgMonPol, false)
-		if len(planFvRsAEPgMonPol) != len(stateFvRsAEPgMonPol) {
-			return false
-		}
-		for index, planFvRsAEPgMonPolValue := range planFvRsAEPgMonPol {
-			if planFvRsAEPgMonPolValue.Annotation != stateFvRsAEPgMonPol[index].Annotation {
-				return false
-			}
-			if planFvRsAEPgMonPolValue.TnMonEPGPolName != stateFvRsAEPgMonPol[index].TnMonEPGPolName {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsBd.IsUnknown() {
-		var planFvRsBd, stateFvRsBd []FvRsBdFvAEPgResourceModel
-		planData.FvRsBd.ElementsAs(ctx, &planFvRsBd, false)
-		stateData.FvRsBd.ElementsAs(ctx, &stateFvRsBd, false)
-		if len(planFvRsBd) != len(stateFvRsBd) {
-			return false
-		}
-		for index, planFvRsBdValue := range planFvRsBd {
-			if planFvRsBdValue.Annotation != stateFvRsBd[index].Annotation {
-				return false
-			}
-			if planFvRsBdValue.TnFvBDName != stateFvRsBd[index].TnFvBDName {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsCons.IsUnknown() {
-		var planFvRsCons, stateFvRsCons []FvRsConsFvAEPgResourceModel
-		planData.FvRsCons.ElementsAs(ctx, &planFvRsCons, false)
-		stateData.FvRsCons.ElementsAs(ctx, &stateFvRsCons, false)
-		if len(planFvRsCons) != len(stateFvRsCons) {
-			return false
-		}
-		for index, planFvRsConsValue := range planFvRsCons {
-			if planFvRsConsValue.Annotation != stateFvRsCons[index].Annotation {
-				return false
-			}
-			if planFvRsConsValue.Prio != stateFvRsCons[index].Prio {
-				return false
-			}
-			if planFvRsConsValue.TnVzBrCPName != stateFvRsCons[index].TnVzBrCPName {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsConsIf.IsUnknown() {
-		var planFvRsConsIf, stateFvRsConsIf []FvRsConsIfFvAEPgResourceModel
-		planData.FvRsConsIf.ElementsAs(ctx, &planFvRsConsIf, false)
-		stateData.FvRsConsIf.ElementsAs(ctx, &stateFvRsConsIf, false)
-		if len(planFvRsConsIf) != len(stateFvRsConsIf) {
-			return false
-		}
-		for index, planFvRsConsIfValue := range planFvRsConsIf {
-			if planFvRsConsIfValue.Annotation != stateFvRsConsIf[index].Annotation {
-				return false
-			}
-			if planFvRsConsIfValue.Prio != stateFvRsConsIf[index].Prio {
-				return false
-			}
-			if planFvRsConsIfValue.TnVzCPIfName != stateFvRsConsIf[index].TnVzCPIfName {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsCustQosPol.IsUnknown() {
-		var planFvRsCustQosPol, stateFvRsCustQosPol []FvRsCustQosPolFvAEPgResourceModel
-		planData.FvRsCustQosPol.ElementsAs(ctx, &planFvRsCustQosPol, false)
-		stateData.FvRsCustQosPol.ElementsAs(ctx, &stateFvRsCustQosPol, false)
-		if len(planFvRsCustQosPol) != len(stateFvRsCustQosPol) {
-			return false
-		}
-		for index, planFvRsCustQosPolValue := range planFvRsCustQosPol {
-			if planFvRsCustQosPolValue.Annotation != stateFvRsCustQosPol[index].Annotation {
-				return false
-			}
-			if planFvRsCustQosPolValue.TnQosCustomPolName != stateFvRsCustQosPol[index].TnQosCustomPolName {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsDomAtt.IsUnknown() {
-		var planFvRsDomAtt, stateFvRsDomAtt []FvRsDomAttFvAEPgResourceModel
-		planData.FvRsDomAtt.ElementsAs(ctx, &planFvRsDomAtt, false)
-		stateData.FvRsDomAtt.ElementsAs(ctx, &stateFvRsDomAtt, false)
-		if len(planFvRsDomAtt) != len(stateFvRsDomAtt) {
-			return false
-		}
-		for index, planFvRsDomAttValue := range planFvRsDomAtt {
-			if planFvRsDomAttValue.Annotation != stateFvRsDomAtt[index].Annotation {
-				return false
-			}
-			if planFvRsDomAttValue.BindingType != stateFvRsDomAtt[index].BindingType {
-				return false
-			}
-			if planFvRsDomAttValue.ClassPref != stateFvRsDomAtt[index].ClassPref {
-				return false
-			}
-			if planFvRsDomAttValue.CustomEpgName != stateFvRsDomAtt[index].CustomEpgName {
-				return false
-			}
-			if planFvRsDomAttValue.Delimiter != stateFvRsDomAtt[index].Delimiter {
-				return false
-			}
-			if planFvRsDomAttValue.Encap != stateFvRsDomAtt[index].Encap {
-				return false
-			}
-			if planFvRsDomAttValue.EncapMode != stateFvRsDomAtt[index].EncapMode {
-				return false
-			}
-			if planFvRsDomAttValue.EpgCos != stateFvRsDomAtt[index].EpgCos {
-				return false
-			}
-			if planFvRsDomAttValue.EpgCosPref != stateFvRsDomAtt[index].EpgCosPref {
-				return false
-			}
-			if planFvRsDomAttValue.InstrImedcy != stateFvRsDomAtt[index].InstrImedcy {
-				return false
-			}
-			if planFvRsDomAttValue.IpamDhcpOverride != stateFvRsDomAtt[index].IpamDhcpOverride {
-				return false
-			}
-			if planFvRsDomAttValue.IpamEnabled != stateFvRsDomAtt[index].IpamEnabled {
-				return false
-			}
-			if planFvRsDomAttValue.IpamGateway != stateFvRsDomAtt[index].IpamGateway {
-				return false
-			}
-			if planFvRsDomAttValue.LagPolicyName != stateFvRsDomAtt[index].LagPolicyName {
-				return false
-			}
-			if planFvRsDomAttValue.NetflowDir != stateFvRsDomAtt[index].NetflowDir {
-				return false
-			}
-			if planFvRsDomAttValue.NetflowPref != stateFvRsDomAtt[index].NetflowPref {
-				return false
-			}
-			if planFvRsDomAttValue.NumPorts != stateFvRsDomAtt[index].NumPorts {
-				return false
-			}
-			if planFvRsDomAttValue.PortAllocation != stateFvRsDomAtt[index].PortAllocation {
-				return false
-			}
-			if planFvRsDomAttValue.PrimaryEncap != stateFvRsDomAtt[index].PrimaryEncap {
-				return false
-			}
-			if planFvRsDomAttValue.PrimaryEncapInner != stateFvRsDomAtt[index].PrimaryEncapInner {
-				return false
-			}
-			if planFvRsDomAttValue.ResImedcy != stateFvRsDomAtt[index].ResImedcy {
-				return false
-			}
-			if planFvRsDomAttValue.SecondaryEncapInner != stateFvRsDomAtt[index].SecondaryEncapInner {
-				return false
-			}
-			if planFvRsDomAttValue.SwitchingMode != stateFvRsDomAtt[index].SwitchingMode {
-				return false
-			}
-			if planFvRsDomAttValue.TDn != stateFvRsDomAtt[index].TDn {
-				return false
-			}
-			if planFvRsDomAttValue.Untagged != stateFvRsDomAtt[index].Untagged {
-				return false
-			}
-			if planFvRsDomAttValue.VnetOnly != stateFvRsDomAtt[index].VnetOnly {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsDppPol.IsUnknown() {
-		var planFvRsDppPol, stateFvRsDppPol []FvRsDppPolFvAEPgResourceModel
-		planData.FvRsDppPol.ElementsAs(ctx, &planFvRsDppPol, false)
-		stateData.FvRsDppPol.ElementsAs(ctx, &stateFvRsDppPol, false)
-		if len(planFvRsDppPol) != len(stateFvRsDppPol) {
-			return false
-		}
-		for index, planFvRsDppPolValue := range planFvRsDppPol {
-			if planFvRsDppPolValue.Annotation != stateFvRsDppPol[index].Annotation {
-				return false
-			}
-			if planFvRsDppPolValue.TnQosDppPolName != stateFvRsDppPol[index].TnQosDppPolName {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsFcPathAtt.IsUnknown() {
-		var planFvRsFcPathAtt, stateFvRsFcPathAtt []FvRsFcPathAttFvAEPgResourceModel
-		planData.FvRsFcPathAtt.ElementsAs(ctx, &planFvRsFcPathAtt, false)
-		stateData.FvRsFcPathAtt.ElementsAs(ctx, &stateFvRsFcPathAtt, false)
-		if len(planFvRsFcPathAtt) != len(stateFvRsFcPathAtt) {
-			return false
-		}
-		for index, planFvRsFcPathAttValue := range planFvRsFcPathAtt {
-			if planFvRsFcPathAttValue.Annotation != stateFvRsFcPathAtt[index].Annotation {
-				return false
-			}
-			if planFvRsFcPathAttValue.Descr != stateFvRsFcPathAtt[index].Descr {
-				return false
-			}
-			if planFvRsFcPathAttValue.TDn != stateFvRsFcPathAtt[index].TDn {
-				return false
-			}
-			if planFvRsFcPathAttValue.Vsan != stateFvRsFcPathAtt[index].Vsan {
-				return false
-			}
-			if planFvRsFcPathAttValue.VsanMode != stateFvRsFcPathAtt[index].VsanMode {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsIntraEpg.IsUnknown() {
-		var planFvRsIntraEpg, stateFvRsIntraEpg []FvRsIntraEpgFvAEPgResourceModel
-		planData.FvRsIntraEpg.ElementsAs(ctx, &planFvRsIntraEpg, false)
-		stateData.FvRsIntraEpg.ElementsAs(ctx, &stateFvRsIntraEpg, false)
-		if len(planFvRsIntraEpg) != len(stateFvRsIntraEpg) {
-			return false
-		}
-		for index, planFvRsIntraEpgValue := range planFvRsIntraEpg {
-			if planFvRsIntraEpgValue.Annotation != stateFvRsIntraEpg[index].Annotation {
-				return false
-			}
-			if planFvRsIntraEpgValue.TnVzBrCPName != stateFvRsIntraEpg[index].TnVzBrCPName {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsNodeAtt.IsUnknown() {
-		var planFvRsNodeAtt, stateFvRsNodeAtt []FvRsNodeAttFvAEPgResourceModel
-		planData.FvRsNodeAtt.ElementsAs(ctx, &planFvRsNodeAtt, false)
-		stateData.FvRsNodeAtt.ElementsAs(ctx, &stateFvRsNodeAtt, false)
-		if len(planFvRsNodeAtt) != len(stateFvRsNodeAtt) {
-			return false
-		}
-		for index, planFvRsNodeAttValue := range planFvRsNodeAtt {
-			if planFvRsNodeAttValue.Annotation != stateFvRsNodeAtt[index].Annotation {
-				return false
-			}
-			if planFvRsNodeAttValue.Descr != stateFvRsNodeAtt[index].Descr {
-				return false
-			}
-			if planFvRsNodeAttValue.Encap != stateFvRsNodeAtt[index].Encap {
-				return false
-			}
-			if planFvRsNodeAttValue.InstrImedcy != stateFvRsNodeAtt[index].InstrImedcy {
-				return false
-			}
-			if planFvRsNodeAttValue.Mode != stateFvRsNodeAtt[index].Mode {
-				return false
-			}
-			if planFvRsNodeAttValue.TDn != stateFvRsNodeAtt[index].TDn {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsPathAtt.IsUnknown() {
-		var planFvRsPathAtt, stateFvRsPathAtt []FvRsPathAttFvAEPgResourceModel
-		planData.FvRsPathAtt.ElementsAs(ctx, &planFvRsPathAtt, false)
-		stateData.FvRsPathAtt.ElementsAs(ctx, &stateFvRsPathAtt, false)
-		if len(planFvRsPathAtt) != len(stateFvRsPathAtt) {
-			return false
-		}
-		for index, planFvRsPathAttValue := range planFvRsPathAtt {
-			if planFvRsPathAttValue.Annotation != stateFvRsPathAtt[index].Annotation {
-				return false
-			}
-			if planFvRsPathAttValue.Descr != stateFvRsPathAtt[index].Descr {
-				return false
-			}
-			if planFvRsPathAttValue.Encap != stateFvRsPathAtt[index].Encap {
-				return false
-			}
-			if planFvRsPathAttValue.InstrImedcy != stateFvRsPathAtt[index].InstrImedcy {
-				return false
-			}
-			if planFvRsPathAttValue.Mode != stateFvRsPathAtt[index].Mode {
-				return false
-			}
-			if planFvRsPathAttValue.PrimaryEncap != stateFvRsPathAtt[index].PrimaryEncap {
-				return false
-			}
-			if planFvRsPathAttValue.TDn != stateFvRsPathAtt[index].TDn {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsProtBy.IsUnknown() {
-		var planFvRsProtBy, stateFvRsProtBy []FvRsProtByFvAEPgResourceModel
-		planData.FvRsProtBy.ElementsAs(ctx, &planFvRsProtBy, false)
-		stateData.FvRsProtBy.ElementsAs(ctx, &stateFvRsProtBy, false)
-		if len(planFvRsProtBy) != len(stateFvRsProtBy) {
-			return false
-		}
-		for index, planFvRsProtByValue := range planFvRsProtBy {
-			if planFvRsProtByValue.Annotation != stateFvRsProtBy[index].Annotation {
-				return false
-			}
-			if planFvRsProtByValue.TnVzTabooName != stateFvRsProtBy[index].TnVzTabooName {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsProv.IsUnknown() {
-		var planFvRsProv, stateFvRsProv []FvRsProvFvAEPgResourceModel
-		planData.FvRsProv.ElementsAs(ctx, &planFvRsProv, false)
-		stateData.FvRsProv.ElementsAs(ctx, &stateFvRsProv, false)
-		if len(planFvRsProv) != len(stateFvRsProv) {
-			return false
-		}
-		for index, planFvRsProvValue := range planFvRsProv {
-			if planFvRsProvValue.Annotation != stateFvRsProv[index].Annotation {
-				return false
-			}
-			if planFvRsProvValue.MatchT != stateFvRsProv[index].MatchT {
-				return false
-			}
-			if planFvRsProvValue.Prio != stateFvRsProv[index].Prio {
-				return false
-			}
-			if planFvRsProvValue.TnVzBrCPName != stateFvRsProv[index].TnVzBrCPName {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsSecInherited.IsUnknown() {
-		var planFvRsSecInherited, stateFvRsSecInherited []FvRsSecInheritedFvAEPgResourceModel
-		planData.FvRsSecInherited.ElementsAs(ctx, &planFvRsSecInherited, false)
-		stateData.FvRsSecInherited.ElementsAs(ctx, &stateFvRsSecInherited, false)
-		if len(planFvRsSecInherited) != len(stateFvRsSecInherited) {
-			return false
-		}
-		for index, planFvRsSecInheritedValue := range planFvRsSecInherited {
-			if planFvRsSecInheritedValue.Annotation != stateFvRsSecInherited[index].Annotation {
-				return false
-			}
-			if planFvRsSecInheritedValue.TDn != stateFvRsSecInherited[index].TDn {
-				return false
-			}
-		}
-	}
-	if !planData.FvRsTrustCtrl.IsUnknown() {
-		var planFvRsTrustCtrl, stateFvRsTrustCtrl []FvRsTrustCtrlFvAEPgResourceModel
-		planData.FvRsTrustCtrl.ElementsAs(ctx, &planFvRsTrustCtrl, false)
-		stateData.FvRsTrustCtrl.ElementsAs(ctx, &stateFvRsTrustCtrl, false)
-		if len(planFvRsTrustCtrl) != len(stateFvRsTrustCtrl) {
-			return false
-		}
-		for index, planFvRsTrustCtrlValue := range planFvRsTrustCtrl {
-			if planFvRsTrustCtrlValue.Annotation != stateFvRsTrustCtrl[index].Annotation {
-				return false
-			}
-			if planFvRsTrustCtrlValue.TnFhsTrustCtrlPolName != stateFvRsTrustCtrl[index].TnFhsTrustCtrlPolName {
-				return false
-			}
-		}
-	}
-	if !planData.TagAnnotation.IsUnknown() {
-		var planTagAnnotation, stateTagAnnotation []TagAnnotationFvAEPgResourceModel
-		planData.TagAnnotation.ElementsAs(ctx, &planTagAnnotation, false)
-		stateData.TagAnnotation.ElementsAs(ctx, &stateTagAnnotation, false)
-		if len(planTagAnnotation) != len(stateTagAnnotation) {
-			return false
-		}
-		for index, planTagAnnotationValue := range planTagAnnotation {
-			if planTagAnnotationValue.Key != stateTagAnnotation[index].Key {
-				return false
-			}
-			if planTagAnnotationValue.Value != stateTagAnnotation[index].Value {
-				return false
-			}
-		}
-	}
-	if !planData.TagTag.IsUnknown() {
-		var planTagTag, stateTagTag []TagTagFvAEPgResourceModel
-		planData.TagTag.ElementsAs(ctx, &planTagTag, false)
-		stateData.TagTag.ElementsAs(ctx, &stateTagTag, false)
-		if len(planTagTag) != len(stateTagTag) {
-			return false
-		}
-		for index, planTagTagValue := range planTagTag {
-			if planTagTagValue.Key != stateTagTag[index].Key {
-				return false
-			}
-			if planTagTagValue.Value != stateTagTag[index].Value {
-				return false
-			}
-		}
-	}
-
-	return true
-}
-
 func (r *FvAEPgResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
 	if !req.Plan.Raw.IsNull() {
 		var planData, stateData, configData *FvAEPgResourceModel
@@ -2677,9 +2238,6 @@ func (r *FvAEPgResource) ModifyPlan(ctx context.Context, req resource.ModifyPlan
 			planData.FvRsNodeAtt = FvRsNodeAttSet
 		}
 
-		if stateData != nil && ignoreReadOnlyChangeFvAEPg(ctx, planData, stateData) {
-			planData.PcTag = stateData.PcTag
-		}
 		resp.Diagnostics.Append(resp.Plan.Set(ctx, &planData)...)
 	}
 }
@@ -3125,6 +2683,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Application EPG Monitoring Policy object.`,
 						},
 						"monitoring_policy_name": schema.StringAttribute{
@@ -3133,6 +2692,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The name of the monitoring policy.`,
 						},
 					},
@@ -3156,6 +2716,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Bridge Domain object.`,
 						},
 						"bridge_domain_name": schema.StringAttribute{
@@ -3164,6 +2725,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The name of the bridge domain associated with this EPG.`,
 						},
 					},
@@ -3184,6 +2746,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Consumed Contract object.`,
 						},
 						"priority": schema.StringAttribute{
@@ -3198,9 +2761,13 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							MarkdownDescription: `The Quality of Service (QoS) priority class ID. QoS refers to the capability of a network to provide better service to selected network traffic over various technologies. The primary goal of QoS is to provide priority including dedicated bandwidth, controlled jitter and latency (required by some real-time and interactive traffic), and improved loss characteristics. You can configure the bandwidth of each QoS level using QoS profiles.`,
 						},
 						"contract_name": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The consumer contract name.`,
 						},
@@ -3222,6 +2789,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Imported Contract object.`,
 						},
 						"priority": schema.StringAttribute{
@@ -3236,9 +2804,13 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							MarkdownDescription: `The Quality of Service (QoS) priority class ID. QoS refers to the capability of a network to provide better service to selected network traffic over various technologies. The primary goal of QoS is to provide priority including dedicated bandwidth, controlled jitter and latency (required by some real-time and interactive traffic), and improved loss characteristics. You can configure the bandwidth of each QoS level using QoS profiles.`,
 						},
 						"imported_contract_name": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The contract interface name.`,
 						},
@@ -3263,6 +2835,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Custom Qos Policy object.`,
 						},
 						"custom_qos_policy_name": schema.StringAttribute{
@@ -3271,6 +2844,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The Custom QoS traffic policy name.`,
 						},
 					},
@@ -3291,6 +2865,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Domain object.`,
 						},
 						"binding_type": schema.StringAttribute{
@@ -3321,6 +2896,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `User-configured port-group display name.`,
 						},
 						"delimiter": schema.StringAttribute{
@@ -3329,6 +2905,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `delimiter.`,
 						},
 						"encapsulation": schema.StringAttribute{
@@ -3337,6 +2914,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The port encapsulation.`,
 						},
 						"encapsulation_mode": schema.StringAttribute{
@@ -3389,6 +2967,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `ipamDhcpOverride.`,
 						},
 						"ipam_enabled": schema.StringAttribute{
@@ -3408,6 +2987,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `ipamGateway.`,
 						},
 						"lag_policy_name": schema.StringAttribute{
@@ -3416,6 +2996,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `LAG Policy Name.`,
 						},
 						"netflow_direction": schema.StringAttribute{
@@ -3446,6 +3027,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `Number of ports for binding type.`,
 						},
 						"port_allocation": schema.StringAttribute{
@@ -3465,6 +3047,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `Represents the primary encap when the EPG is isolated.`,
 						},
 						"primary_encapsulation_inner": schema.StringAttribute{
@@ -3473,6 +3056,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `primaryEncapInner.`,
 						},
 						"resolution_immediacy": schema.StringAttribute{
@@ -3492,6 +3076,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `secondaryEncapInner.`,
 						},
 						"switching_mode": schema.StringAttribute{
@@ -3506,9 +3091,13 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							MarkdownDescription: `switchingMode.`,
 						},
 						"target_dn": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The name of the Physical Domain Profile.`,
 						},
@@ -3555,6 +3144,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Data Plane Policing Policy object.`,
 						},
 						"data_plane_policing_policy_name": schema.StringAttribute{
@@ -3563,6 +3153,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `Name.`,
 						},
 					},
@@ -3586,6 +3177,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Fibre Channel Path object.`,
 						},
 						"description": schema.StringAttribute{
@@ -3594,12 +3186,17 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The description of the Relation To Fibre Channel Path object.`,
 						},
 						"target_dn": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The distinguished name of the target.`,
 						},
@@ -3609,6 +3206,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `port vsan.`,
 						},
 						"vsan_mode": schema.StringAttribute{
@@ -3644,12 +3242,17 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Intra EPG Contract object.`,
 						},
 						"contract_name": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The contract name.`,
 						},
@@ -3671,6 +3274,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Static Leaf object.`,
 						},
 						"description": schema.StringAttribute{
@@ -3679,12 +3283,17 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The description of the Relation To Static Leaf object.`,
 						},
 						"encapsulation": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The encapsulation method (VLAN) for the static binding.`,
 						},
@@ -3711,9 +3320,13 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							MarkdownDescription: `The mode of the static association with the path.`,
 						},
 						"target_dn": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The distinguished name of the target of this static binding.`,
 						},
@@ -3735,6 +3348,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Static Path object.`,
 						},
 						"description": schema.StringAttribute{
@@ -3743,12 +3357,17 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The description of the Relation To Static Path object.`,
 						},
 						"encapsulation": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The encapsulation method (VLAN) of the path.`,
 						},
@@ -3780,12 +3399,17 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `Represents the primary encap when the EPG is isolated.`,
 						},
 						"target_dn": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `null.`,
 						},
@@ -3807,12 +3431,17 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Taboo Contract object.`,
 						},
 						"taboo_contract_name": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `A contract for denying specific classes of traffic. Taboo rules are applied in the hardware before applying the rules of regular contracts. Without a contract, the default forwarding policy is to not allow any communication between EPGs.`,
 						},
@@ -3834,6 +3463,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Provided Contract object.`,
 						},
 						"match_criteria": schema.StringAttribute{
@@ -3859,9 +3489,13 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							MarkdownDescription: `The Quality of Service (QoS) priority class ID. QoS refers to the capability of a network to provide better service to selected network traffic over various technologies. The primary goal of QoS is to provide priority including dedicated bandwidth, controlled jitter and latency (required by some real-time and interactive traffic), and improved loss characteristics. You can configure the bandwidth of each QoS level using QoS profiles.`,
 						},
 						"contract_name": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The provider contract name.`,
 						},
@@ -3883,12 +3517,17 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Contract Master object.`,
 						},
 						"target_dn": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The distinguished name of the target.`,
 						},
@@ -3913,6 +3552,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `The annotation of the Relation To Trust Control Policy object.`,
 						},
 						"trust_control_policy_name": schema.StringAttribute{
@@ -3921,6 +3561,7 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
+							Validators:          []validator.String{},
 							MarkdownDescription: `Name.`,
 						},
 					},
@@ -3936,16 +3577,24 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"key": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
 						"value": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
@@ -3962,16 +3611,24 @@ func (r *FvAEPgResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"key": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The key used to uniquely identify this configuration object.`,
 						},
 						"value": schema.StringAttribute{
-							Required: true,
+							Optional: true,
+							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
+							},
+							Validators: []validator.String{
+								MakeStringRequired(),
 							},
 							MarkdownDescription: `The value of the property.`,
 						},
