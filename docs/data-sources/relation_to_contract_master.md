@@ -7,12 +7,12 @@ layout: "aci"
 page_title: "ACI: aci_relation_to_contract_master"
 sidebar_current: "docs-aci-data-source-aci_relation_to_contract_master"
 description: |-
-  Data source for Relation To Contract Master
+  Data source for ACI Relation To Contract Master
 ---
 
 # aci_relation_to_contract_master #
 
-Data source for Relation To Contract Master
+Data source for ACI Relation To Contract Master
 
 ## API Information ##
 

@@ -7,12 +7,12 @@ layout: "aci"
 page_title: "ACI: aci_relation_to_intra_epg_contract"
 sidebar_current: "docs-aci-data-source-aci_relation_to_intra_epg_contract"
 description: |-
-  Data source for Relation To Intra Epg Contract
+  Data source for ACI Relation To Intra Epg Contract
 ---
 
 # aci_relation_to_intra_epg_contract #
 
-Data source for Relation To Intra Epg Contract
+Data source for ACI Relation To Intra Epg Contract
 
 ## API Information ##
 

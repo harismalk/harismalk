@@ -7,12 +7,12 @@ layout: "aci"
 page_title: "ACI: aci_tag"
 sidebar_current: "docs-aci-data-source-aci_tag"
 description: |-
-  Data source for Tag
+  Data source for ACI Tag
 ---
 
 # aci_tag #
 
-Data source for Tag
+Data source for ACI Tag
 
 ## API Information ##
 
