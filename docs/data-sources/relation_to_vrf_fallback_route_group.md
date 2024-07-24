@@ -7,12 +7,12 @@ layout: "aci"
 page_title: "ACI: aci_relation_to_vrf_fallback_route_group"
 sidebar_current: "docs-aci-data-source-aci_relation_to_vrf_fallback_route_group"
 description: |-
-  Data source for Relation To VRF Fallback Route Group
+  Data source for ACI Relation To VRF Fallback Route Group
 ---
 
 # aci_relation_to_vrf_fallback_route_group #
 
-Data source for Relation To VRF Fallback Route Group
+Data source for ACI Relation To VRF Fallback Route Group
 
 ## API Information ##
 

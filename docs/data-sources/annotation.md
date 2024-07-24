@@ -7,12 +7,12 @@ layout: "aci"
 page_title: "ACI: aci_annotation"
 sidebar_current: "docs-aci-data-source-aci_annotation"
 description: |-
-  Data source for Annotation
+  Data source for ACI Annotation
 ---
 
 # aci_annotation #
 
-Data source for Annotation
+Data source for ACI Annotation
 
 ## API Information ##
 

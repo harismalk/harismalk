@@ -317,7 +317,7 @@ netflowRecordPol:
   default_values:
     parent_dn: "uni/infra"
   remove_valid_values:
-    match: 
+    match:
       - "unspecified"
   test_values:
     default:
@@ -325,10 +325,10 @@ netflowRecordPol:
       collect_parameters:
         - "src-intf"
     all:
-      collect_parameters: 
+      collect_parameters:
         - "count-bytes"
         - "src-intf"
-      match_parameters: 
+      match_parameters:
         - "dst-ip"
         - "src-ip"
     resource_required:
@@ -454,3 +454,13 @@ fvRsSecInherited:
       relation_resource_name: "contract_master"
       properties:
         name: "epg_3"
+
+rtctrlProfile:
+  default_values:
+    autoContinue: "no"
+  overwrites:
+    type: "route_control_profile_type"
+    auto_continue: "route_map_continue"
+  documentation:
+    autoContinue: "This action will be applied on all the entries which are part of per Peer BGP Route-Map. Only available on 'Tenants -> Policies -> Protocol -> Route Maps for Route Control'."
+    type: "The route control policy type of the %s object. Only available on 'Tenants -> Networking -> L3Outs -> Route map for import and export route control'."
