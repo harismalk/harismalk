@@ -66,7 +66,6 @@ const testConfigTagTagNotExistingFvTenant = testConfigTagTagMinDependencyWithFvT
 data "aci_tag" "test_non_existing" {
   parent_dn = aci_tenant.test.id
   key = "non_existing_key"
-  depends_on = [aci_tag.test]
 }
 `
 const testConfigTagTagDataSourceDependencyWithFvAEPg = testConfigTagTagMinDependencyWithFvAEPg + `
@@ -81,6 +80,5 @@ const testConfigTagTagNotExistingFvAEPg = testConfigTagTagMinDependencyWithFvAEP
 data "aci_tag" "test_non_existing" {
   parent_dn = aci_application_epg.test.id
   key = "non_existing_key"
-  depends_on = [aci_tag.test]
 }
 `

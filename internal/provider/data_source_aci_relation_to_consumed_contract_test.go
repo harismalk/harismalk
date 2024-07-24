@@ -68,7 +68,6 @@ const testConfigFvRsConsNotExistingFvAEPg = testConfigFvRsConsMinDependencyWithF
 data "aci_relation_to_consumed_contract" "test_non_existing" {
   parent_dn = aci_application_epg.test.id
   contract_name = "non_existing_tn_vz_br_cp_name"
-  depends_on = [aci_relation_to_consumed_contract.test]
 }
 `
 const testConfigFvRsConsDataSourceDependencyWithFvESg = testConfigFvRsConsMinDependencyWithFvESg + `
@@ -83,6 +82,5 @@ const testConfigFvRsConsNotExistingFvESg = testConfigFvRsConsMinDependencyWithFv
 data "aci_relation_to_consumed_contract" "test_non_existing" {
   parent_dn = aci_endpoint_security_group.test.id
   contract_name = "non_existing_tn_vz_br_cp_name"
-  depends_on = [aci_relation_to_consumed_contract.test]
 }
 `

@@ -22,10 +22,10 @@ func TestAccResourceTagTagWithFvTenant(t *testing.T) {
 				Config:             testConfigTagTagMinDependencyWithFvTenantAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_tag.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_tag.test_2", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_tag.test", "value", "test_value"),
-					resource.TestCheckResourceAttr("aci_tag.test_2", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test_2", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test_2", "value", "test_value"),
 				),
 			},
 		},
@@ -54,10 +54,10 @@ func TestAccResourceTagTagWithFvTenant(t *testing.T) {
 				Config:             testConfigTagTagMinDependencyWithFvTenantAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_tag.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_tag.test_2", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_tag.test", "value", "test_value"),
-					resource.TestCheckResourceAttr("aci_tag.test_2", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test_2", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test_2", "value", "test_value"),
 				),
 			},
 		},
@@ -82,7 +82,7 @@ func TestAccResourceTagTagWithFvTenant(t *testing.T) {
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("aci_tag.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_tag.test", "value", "value"),
+					resource.TestCheckResourceAttr("aci_tag.test", "value", "value_1"),
 				),
 			},
 			// Update with minimum config and verify config is unchanged
@@ -127,10 +127,10 @@ func TestAccResourceTagTagWithFvAEPg(t *testing.T) {
 				Config:             testConfigTagTagMinDependencyWithFvAEPgAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_tag.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_tag.test_2", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_tag.test", "value", "test_value"),
-					resource.TestCheckResourceAttr("aci_tag.test_2", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test_2", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test_2", "value", "test_value"),
 				),
 			},
 		},
@@ -159,10 +159,10 @@ func TestAccResourceTagTagWithFvAEPg(t *testing.T) {
 				Config:             testConfigTagTagMinDependencyWithFvAEPgAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_tag.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_tag.test_2", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_tag.test", "value", "test_value"),
-					resource.TestCheckResourceAttr("aci_tag.test_2", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test_2", "key", "test_key"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test", "value", "test_value"),
+					resource.TestCheckResourceAttr("aci_tag.allow_test_2", "value", "test_value"),
 				),
 			},
 		},
@@ -187,7 +187,7 @@ func TestAccResourceTagTagWithFvAEPg(t *testing.T) {
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("aci_tag.test", "key", "test_key"),
-					resource.TestCheckResourceAttr("aci_tag.test", "value", "value"),
+					resource.TestCheckResourceAttr("aci_tag.test", "value", "value_1"),
 				),
 			},
 			// Update with minimum config and verify config is unchanged
@@ -223,16 +223,16 @@ func TestAccResourceTagTagWithFvAEPg(t *testing.T) {
 }
 
 const testConfigTagTagMinDependencyWithFvTenantAllowExisting = testConfigFvTenantMin + `
-resource "aci_tag" "test" {
+resource "aci_tag" "allow_test" {
   parent_dn = aci_tenant.test.id
   key = "test_key"
   value = "test_value"
 }
-resource "aci_tag" "test_2" {
+resource "aci_tag" "allow_test_2" {
   parent_dn = aci_tenant.test.id
   key = "test_key"
   value = "test_value"
-  depends_on = [aci_tag.test]
+  depends_on = [aci_tag.allow_test]
 }
 `
 
@@ -248,7 +248,7 @@ const testConfigTagTagAllDependencyWithFvTenant = testConfigFvTenantMin + `
 resource "aci_tag" "test" {
   parent_dn = aci_tenant.test.id
   key = "test_key"
-  value = "value"
+  value = "value_1"
 }
 `
 
@@ -261,16 +261,16 @@ resource "aci_tag" "test" {
 `
 
 const testConfigTagTagMinDependencyWithFvAEPgAllowExisting = testConfigFvAEPgMin + `
-resource "aci_tag" "test" {
+resource "aci_tag" "allow_test" {
   parent_dn = aci_application_epg.test.id
   key = "test_key"
   value = "test_value"
 }
-resource "aci_tag" "test_2" {
+resource "aci_tag" "allow_test_2" {
   parent_dn = aci_application_epg.test.id
   key = "test_key"
   value = "test_value"
-  depends_on = [aci_tag.test]
+  depends_on = [aci_tag.allow_test]
 }
 `
 
@@ -286,7 +286,7 @@ const testConfigTagTagAllDependencyWithFvAEPg = testConfigFvAEPgMin + `
 resource "aci_tag" "test" {
   parent_dn = aci_application_epg.test.id
   key = "test_key"
-  value = "value"
+  value = "value_1"
 }
 `
 

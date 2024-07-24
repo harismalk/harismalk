@@ -22,18 +22,18 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 				Config:             testConfigNetflowMonitorPolMinDependencyWithFvTenantAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "name", "netfow_monitor"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "name", "netfow_monitor"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotation", "orchestrator:terraform"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "annotation", "orchestrator:terraform"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "description", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "description", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "name_alias", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "name_alias", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "owner_key", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "owner_key", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "owner_tag", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "owner_tag", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "name", "netfow_monitor"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "name", "netfow_monitor"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "description", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "description", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "name_alias", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "name_alias", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "owner_key", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "owner_key", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "owner_tag", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "owner_tag", ""),
 				),
 			},
 		},
@@ -62,18 +62,18 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 				Config:             testConfigNetflowMonitorPolMinDependencyWithFvTenantAllowExisting,
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "name", "netfow_monitor"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "name", "netfow_monitor"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotation", "orchestrator:terraform"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "annotation", "orchestrator:terraform"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "description", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "description", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "name_alias", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "name_alias", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "owner_key", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "owner_key", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "owner_tag", ""),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test_2", "owner_tag", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "name", "netfow_monitor"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "name", "netfow_monitor"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "annotation", "orchestrator:terraform"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "description", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "description", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "name_alias", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "name_alias", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "owner_key", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "owner_key", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test", "owner_tag", ""),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.allow_test_2", "owner_tag", ""),
 				),
 			},
 		},
@@ -103,10 +103,10 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "name", "netfow_monitor"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotation", "annotation"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "description", "description"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "name_alias", "name_alias"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "owner_key", "owner_key"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "owner_tag", "owner_tag"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "description", "description_1"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "name_alias", "name_alias_1"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "owner_key", "owner_key_1"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "owner_tag", "owner_tag_1"),
 				),
 			},
 			// Update with minimum config and verify config is unchanged
@@ -158,7 +158,7 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.annotation", "annotation_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.netflow_exporter_policy_name", "netflow_exporter_policy_name_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.annotation", "annotation_2"),
@@ -168,7 +168,7 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.1.value", "test_value"),
 				),
 			},
 			// Import testing with children
@@ -186,7 +186,7 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.annotation", "annotation_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.netflow_exporter_policy_name", "netflow_exporter_policy_name_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.1.annotation", "annotation_2"),
@@ -196,7 +196,7 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.1.value", "test_value"),
 				),
 			},
 			// Update with children removed from config
@@ -207,7 +207,7 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.#", "2"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.annotation", "annotation_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.netflow_exporter_policy_name", "netflow_exporter_policy_name_0"),
@@ -220,7 +220,7 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.key", "key_0"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.value", "value_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.1.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.1.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.1.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.#", "2"),
 				),
 			},
@@ -230,7 +230,7 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 				ExpectNonEmptyPlan: false,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.0.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.0.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "annotations.#", "1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.annotation", "annotation_2"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_exporters.0.netflow_exporter_policy_name", "netflow_exporter_policy_name_1"),
@@ -239,7 +239,7 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.0.netflow_record_policy_name", "netflow_record_policy_name_1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "relation_to_netflow_record.#", "1"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.key", "key_1"),
-					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.value", "value_2"),
+					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.0.value", "test_value"),
 					resource.TestCheckResourceAttr("aci_netflow_monitor_policy.test", "tags.#", "1"),
 				),
 			},
@@ -261,14 +261,14 @@ func TestAccResourceNetflowMonitorPolWithFvTenant(t *testing.T) {
 }
 
 const testConfigNetflowMonitorPolMinDependencyWithFvTenantAllowExisting = testConfigFvTenantMin + `
-resource "aci_netflow_monitor_policy" "test" {
+resource "aci_netflow_monitor_policy" "allow_test" {
   parent_dn = aci_tenant.test.id
   name = "netfow_monitor"
 }
-resource "aci_netflow_monitor_policy" "test_2" {
+resource "aci_netflow_monitor_policy" "allow_test_2" {
   parent_dn = aci_tenant.test.id
   name = "netfow_monitor"
-  depends_on = [aci_netflow_monitor_policy.test]
+  depends_on = [aci_netflow_monitor_policy.allow_test]
 }
 `
 
@@ -284,10 +284,10 @@ resource "aci_netflow_monitor_policy" "test" {
   parent_dn = aci_tenant.test.id
   name = "netfow_monitor"
   annotation = "annotation"
-  description = "description"
-  name_alias = "name_alias"
-  owner_key = "owner_key"
-  owner_tag = "owner_tag"
+  description = "description_1"
+  name_alias = "name_alias_1"
+  owner_key = "owner_key_1"
+  owner_tag = "owner_tag_1"
 }
 `
 
@@ -313,7 +313,7 @@ resource "aci_netflow_monitor_policy" "test" {
 	},
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
   relation_to_netflow_exporters = [
@@ -339,7 +339,7 @@ resource "aci_netflow_monitor_policy" "test" {
 	},
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
 }
@@ -359,7 +359,7 @@ resource "aci_netflow_monitor_policy" "test" {
   annotations = [ 
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
   relation_to_netflow_exporters = [ 
@@ -371,7 +371,7 @@ resource "aci_netflow_monitor_policy" "test" {
   tags = [ 
 	{
 	  key = "key_1"
-	  value = "value_2"
+	  value = "test_value"
 	},
   ]
 }

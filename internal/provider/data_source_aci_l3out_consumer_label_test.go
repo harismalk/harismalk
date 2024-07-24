@@ -51,6 +51,5 @@ const testConfigL3extConsLblNotExistingL3extOut = testConfigL3extConsLblMinDepen
 data "aci_l3out_consumer_label" "test_non_existing" {
   parent_dn = aci_l3_outside.test.id
   name = "non_existing_name"
-  depends_on = [aci_l3out_consumer_label.test]
 }
 `

@@ -49,11 +49,11 @@ The configuration snippet below shows all possible attributes of the Endpoint Se
 resource "aci_endpoint_security_group" "full_example_application_profile" {
   parent_dn              = aci_application_profile.example.id
   annotation             = "annotation"
-  description            = "description"
-  exception_tag          = "exception_tag"
+  description            = "description_1"
+  exception_tag          = "exception_tag_1"
   match_criteria         = "All"
   name                   = "test_name"
-  name_alias             = "name_alias"
+  name_alias             = "name_alias_1"
   intra_esg_isolation    = "enforced"
   preferred_group_member = "exclude"
   admin_state            = "no"
@@ -94,7 +94,7 @@ resource "aci_endpoint_security_group" "full_example_application_profile" {
   relation_to_contract_masters = [
     {
       annotation = "annotation_1"
-      target_dn  = aci_endpoint_security_group.example_2.id
+      target_dn  = aci_endpoint_security_group.test_endpoint_security_group_0.id
     }
   ]
   annotations = [
@@ -175,7 +175,7 @@ All examples for the Endpoint Security Group resource can be found in the [examp
       - Default: `unspecified`
       - Valid Values: `level1`, `level2`, `level3`, `level4`, `level5`, `level6`, `unspecified`.
 
-* `relation_to_intra_epg_contracts` - (list) A list of Relation To Intra Epg Contracts (ACI object [fvRsIntraEpg](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fvRsIntraEpg/overview)) pointing to Contract (ACI Object [vzBrCP](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/vzBrCP/overview)) which can be configured using the [aci_contract](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/contract) resource. This attribute is supported in ACI versions: 3.0(1k) and later.
+* `relation_to_intra_epg_contracts` - (list) A list of Relation To Intra EPG Contracts (ACI object [fvRsIntraEpg](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fvRsIntraEpg/overview)) pointing to Contract (ACI Object [vzBrCP](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/vzBrCP/overview)) which can be configured using the [aci_contract](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/contract) resource. This attribute is supported in ACI versions: 3.0(1k) and later.
   
   #### Required ####
   
@@ -183,7 +183,7 @@ All examples for the Endpoint Security Group resource can be found in the [examp
 
   #### Optional ####
     
-  * `annotation` (annotation) - (string) The annotation of the Relation To Intra Epg Contract object.
+  * `annotation` (annotation) - (string) The annotation of the Relation To Intra EPG Contract object.
       - Default: `orchestrator:terraform`
 
 * `relation_to_provided_contracts` - (list) A list of Relation To Provided Contracts (ACI object [fvRsProv](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fvRsProv/overview)) pointing to Contract (ACI Object [vzBrCP](https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/vzBrCP/overview)) which can be configured using the [aci_contract](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/contract) resource. This attribute is supported in ACI versions: 1.0(1e) and later.

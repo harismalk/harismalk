@@ -45,6 +45,5 @@ const testConfigFvRsProtByNotExistingFvAEPg = testConfigFvRsProtByMinDependencyW
 data "aci_relation_to_taboo_contract" "test_non_existing" {
   parent_dn = aci_application_epg.test.id
   taboo_contract_name = "non_existing_tn_vz_taboo_name"
-  depends_on = [aci_relation_to_taboo_contract.test]
 }
 `
