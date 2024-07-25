@@ -1,3 +1,15 @@
+# Terraform Provider ACI - Changelog
+
+All notable changes to this project will be documented in this file.
+
+## 2.16.0 (July 25, 2024)
+
+IMPROVEMENTS:
+- Migration of aci_endpoint_security_group into plugin framework
+- Add datasource and resource for fvfbroute in aci_vrf_fallback_route and aci_vrf_fallback_route_group
+- Introduction of a provider level flag to prevent creation of objects that are already existing in apic configuration
+- Display id during plan for plugin framework resources where the dn can be constructed
+
 ## 2.15.0 (July 2, 2024)
 DEPRECATIONS:
 - Deprecate the non-functional `relation_vz_rs_graph_att` attribute from `aci_contract`. Use `relation_vz_rs_subj_graph_att` on `aci_contract_subject` instead.
